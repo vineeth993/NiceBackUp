@@ -322,16 +322,16 @@
  -->
 
 				<xpath expr="//field[@name='pricelist_id']" position="after">
-					<field name="transaction_type" />
-					<field name="partner_selling_type" />
+					<!--<field name="transaction_type" />-->
+					<field name="partner_selling_type" required="1"/>
 					<!-- <field name="partner_selling_type_id" readonly="1" /> -->
 					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'in', ('progress','done'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
 					<field name="extra_discount" 
 						attrs="{'readonly':['|',('partner_selling_type','==','normal'), ('state', 'in', ('progress','done'))], 'invisible':[('partner_selling_type', 'in', ('extra', 'special'))]}" />
 					<field name="nonread_normal_disocunt"
-						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))], 'readonly':[('state', 'in', ('progress','done'))]}" />
+						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))]}" />
 					<field name="nonread_extra_disocunt"
-						attrs="{'invisible':[('partner_selling_type', '==','normal')], 'readonly':[('state', 'in', ('progress','done'))]}" />
+						attrs="{'invisible':[('partner_selling_type', '==','normal')]}" />
 					
 				</xpath>
 
@@ -399,11 +399,11 @@
 					<field name="additional_discount" attrs="{'readonly':[('state', 'not in',  ('draft', 'confirm', 'sent', 'cancel'))]}"/>
 					<field name="partner_type" invisible="1"/>
 				</xpath>
-				<xpath
+				<!-- <xpath
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='discount']"
 					position="attributes">
 					<attribute name="invisible">1</attribute>
-				</xpath>
+				</xpath> -->
 <!-- 				<xpath -->
 <!-- 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_unit']" -->
 <!-- 					position="after"> -->

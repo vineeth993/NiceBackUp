@@ -99,9 +99,9 @@ class sale_status_report(report_xls):
                     ws.write(count, 0, date, normal)
                     ws.write(count, 1, sale.name, normal)
                     ws.write(count, 2, orderLine, normal)
-                    ws.write(count, 3, orderLineQty[orderLine], normal)
-                    ws.write(count, 4, issuedQuan, normal)
-                    ws.write(count, 5, quantityPending, normal)
+                    ws.write(count, 3, orderLineQty[orderLine], number)
+                    ws.write(count, 4, issuedQuan, number)
+                    ws.write(count, 5, quantityPending, number)
                     count += 1
             invoiceQty = {}
             orderLineQty = {}
