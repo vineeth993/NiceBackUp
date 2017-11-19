@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_account_invoice_form" model="ir.ui.view">
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='invoice_print']" position="after">
+                        <button name="print_invoice_gst" string="Print GST Invoice" type="object" class="oe_highlight"/>
+              	</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>

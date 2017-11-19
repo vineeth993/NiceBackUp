@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<template id="envolope_printing_temp">
+			<div class="page">
+				<table width="100%">
+					<tr>
+						<td width="100%" style="padding-top:6cm;padding-left:15cm;"> 
+							<b><span style="font-size:15px" t-field="o.partner_id.name"/></b>
+							[<span t-field="o.partner_id.ref"/>]<br/>
+							<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+	                        <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+	                        <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/></span>
+	                        <span t-if="o.partner_id.state_id">, <span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span><br/>
+	                       	PIN: <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span><br/><br/>
+	                        Contact: <span t-if="o.partner_id.phone"><span t-field="o.partner_id.phone"/>,</span>
+	                        <span t-if="o.partner_id.mobile"><span t-field="o.partner_id.mobile"/></span>
+						 </td>
+					</tr>
+				</table>
+			</div>
+		</template>
+
+		<template id="print_on_envolope">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="lr_doc.envolope_printing_temp"/>
+				</t>
+			</t>
+		</template>
+
+		<record id="nice_envolope" model="report.paperformat">
+			<field name="name">Nice Envolope</field>
+			<field name="format">custom</field>
+			<field name="page_height">120</field>
+			<field name="page_width">270</field>
+			<field name="orientation">Portrait</field>
+			<field name="margin_top">0</field>
+	        <field name="margin_bottom">0</field>
+	        <field name="margin_left">0</field>
+	        <field name="margin_right">0</field>
+	        <field name="header_line" eval="False" />
+	        <field name="header_spacing">0</field>
+	        <field name="dpi">90</field>
+		</record>
+
+		<record id="lr_doc_envolope" model="ir.actions.report.xml">
+        	<field name="paperformat_id" ref="nice_envolope"/>
+    	</record>
+	</data>
+</openerp>

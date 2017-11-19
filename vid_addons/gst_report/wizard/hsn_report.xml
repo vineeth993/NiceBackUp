@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="gstr_hsn_report" model="ir.ui.view">
+            <field name="name">HSN Report</field>
+            <field name="model">gstr.hsn_report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group  colspan="4" col="4">
+                            <field name="from_date" required="1"/>
+                            <field name="to_date" required="1"/>
+                        </group>
+                        <group>
+                            <field name="company" required="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_hsn_report" string="Print"  type="object" icon="gtk-print"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_gstn_hsn_report" model="ir.actions.act_window">
+            <field name="name">HSN Report</field>
+            <field name="res_model">gstr.hsn_report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="gstr_hsn_report"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="menu_gstr_report" name="GSTR Reporting" sequence="200" parent="account.menu_finance_reports"/>
+        <menuitem id="menu_gstr_hsn_report" name="HSN Sales Summary" action="action_gstn_hsn_report" parent="menu_gstr_report" sequence="4" />
+       
+    </data>
+</openerp>

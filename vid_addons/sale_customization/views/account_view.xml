@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        
+    
+    	<record id="view_account_form_inherit_nice" model="ir.ui.view">
+            <field name="name">view.account.form.inherit.nice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+
+               <!-- <xpath expr="//field[@name='amount_untaxed']" position="after">
+					<field name="extra_discount_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+				</xpath>
+				 -->
+				<xpath expr="//field[@name='account_id']" position="after">
+					<field name="partner_selling_type" attrs="{'readonly':[('state', 'in', ('open','paid'))]}"/>
+					<!-- <field name="partner_selling_type_id"  /> -->
+					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'in', ('open','paid'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
+					<field name="extra_discount" 
+						attrs="{'readonly':['|',('partner_selling_type','==','normal'), ('state', 'in', ('open','paid'))], 'invisible':[('partner_selling_type', 'in', ('extra', 'special'))]}" />
+					<field name="nonread_normal_disocunt"
+						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))], 'readonly':[('state', 'in', ('open','paid'))]}" />
+					<field name="nonread_extra_disocunt"
+						attrs="{'invisible':[('partner_selling_type', '==','normal')], 'readonly':[('state', 'in', ('open','paid'))]}" />
+
+					<!-- <field name="additional_extra_disocunt"
+						attrs="{'invisible':[('partner_selling_type','!=','special'),('partner_selling_type','!=','extra')]}" /> -->
+				</xpath>
+				<xpath
+					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='discount']"
+					position="after">
+					<field name="additional_discount"/>
+				</xpath>
+				<xpath
+					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='discount']"
+					position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+            </field>
+         </record>
+        
+        
+    </data>
+</openerp>

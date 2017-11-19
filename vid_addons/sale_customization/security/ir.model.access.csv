@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_products,access_crm_products,sale_customization.model_crm_products,,1,1,1,1
+access_customer_type,customer_type,sale_customization.model_customer_type,,1,1,1,1
+access_sale_reason_category,sale_reason_category,sale_customization.model_sale_reason_category,,1,1,1,1
+access_sale_reason,sale_reason,sale_customization.model_sale_reason,,1,1,1,1
+access_sale_quotation_line,sale_quotation_line,sale_customization.model_sale_quotation_line,base.group_sale_salesman,1,1,1,1
+access_sale_transport.document_user,transport.document.user,sale_customization.model_transport_document,base.group_sale_salesman,1,1,1,0
+access_partner_selling_type,access_partner_selling_type,model_partner_selling_type,,1,1,1,1

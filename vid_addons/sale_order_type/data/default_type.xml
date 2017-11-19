@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+        <record model="ir.rule" id="stock_picking_type_comp_rule">
+            <field name="name">Stock Picking Type multi-company</field>
+            <field name="model_id" search="[('model','=','stock.picking.type')]" model="ir.model"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('warehouse_id.company_id','=',user.company_id.id)]</field>
+        </record>
+
+    	<!-- Head Office -->
+    	<record id="seq_sale_order_head_office_b2b" model="ir.sequence">
+            <field name="name">Sales Order Head Office B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">SO</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'1'"/>
+        </record>
+        <record id="seq_sale_order_head_office_b2c" model="ir.sequence">
+            <field name="name">Sales Order Head Office B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">321-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'1'"/>
+        </record>
+        <record id="seq_sale_order_head_office_exp" model="ir.sequence">
+            <field name="name">Sales Order Head Office B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">321-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'1'"/>
+        </record>
+        <record id="head_office_b2b_sale_type" model="sale.order.type">
+            <field name="name">Head Office B2B</field>
+            <field name="warehouse_id" eval="'1'"/>
+            <field name="sequence_id" ref="seq_sale_order_head_office_b2b"/>
+            <field name="active" eval="True"/>
+            <field name="object_type">sale</field>
+        </record>
+        <record id="head_office_b2c_sale_type" model="sale.order.type">
+            <field name="name">Head Office B2C</field>
+            <field name="warehouse_id" eval="'1'"/>
+            <field name="sequence_id" ref="seq_sale_order_head_office_b2c"/>
+            <field name="active" eval="True"/>
+            <field name="object_type">sale</field>
+        </record>
+        <record id="head_office_exp_sale_type" model="sale.order.type">
+            <field name="name">Head Office EXP</field>
+            <field name="warehouse_id" eval="'1'"/>
+            <field name="sequence_id" ref="seq_sale_order_head_office_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Head Office -->
+    	<record id="seq_sale_order_aluva_unit_b2b" model="ir.sequence">
+            <field name="name">Sales Order Aluva Unit B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">322-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_aluva_unit_b2c" model="ir.sequence">
+            <field name="name">Sales Order Aluva Unit B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">322-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_aluva_unit_exp" model="ir.sequence">
+            <field name="name">Sales Order Aluva Unit B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">322-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="aluva_unit_b2b_sale_type" model="sale.order.type">
+            <field name="name">Aluva Unit B2B</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_aluva_unit_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="aluva_unit_b2c_sale_type" model="sale.order.type">
+            <field name="name">Aluva Unit B2C</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_aluva_unit_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="aluva_unit_exp_sale_type" model="sale.order.type">
+            <field name="name">Aluva Unit EXP</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_aluva_unit_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+
+        <!-- Edayar Unit -->
+    	<record id="seq_sale_order_edayar_unit_b2b" model="ir.sequence">
+            <field name="name">Sales Order Edayar Unit B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">323-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_edayar_unit_b2c" model="ir.sequence">
+            <field name="name">Sales Order Edayar Unit B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">323-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_edayar_unit_exp" model="ir.sequence">
+            <field name="name">Sales Order Edayar Unit B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">323-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="edayar_unit_b2b_sale_type" model="sale.order.type">
+            <field name="name">Edayar Unit B2B</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_edayar_unit_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="edayar_unit_b2c_sale_type" model="sale.order.type">
+            <field name="name">Edayar Unit B2C</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_edayar_unit_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="edayar_unit_exp_sale_type" model="sale.order.type">
+            <field name="name">Edayar Unit EXP</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_edayar_unit_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+
+        <!-- Deep Packs -->
+    	<record id="seq_sale_order_deep_packs_b2b" model="ir.sequence">
+            <field name="name">Sales Order Deep Packs B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">324-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_deep_packs_b2c" model="ir.sequence">
+            <field name="name">Sales Order Deep Packs B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">324-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_deep_packs_exp" model="ir.sequence">
+            <field name="name">Sales Order Deep Packs B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">324-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="deep_packs_b2b_sale_type" model="sale.order.type">
+            <field name="name">Deep Packs B2B</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_deep_packs_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="deep_packs_b2c_sale_type" model="sale.order.type">
+            <field name="name">Deep Packs B2C</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_deep_packs_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="deep_packs_exp_sale_type" model="sale.order.type">
+            <field name="name">Deep Packs EXP</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_deep_packs_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Neelima Chemicals -->
+    	<record id="seq_sale_order_neelima_chemicals_b2b" model="ir.sequence">
+            <field name="name">Sales Order Neelima Chemicals B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">325-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_neelima_chemicals_b2c" model="ir.sequence">
+            <field name="name">Sales Order Neelima Chemicals B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">325-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_neelima_chemicals_exp" model="ir.sequence">
+            <field name="name">Sales Order Neelima Chemicals B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">325-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="neelima_chemicals_b2b_sale_type" model="sale.order.type">
+            <field name="name">Neelima Chemicals B2B</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_neelima_chemicals_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="neelima_chemicals_b2c_sale_type" model="sale.order.type">
+            <field name="name">Neelima Chemicals B2C</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_neelima_chemicals_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="neelima_chemicals_exp_sale_type" model="sale.order.type">
+            <field name="name">Neelima Chemicals EXP</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_neelima_chemicals_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+
+        <!-- D.R.Packs -->
+    	<record id="seq_sale_order_d_r_packs_b2b" model="ir.sequence">
+            <field name="name">Sales Order D.R.Packs B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">326-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_d_r_packs_b2c" model="ir.sequence">
+            <field name="name">Sales Order D.R.Packs B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">326-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_d_r_packs_exp" model="ir.sequence">
+            <field name="name">Sales Order D.R.Packs B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">326-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="d_r_packs_b2b_sale_type" model="sale.order.type">
+            <field name="name">D.R.Packs B2B</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_d_r_packs_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="d_r_packs_b2c_sale_type" model="sale.order.type">
+            <field name="name">D.R.Packs B2C</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_d_r_packs_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="d_r_packs_exp_sale_type" model="sale.order.type">
+            <field name="name">D.R.Packs EXP</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_d_r_packs_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+
+        <!-- IRC -->
+    	<record id="seq_sale_order_irc_b2b" model="ir.sequence">
+            <field name="name">Sales Order IRC B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">327-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_irc_b2c" model="ir.sequence">
+            <field name="name">Sales Order IRC B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">327-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_sale_order_irc_exp" model="ir.sequence">
+            <field name="name">Sales Order IRC B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">327-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="irc_b2b_sale_type" model="sale.order.type">
+            <field name="name">IRC B2B</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_irc_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="irc_b2c_sale_type" model="sale.order.type">
+            <field name="name">IRC B2C</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_irc_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="irc_exp_sale_type" model="sale.order.type">
+            <field name="name">IRC EXP</field>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="sequence_id" ref="seq_sale_order_irc_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="False"/>
+        </record>
+
+
+        <!-- Chennai Branch -->
+    	<record id="seq_sale_order_chennai_branch_b2b" model="ir.sequence">
+            <field name="name">Sales Order Chennai Branch B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">SO-331-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'5'"/>
+        </record>
+        <record id="seq_sale_order_chennai_branch_b2c" model="ir.sequence">
+            <field name="name">Sales Order Chennai Branch B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">SO-331-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'5'"/>
+        </record>
+        <record id="seq_sale_order_chennai_branch_exp" model="ir.sequence">
+            <field name="name">Sales Order Chennai Branch B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">331-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'5'"/>
+        </record>
+        <record id="chennai_branch_b2b_sale_type" model="sale.order.type">
+            <field name="name">Chennai Branch B2B</field>
+            <field name="warehouse_id" eval="'3'"/>
+            <field name="sequence_id" ref="seq_sale_order_chennai_branch_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="chennai_branch_b2c_sale_type" model="sale.order.type">
+            <field name="name">Chennai Branch B2C</field>
+            <field name="warehouse_id" eval="'3'"/>
+            <field name="sequence_id" ref="seq_sale_order_chennai_branch_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="chennai_branch_exp_sale_type" model="sale.order.type">
+            <field name="name">Chennai Branch EXP</field>
+            <field name="warehouse_id" eval="'3'"/>
+            <field name="sequence_id" ref="seq_sale_order_chennai_branch_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+
+
+        <!-- Chennai Branch -->
+    	<record id="seq_sale_order_coimbatore_unit_b2b" model="ir.sequence">
+            <field name="name">Sales Order Coimbatore Unit B2B</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">332-B-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'7'"/>
+        </record>
+        <record id="seq_sale_order_coimbatore_unit_b2c" model="ir.sequence">
+            <field name="name">Sales Order Coimbatore Unit B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">332-C-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'7'"/>
+        </record>
+        <record id="seq_sale_order_coimbatore_unit_exp" model="ir.sequence">
+            <field name="name">Sales Order Coimbatore Unit B2C</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">332-E-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="'7'"/>
+        </record>
+        <record id="coimbatore_unit_b2b_sale_type" model="sale.order.type">
+            <field name="name">Coimbatore Unit Branch B2B</field>
+            <field name="warehouse_id" eval="'4'"/>
+            <field name="sequence_id" ref="seq_sale_order_coimbatore_unit_b2b"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="coimbatore_unit_b2c_sale_type" model="sale.order.type">
+            <field name="name">Coimbatore Unit Branch B2C</field>
+            <field name="warehouse_id" eval="'4'"/>
+            <field name="sequence_id" ref="seq_sale_order_coimbatore_unit_b2c"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="coimbatore_unit_exp_sale_type" model="sale.order.type">
+            <field name="name">Coimbatore Unit Branch EXP</field>
+            <field name="warehouse_id" eval="'4'"/>
+            <field name="sequence_id" ref="seq_sale_order_coimbatore_unit_exp"/>
+            <field name="object_type">sale</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</openerp>

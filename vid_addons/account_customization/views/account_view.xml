@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        
+    
+    	<record id="view_account_form_inherit_in" model="ir.ui.view">
+            <field name="name">view.account.form.inherit.in</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+
+               <xpath expr="//field[@name='date_invoice']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="context">{'readonly_by_pass':True}</attribute>
+               </xpath>
+               
+            </field>
+         </record>
+        
+        
+    </data>
+</openerp>

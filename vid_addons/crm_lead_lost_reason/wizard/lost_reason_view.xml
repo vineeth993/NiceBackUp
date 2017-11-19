@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="view_crm_lead_lost" model="ir.ui.view">
+            <field name="name">Reason for the lost</field>
+            <field name="model">crm.lost</field>
+            <field name="arch" type="xml">
+             <form string="Reason for the lost">
+                <p class="oe_grey">
+                    Choose the reason for the lost of the
+                    lead.
+                </p>
+                <group>
+                    <field name="reason_id" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="confirm_lost"
+                        string="Confirm" type="object"
+                        class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link"
+                        special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_crm_lead_lost" model="ir.actions.act_window">
+            <field name="name">Reason for the lost</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.lost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_crm_lead_lost"/>
+            <field name="target">new</field>
+        </record>
+    <record id="view_crm_lead_won" model="ir.ui.view">
+            <field name="name">Reason for the won</field>
+            <field name="model">crm.won</field>
+            <field name="arch" type="xml">
+             <form string="Reason for the won">
+                <p class="oe_grey">
+                    Choose the reason for the lost of the
+                    lead.
+                </p>
+                <group>
+                    <field name="reason_id" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="confirm_lost1"
+                        string="Confirm" type="object"
+                        class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link"
+                        special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_crm_lead_won" model="ir.actions.act_window">
+            <field name="name">Reason for Won</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.won</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_crm_lead_won"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <record model="crm.case.stage" id="stage_lead9">
+            <field name="name">Won</field>
+            <field name="case_default">1</field>
+            <field name="fold">1</field>
+            <field name="probability">0</field>
+            <field name="on_change">1</field>
+            <field name="sequence">29</field>
+            <field name="type">lead</field>
+        </record>
+    </data>
+</openerp>

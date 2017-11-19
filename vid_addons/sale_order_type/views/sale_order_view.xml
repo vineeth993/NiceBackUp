@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_picking_type_form" model="ir.ui.view">
+            <field name="name">Picking Types</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>
+            <field name="sequence" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="store_type"/>
+                </field>
+            </field>
+        </record>
+        <record id="pot_view_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="sequence" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="domain">[('supplier','=',True), ('purchase_type', '=', type_id), ('purchase_sub_type_id', '=', sub_type_id)]</attribute>
+                    <attribute name="context">{'default_purchase_type': type_id, 'default_purchase_sub_type_id': sub_type_id}</attribute>
+                </field>
+                <field name="partner_id" position="before">
+                    <field name="type_id" required="1" domain="[('company_id', '=', company_id), ('object_type', '=', 'purchase')]" context="{'default_object_type': 'purchase'}"/>
+                    <field name="sub_type_id" domain="[('type_id', '=', type_id), ('object_type', '=', 'purchase')]" context="{'default_type_id': type_id, 'default_object_type': 'purchase'}"/>
+                </field>
+               <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+                   <attribute name="context">{'sub_type_id': parent.sub_type_id}</attribute>
+               </xpath>
+               <field name="picking_type_id" position="attributes">
+                    <attribute name="domain">[('code','=','incoming'), ('store_type', '=', 'row_material')]</attribute>
+               </field>
+            </field>
+        </record>
+        
+        <record id="sot_view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="domain">[('customer','=',True), ('sale_type', '=', type_id), ('sale_sub_type_id', '=', sub_type_id)]</attribute>
+                    <attribute name="context">{'default_sale_type': type_id, 'default_sale_sub_type_id': [sub_type_id]}</attribute>
+                </field>
+                <field name="partner_id" position="before">
+                    <field name="type_id" required="1" domain="[('company_id', '=', company_id), ('object_type', '=', 'sale')]" context="{'default_object_type': 'sale'}"/>
+                    <field name="sub_type_id" domain="[('type_id', '=', type_id), ('object_type', '=', 'sale')]" context="{'default_type_id': type_id, 'default_object_type': 'sale'}"/>
+                </field>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="replace">
+                       <field name="product_id" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':False, 'company_id': parent.company_id, 'sub_type_id': parent.sub_type_id, 'partner_type':parent.partner_selling_type}" groups="base.group_user" on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, parent.warehouse_id, context)"/>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="replace">
+                       <field name="product_id" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'sub_type_id': parent.sub_type_id, 'partner_type':parent.partner_selling_type}" groups="base.group_user" on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, parent.warehouse_id, context)"/>
+                   </xpath>
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="attributes">
+                       <attribute name="context">{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id, 'sub_type_id': parent.sub_type_id, 'partner_type':parent.partner_selling_type}</attribute>
+                   </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

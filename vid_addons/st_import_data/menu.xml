@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+		<menuitem id="menu_data_import" name="Data Import" parent="base.menu_administration" sequence="20"/>
+		<menuitem id="menu_product_import" parent="menu_data_import" action="action_product_import" sequence="0"/>
+		<menuitem id="menu_partner_import" parent="menu_data_import" action="action_partner_import" sequence="1"/>
+
+	</data>
+</openerp>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<openerp>
+	<data>
+
+		<record id="b2b_summary_sale" model="ir.actions.report.xml">
+			<field name="name">Sale Summary</field>
+			<field name="model">gstr.b2b_report</field>
+			<field name="type">ir.actions.report.xml</field>
+			<field name="report_name">gstr.b2b_report</field>
+			<field name="report_type">xls</field>
+			<field name="auto" eval="False"/>
+		</record>
+		
+	</data>
+</openerp>

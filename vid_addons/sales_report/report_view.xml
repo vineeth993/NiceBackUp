@@ -1,0 +1,14 @@
+<openerp>
+   <data>
+   
+	<report string="SALE PENDING REPORT"
+			model="sale.status.report"
+			auto="True"
+			name="sale_status_report"
+			rml="sales_report/report/sale_status_report.jrxml"
+			id="report_sale_status"
+			menu="False"
+			/>
+			
+   </data>
+</openerp>

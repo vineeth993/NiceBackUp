@@ -1,0 +1,26 @@
+<openerp>
+    <data>
+    <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='website']" position="after">
+                    <field name="country_base_gst_type" widget="radio"/>
+                    <field name="gst_category" widget="radio"/>
+                    <field name="gst_reg" widget="radio"/>
+                    <field name="gst_no" attrs="{'invisible': [('gst_reg', '=', 'unregistered')], 'required': [('gst_reg', '=', 'registered')]}"/>
+               </xpath>
+               <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="p_code"/>
+                    <field name="tds"/>
+                    <field name="reverse_tax"/>
+                    <field name="gst_credit"/>
+                    <field name="ssi_unit"/>
+                    <field name="pan"/>
+               </xpath>
+               
+            </field>
+         </record>
+    </data>
+</openerp>

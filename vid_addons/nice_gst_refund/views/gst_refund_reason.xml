@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="gst_refund_reason_form_view" model="ir.ui.view">
+			<field name="name">gst.refund.reason.form</field>
+			<field name="model">gst.refund.reason</field>
+			<field name="arch" type="xml">
+				<form string="GST Refund Reason">
+					<group>
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="gst_refund_reason_tree_view" model="ir.ui.view">
+			<field name="name">gst.refund.reason.tree</field>
+			<field name="model">gst.refund.reason</field>
+			<field name="arch" type="xml">
+				<tree string="GST Refund Reason">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="gst_refund_reason_action" model="ir.actions.act_window">
+			<field name="name">GST Refund Reason</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">gst.refund.reason</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create GST Refund Reason
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_gst_refund_reason" name="GST Refund Reason"
+			parent="account.menu_configuration_misc" action="gst_refund_reason_action"
+			sequence="220" />
+
+	</data>
+</openerp>
+		

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+         <record id="partner_custom_view" model="ir.ui.view">
+            <field name="name">partner.custom.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="category_id" position="before">
+                    <field name="customer_type"/>
+                </field>
+                <field name="date" position="after">
+                    <field name="lead_time" attrs="{'invisible':[('supplier','=',False)]}"/>
+                    <field name="tax_form"/>
+                </field>
+                <xpath expr="//page[@string='Sales &amp; Purchases']" position="after">
+                    <page name='discount' string="Discount" attrs="{'invisible':[('customer','=',False)]}">
+                    	<group string="Discount configuration">
+                    		<field name="customer_type"/>
+                    		<!-- <field name="partner_selling_type"/>
+                    		<field name="partner_selling_type_id" domain="[('partner_type','=',partner_selling_type)]"/> -->
+                    	</group>
+                        <group>
+                            <group >
+                                <field name="disc"/>
+                                <!-- <field name="nedisc"/> -->
+                            </group>
+                            <group>
+                                <field name="adisc"/>
+                                <field name="tdisc"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+         </record>
+
+         <record id="partner_custom_view1" model="ir.ui.view">
+            <field name="name">partner.custom.view1</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bank_ids']/tree/field[@name='state']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bank_ids']/tree/field[@name='bank_name']" position="after">
+                    <field name="street"/>
+                    <field name="state_id"/>
+                </xpath>
+            </field>
+         </record>
+
+         <record id="partner_cust_type" model="ir.ui.view">
+            <field name="name">partner.customer.type</field>
+            <field name="model">customer.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="2">
+                        <field name="customer_type"/>
+                    </group>
+                </form>
+            </field>
+         </record>
+    </data>
+</openerp>

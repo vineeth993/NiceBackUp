@@ -1,0 +1,34 @@
+<openerp>
+    <data>
+
+        <record id="sales_invoice_view_inherit_barcode1" model="ir.ui.view">
+            <field name="name">sale.invoice.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='invoice_line']/tree/field[@name='product_id']" position="before">
+                        <field name ="barcode_scan"/>
+               </xpath>
+                <xpath expr="//field[@name='invoice_line']/tree/field[@name='product_id']" position="after">
+                        <!--<field name ="sale_person" invisible="1"/>-->
+                        <!--<field name ="customer" invisible="1"/>-->
+               </xpath>
+            </field>
+        </record>
+
+
+        <record id="purchase_invoice_view_inherit_barcode1" model="ir.ui.view">
+            <field name="name">purchase.invoice.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='invoice_line']/tree/field[@name='product_id']" position="before">
+                        <field name ="barcode_scan"/>
+               </xpath>
+
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

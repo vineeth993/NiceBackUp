@@ -1,0 +1,8 @@
+
+.product_width [data-id="product_id"]{width: 400px;}
+
+.openerp .oe_form_sheet_width {
+  min-width: 650px;
+  max-width: 1500px;
+  margin: 0 auto;
+}

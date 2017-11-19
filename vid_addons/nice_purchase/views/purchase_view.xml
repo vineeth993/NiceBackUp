@@ -1,0 +1,69 @@
+<openerp>
+    <data>
+		
+		<record id="view_purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.view</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='order_line']/tree[@string='Purchase Order Lines']/field[@name='name']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+               <xpath expr="//field[@name='order_line']/tree[@string='Purchase Order Lines']/field[@name='date_planned']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+               <xpath expr="//field[@name='order_line']/tree[@string='Purchase Order Lines']/field[@name='company_id']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+               <xpath expr="//field[@name='order_line']/tree[@string='Purchase Order Lines']/field[@name='product_uom']" position="attributes">
+                   <attribute name="string">UoM</attribute>
+               </xpath>
+               <xpath expr="//field[@name='order_line']/tree[@string='Purchase Order Lines']" position="attributes">
+                   <attribute name="class">product_width</attribute>
+               </xpath>
+               <xpath expr="//field[@name='order_line']/tree[@string='Purchase Order Lines']/field[@name='price_subtotal']" position="after">
+                   <button name="open_form_view" type="object" string="Open"/>
+               </xpath>
+            </field>
+         </record>
+        
+        
+		<record id="view_order_line_form" model="ir.ui.view">
+            <field name="name">purchase.order.line.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order Line" create="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,False,False,'draft',context)"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,'draft',context)" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,'draft',context)" class="oe_inline"/>
+                                </div>
+                                <field name="price_unit"/>
+                                <field name="price_subtotal"/>
+                            </group>
+                            <group>
+                                <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                                <field name="date_planned" widget="date"/>
+                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                        <page string="Notes">
+                            <field name="name"/>
+                        </page><page string="Invoices and Incoming Shipments">
+                            <field name="invoice_lines"/>
+                            <field name="move_ids"/>
+                        </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

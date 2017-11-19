@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="product_custom_view" model="ir.ui.view">
+            <field name="name">product.custom.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <div name='options' position="after">
+                    <div>
+                        <field name="hazard_type" widget="radio" class="radio"/>
+                        <field name="control_type" widget="radio"/>
+                    </div>
+                </div>
+                <field name='volume' position="before">
+                    <field name="uom_id_pack" style="width:193px;"/>
+                </field>
+                <field name='volume' position="replace">
+                     <label for="volume"/>
+                     <div>
+                         <field class="oe_inline" name="volume"/>
+                         <field name="uom_id_one" style="width:100px;"/>
+                     </div>
+                 </field>
+                <field name='weight' position="replace">
+                     <label for="weight"/>
+                     <div>
+                         <field class="oe_inline" name="weight"/>
+                         <field name="uom_id_two" style="width:100px;"/>
+                     </div>
+                 </field>
+                 <field name='weight_net' position="replace">
+                     <label for="weight_net"/>
+                     <div>
+                         <field class="oe_inline" name="weight_net"/>
+                         <field name="uom_id_three" style="width:100px;"/>
+                     </div>
+                 </field>
+                <xpath expr="//page[@string='Information']" position="after">
+                    <page string="Profiling Seasons">
+                        <field name="profiling_seasons">
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+         </record>
+
+         <record id="hidden_group" model="res.groups">
+                <field name="name">Hidden Group</field>
+                <field name="category_id" ref="base.module_category_hidden"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+         </record>
+
+        <record id="product.menu_products" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('base.user_root')] )]"/>
+        </record>
+
+        <record id="stock.menu_product_variant_config_stock" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('base.user_root')] )]"/>
+        </record>
+
+         <record id="product_custom_view1" model="ir.ui.view">
+            <field name="name">product.custom.view1</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <page name="variants" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </page>
+                <field name="default_code" position="after">
+                    <field name="gcode" />
+                    <field name="cas_no"/>
+                </field>
+
+                 <field name="list_price" position="after">
+                    <field name="specific_gravity"/>
+                    <field name="schedule"/>
+                    <field name="grade"/>
+                     <field name="certificate_of_analysis"/>
+                     <field name="hs_code_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_custom_view_kanban1" model="ir.ui.view">
+            <field name="name">product.custom.kanban.view1</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/kanban/templates/t/div[1]/div[1]/a[@name='%(product.product_variant_action)d']" position="replace">
+                </xpath>
+
+            </field>
+        </record>
+
+         <record id="product_custom_view3" model="ir.ui.view">
+            <field name="name">product.custom.view3</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="default_code" position="after">
+                    <field name="gcode" />
+                    <field name="cas_no"/>
+                    <field name="specific_gravity"/>
+                    <field name="schedule"/>
+                    <field name="grade"/>
+                </field>
+            </field>
+        </record>
+        
+
+    <record id="view_hs_code_tree" model="ir.ui.view">
+      <field name="name">hs.code.tree</field>
+      <field name="model">hs.code</field>
+      <field name="arch" type="xml">
+        <tree string="H.S. Codes">
+          <field name="code"/>
+          <field name="description"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_hs_code_form" model="ir.ui.view">
+      <field name="name">hs.code.form</field>
+      <field name="model">hs.code</field>
+      <field name="arch" type="xml">
+        <form string="H.S. Code">
+          <group>
+            <field name="code"/>
+            <field name="description"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_hs_code" model="ir.actions.act_window">
+      <field name="name">H.S. Codes</field>
+      <field name="res_model">hs.code</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hs_code" action="action_hs_code"
+        parent="product.prod_config_main" sequence="60"/>
+        
+
+    </data>
+</openerp>

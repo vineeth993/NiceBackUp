@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="lr_doc_action" model="ir.actions.act_window">
+			<field name="name">Dispatch Document</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">lr.doc</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create lr
+				</p>
+			</field>
+		</record>
+		
+
+		<record id="lr_doc_form_view" model="ir.ui.view">
+			<field name="name">lr.doc.form</field>
+			<field name="model">lr.doc</field>
+			<field name="arch" type="xml">
+				<form string="Lr Doc">
+					<header>
+						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':['|',('state','=','confirm'),('state','=','validate')]}" class="oe_highlight" />
+						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':['|',('state','=','draft'),('state','=','validate')]}" class="oe_highlight" />
+						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" />
+						<button name="print_envolope" type="object" string="Print Envelope" class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+					</header>
+					<h1>
+						<field name="name" class="oe_inline" readonly="1" />
+					</h1>
+					<group>
+						<group>
+							<field name="partner_id" options="{'no_create_edit': True,'no_create': True}" />
+							<field name="invoice_id" widget="many2many_tags" domain="[('partner_id', '=', partner_id),('dispatch_id','=', False),('state', 'not in',('draft', 'cancel', 'proforma', 'proforma2'))]" options="{'no_create_edit': True, 'no_create':True}"/>
+							<field name="freight_payment_type"/>
+							<field name="dispatch_mode" />
+							<field name="freight_amount" attrs="{'readonly':[('state','=', 'validate')]}"/>
+							<field name="total_amount"/>
+							<field name="articles" attrs="{'readonly':[('state', '=', 'validate')]}"/>
+						</group>
+						<group>
+							<field name="date"/>
+							<field name="port_id" placeholder="If Export" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+							<field name="docket_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+							<field name="docket_date" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+							<field name="courier_name" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+							<field name="driver_name" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+							<field name="contact_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+							<field name="freight_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+
+						</group>
+					</group>
+				</form>
+			</field>			
+		</record>
+
+		<record id="lr_doc_tree_view" model="ir.ui.view">
+			<field name="name">lr.doc.tree</field>
+			<field name="model">lr.doc</field>
+			<field name="arch" type="xml">
+				<tree string="LR Tree">
+					<field name="name" string="Lr ID"/>
+					<field name="partner_id"/>
+					<field name="total_amount"/>
+					<field name="state"/>
+				</tree>
+			</field>			
+		</record>
+
+		<menuitem id="menu_account_lr_doc" name="Dispatch Document" parent="account.menu_finance_receivables" action="lr_doc_action" sequence="200"/>
+	</data>
+</openerp>

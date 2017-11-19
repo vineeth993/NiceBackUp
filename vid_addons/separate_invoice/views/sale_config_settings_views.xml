@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sales_config_inherit_for_separate_invoice" model="ir.ui.view">
+            <field name="name">sale settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='customer feature']" position="before">
+                    <group string="Separate Invoice">
+                        <group>
+                            <field name="excise_invoice_journal_type" />
+                            <field name="non_excise_invoice_journal_type"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

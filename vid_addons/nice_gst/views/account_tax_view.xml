@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_account_tax_inherit_form_taxcateg" model="ir.ui.view">
+			<field name="name">account.tax.inherit.form.tax.categ</field>
+			<field name="model">account.tax</field>
+			<field name="inherit_id" ref="account.view_tax_form" />
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="tax_categ" required="1"/>
+					<field name="gst_type" attrs="{'required': [('tax_categ', 'in', ('gst', 'igst'))]}"/>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>

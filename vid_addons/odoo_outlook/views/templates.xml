@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<template id="mail.thread.message" xml:space="preserve">
+    <t t-extend="mail.thread.message">
+       <t t-jquery="div:first">
+           var node = this[0]
+           for(var i=0; i!=node.attributes.length; i++){  // != used to avoid less than since we are in xml
+            var attr = node.attributes[i];
+            if (attr.name == "t-attf-class") {
+             attr.value += " #{widget.from_outlook ? 'oe_from_outlook_msg' : ''}";
+             break
+            }
+           }
+       </t>
+    </t>
+</template>

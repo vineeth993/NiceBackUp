@@ -1,0 +1,15 @@
+<openerp>
+    <data>
+		
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_button_confirm']" position="after">
+					<button name="print_status_report" type="object" string="Print Status" attrs="{'invisible': [('state', 'in', ('draft', 'cancel'))]}"/>
+               </xpath>
+            </field>
+         </record>
+    </data>
+</openerp>

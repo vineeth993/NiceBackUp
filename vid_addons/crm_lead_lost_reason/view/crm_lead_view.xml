@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="crm_case_form_view_oppor_reason" model="ir.ui.view">
+            <field name="name">Opportunities - add Reason</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='case_mark_lost']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//button[@name='case_mark_won']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//button[@name='case_mark_lost']" position="before">
+                    <button name="%(action_crm_lead_lost)d" string="Mark Lost" type="action" class="oe_highlight" groups="base.group_user" attrs="{'invisible':[('stage_id','=',7)]}"/>
+                    <button name="%(action_crm_lead_won)d" string="Mark Won" type="action" class="oe_highlight" groups="base.group_user" attrs="{'invisible':[('stage_id','=',6)]}"/>
+                </xpath>
+                <xpath expr="/form/sheet/div[@class='oe_title']/h2" position="after">
+                    <h2 attrs="{'invisible':[('lost_reason_id','=',False)]}">
+                        <label for="lost_reason_id" string="Lost reason:" attrs="{'invisible':[('stage_id','!=',7)]}"/>
+                        <field name="lost_reason_id" class="oe_inline"
+                          options='{"no_open": True}' widget="many2many_tags" attrs="{'invisible':[('stage_id','!=',7)]}"/>
+                    </h2>
+                    <h2 attrs="{'invisible':[('lost_reason_id','=',False)]}">
+                        <label for="won_reason_id" string="Won reason:" attrs="{'invisible':[('stage_id','!=',6)]}"/>
+                        <field name="won_reason_id" class="oe_inline"
+                          options='{"no_open": True}' widget="many2many_tags" attrs="{'invisible':[('stage_id','!=',6)]}"/>
+                    </h2>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="crm_case_form_view_oppor_reason1" model="ir.ui.view">
+            <field name="name">Opportunities - add Reason1</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                 <button name="%(sale_crm.action_crm_make_sale)d" string="Convert to Quotation" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+                 <button name="%(sale_crm.action_crm_make_sale)d" string="Create Quotation" position="attributes">
+                    <attribute name="domain">[('stage_id','=',6)]</attribute>
+                </button>
+            </field>
+        </record>
+
+         <record id="crm_case_from_custom" model="ir.ui.view">
+            <field name="name">crm_case_from_custom</field>
+            <field name="model">crm.make.sale</field>
+            <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
+            <field name="arch" type="xml">
+                <field name="close" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_crm_lead_lost_reason_form">
+            <field name="name">Crm Lead Lost Reason</field>
+            <field name="model">crm.lead.lost.reason</field>
+            <field name="arch" type="xml">
+                <form string="Crm Lead Lost Reasons">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="responsible"/>
+                                <field name="status"/>
+                            </group>
+                            <group>
+                                <field name="remarks"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_crm_lead_lost_reason_tree">
+            <field name="name">Crm Lead Lost Reason</field>
+            <field name="model">crm.lead.lost.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Crm Lead Lost Reasons">
+                    <field name="name"/>
+                    <field name="responsible"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_crm_lead_lost_button">
+            <field name="name">Crm Lead Lost Reason</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+                <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" position="after">
+                    <button name="%(action_crm_lead_lost)d" string="Mark Lost" type="action" class="oe_highlight" attrs="{'invisible':[('stage_id','=',2)]}"/>
+                    <button name="%(action_crm_lead_won)d" string="Mark Won" type="action" class="oe_highlight" attrs="{'invisible':[('stage_id','=',8)]}"/>
+                </button>
+                <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" position="attributes">
+                    <attribute name="domain">[('stage_id','!=',2)]</attribute>
+                </button>
+                <xpath expr="/form/sheet/div[@class='oe_title']/h1" position="after">
+                    <div>
+                        <h2 attrs="{'invisible':[('lost_reason_id','=',False)]}">
+                            <label for="lost_reason_id" string="Lost reason:" attrs="{'invisible':[('stage_id','!=',2)]}"/>
+                            <field name="lost_reason_id" class="oe_inline"
+                              options='{"no_open": True}' widget="many2many_tags" attrs="{'invisible':[('stage_id','!=',2)]}"/>
+                        </h2>
+                        <h2 attrs="{'invisible':[('won_reason_id','=',False)]}">
+                            <label for="won_reason_id" string="Won reason:" attrs="{'invisible':[('stage_id','!=',8)]}"/>
+                            <field name="won_reason_id" class="oe_inline"
+                              options='{"no_open": True}' widget="many2many_tags" attrs="{'invisible':[('stage_id','!=',8)]}"/>
+                        </h2>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_crm_lead_lost_reason">
+            <field name="name">Lost Reasons</field>
+            <field name="res_model">crm.lead.lost.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_crm_lead_lost_reason"
+          parent="base.menu_crm_config_lead"
+          name="Lost and Won Reasons"
+          action="action_crm_lead_lost_reason"
+          sequence="150"
+          groups="base.group_sale_manager"/>
+    </data>
+</openerp>

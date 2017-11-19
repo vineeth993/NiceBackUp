@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<record id="port_code_action" model="ir.actions.act_window">
+			<field name="name">Port Code</field>
+			<field name="res_model">port.code</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+		</record>
+
+		<record id="port_code_form" model="ir.ui.view">
+			<field name="name">port.code.name</field>
+			<field name="model">port.code</field>
+			<field name="arch" type="xml">
+				<form string="Port Code">
+					<group>
+						<group>
+							<field name="name"/>
+							<field name="location"/>
+						</group>
+						<group>
+							<field name="state_id"/>
+							<field name="country_id"/>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+	</data>
+</openerp>

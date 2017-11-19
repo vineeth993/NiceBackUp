@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>      
+        <record id="view_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='note']" position="before">
+                     <div invisible="1">
+                        <label for="tax_type" string="Tax Type"/>
+                        <field name="tax_type" class="oe_inline"/>
+                    </div>
+                </xpath>                
+            </field>
+        </record>
+
+        <!--<record id="view_account_invoice_form_inherit" model="ir.ui.view">-->
+            <!--<field name="name">account.invoice.form.inherit</field>-->
+            <!--<field name="model">account.invoice</field>-->
+            <!--<field name="inherit_id" ref="account.invoice_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='comment']" position="before">-->
+                    <!--<div>-->
+                        <!--<label for="tax_type" string="Tax Type"/>-->
+                        <!--<field name="tax_type" class="oe_inline"/>-->
+                    <!--</div>-->
+                <!--</xpath>                  -->
+            <!--</field>-->
+        <!--</record>-->
+    </data>
+</openerp>

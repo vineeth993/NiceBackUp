@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		
+		<report 
+	        id="report_lr"
+	        model="lr.doc"
+	        string="Dispatch Document"
+	        report_type="qweb-pdf"
+	        name="lr_doc.report_lr_doc"
+	        multi="True"
+	    />
+
+	    <report
+	    	id="lr_doc_envolope"
+	    	model="lr.doc"
+	    	string="Print Envolope"
+	    	report_type="qweb-pdf"
+	    	name="lr_doc.print_on_envolope"
+	    	multi="True"
+	    />
+	    
+	</data>
+</openerp>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	    <template id="external_layout">
+	        <t t-if="not o and doc">
+	            <t t-set="o" t-value="doc"/>
+	        </t>
+	        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+	        <t t-call="lr_doc.external_layout_header" />
+	        <br/><br/>
+	        <t t-raw="0" />
+	    </template>
+    
+        
+    	<template id="external_layout_header">
+	        <div class="header">
+	            <table width="100%" style="font-size:12px;">
+	                <tr>
+	                    <td width="2%"></td>
+	                    <td width="43%" style="text-align:left;text-size: 1px;">
+	                        <!-- <span t-if="not company.letter_head_ok"> -->
+	                            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 50px;width: 150px;"/><br/>
+	                        <!-- </span> -->
+	                    </td>
+	                    <td width="33%" style="text-align:left;text-size: 1px;">
+	                    </td>
+	                    <td width="20%" style="text-align:right;text-size: 1px;">
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td width="2%"></td>
+	                    <td width="43%" style="text-align:left;text-size: 1px;">
+	                        <!-- <span t-if="not company.letter_head_ok"> -->
+	                            <b><span t-field="company.name"/><br/></b>
+	                            <span t-field="company.street"/><br/>
+	                            <span t-field="company.street2"/>,<span t-field="company.city"/>-<span t-field="company.zip"/><br/>
+	                            Tel:<span t-field="company.phone"/><br/>
+	                            Email:<span t-field="company.email"/><br/>
+	                            Website:<span t-field="company.website"/><br/>
+	                        <!-- </span> -->
+	                    </td>
+	                    <td width="33%" style="text-align:left;text-size: 1px;" colspan="2">
+	                        <!-- <span t-if="not company.letter_head_ok"> -->
+	                            GSTIN: <span t-field="company.gst_no"/><br/>
+	                            CIN: <span t-field="company.cin"/><br/>
+	                            TIN: <span t-field="company.tin"/> CST: 32070449722C<br/>
+	                            CE Regn No.: <span t-field="company.ce_regn_no"/> Range &amp; Division: <span t-field="company.range_div"/><br/>
+	                            Poison Lic.No.: <span t-field="company.poison_lic_no"/><br/>
+	                            Drug Mfg.Lic.No: <span t-field="company.drug_mfg_lic_no"/><br/>
+
+
+	                            <!-- GSTIN: <span t-field="company.gst_no"/><br/>
+	                            CIN: U24299KL1989PTC<br/>
+	                            TIN: 3207449722, CST: 32070449722C<br/>
+	                            CE Regn No.: AAACN7756RXM001, Range &amp; Division: ERNAKULAM II<br/>
+	                            Poison Lic.No.: <br/>
+	                            Drug Mfg.Lic.No: <span t-field="company.gstin"/><br/> -->
+	                        <!-- </span> -->
+	                    </td>
+	                </tr>
+	                
+	            </table>
+	        </div>
+	    </template>
+
+
+		<template id="report_lr_doc_document">
+			<t t-call="lr_doc.external_layout">
+				<div class="page">
+		          	<table width="100%">
+		          		<tr>
+		          			<td width="100%" style="font-size:30px;text-align:center; padding-bottom:80px">
+		          				<b>DISPATCH DOCUMENT</b>
+		          			</td>
+		          		</tr>
+		          	</table>
+		          	<table width="100%">
+		          		<tr style="border:2px solid black; padding-bottom:20px">
+		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Name and Address of the Consignee</b></td>
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          				<b><span t-field="o.partner_id.name"/></b><br/>
+		          				<span t-if="o.partner_id.street"><b><span t-field="o.partner_id.street"/></b><br/></span>
+	                            <span t-if="o.partner_id.street2"><b><span t-field="o.partner_id.street2"/></b></span>
+	                            <span t-if="o.partner_id.city"><br/><b><span t-field="o.partner_id.city"/>,</b></span>
+	                            <span t-if="o.partner_id.zip"><b><span t-field="o.partner_id.zip"/></b></span>
+	                            <span t-if="o.partner_id.state_id"><br/><b><span t-field="o.partner_id.state_id.name"/>,</b></span><span t-if="o.partner_id.country_id"><b><span t-field="o.partner_id.country_id.name"/></b></span>
+		          			</td>
+		          		</tr>
+		          		<tr style="border:2px solid black; padding-bottom:20px">
+		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px;"><b>Number and Description Of Articles</b></td>
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px">
+		          				<t t-if="o.articles"><span t-field="o.articles"/></t>
+		          			</td>
+		          		</tr>
+		          		<tr style="border:2px solid black; padding-bottom:20px">
+		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px;"><b>Value in Words and Figures</b></td>
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px">
+		          				<t t-if="o.total_amount"><span t-field="o.total_amount"/><br/><br/>
+		          				<span t-field="o.amount_in_words"/></t>
+		          			</td>
+		          		</tr>
+		          		<tr style="border:2px solid black; padding-bottom:20px">
+		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Freight Type</b></td>
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px">
+		          				<t t-if="o.freight_payment_type"><span t-field="o.freight_payment_type"/></t>
+		          			</td>
+		          		</tr>
+		          		<tr style="border:2px solid black; padding-bottom:20px">
+		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Invoice and Date</b></td>
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px">
+		          				<t t-foreach="o.invoice_id" t-as="invoices"><span style="margin-right:10px; margin-top:10px" t-esc="invoices.number.replace('SAJ-', '')" />Date:<span style="margin-left:10px" t-esc="invoices.date_invoice"/><br/><br/></t>
+		          			</td>
+		          		</tr>
+		          		<tr style="border:2px solid black; padding-bottom:20px">
+			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Mode of Dispatch</b></td>
+			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.dispatch_mode"><span t-field="o.dispatch_mode"/></t></td>
+			       		</tr>
+			       		<tr style="border:2px solid black; padding-bottom:20px">
+			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Courier</b></td>
+			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.courier_name"><span t-field="o.courier_name"/></t></td>
+			       		</tr>
+			       		<tr style="border:2px solid black; padding-bottom:20px">
+			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Docket No</b></td>
+			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.docket_no"><span t-field="o.docket_no"/></t></td>
+			       		</tr>
+			       		<tr style="border:2px solid black; padding-bottom:20px">
+			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Docket Date</b></td>
+			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.docket_date"><span t-field="o.docket_date"/></t></td>
+			       		</tr>
+			       		<tr style="border:2px solid black; padding-bottom:20px">
+			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Vehicle and Driver Details</b></td>
+			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.driver_name"><span style="margin-right:10px; margin-top:10px" t-field="o.driver_name"/><br/></t><t t-if="o.freight_no"><span style="margin-right:10px; margin-top:10px" t-field="o.freight_no"/><br/></t><t t-if="o.contact_no"><span style="margin-right:10px; margin-top:10px" t-field="o.contact_no"/><br/></t>
+			       			</td>
+			       		</tr>
+		          	</table>
+		          	<table width="100%">
+		          		<tr>
+		          			<td width="100%" style="font-size:15px;text-align:center; padding-top:25px">
+		          				<b>TAX SUMMARY</b>
+		          			</td>
+		          		</tr>
+		          	</table>
+	          		<t t-foreach="taxes_taxable" t-as="tax">
+	          			<t t-if="taxes_taxable[tax]">
+	          				<table width="100%">
+			          			<tr>
+			          				<td width="100%" style="font-size:15px;text-align:center; padding-top:25px">
+			          					<b><span t-esc="tax"/></b>
+			          				</td>
+			          			</tr>
+			          		</table>
+			          		<table width="100%">
+			          			<tr width="50%" style="border:1px solid black; padding-bottom:20px">
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><b>Invoices</b></td>
+			          				<td width="33%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>Taxable Amount</b></td>
+		          					<td width="33%" style="padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>Total Amount (With tax)</b></td>
+			          			</tr>
+			          			<tr t-foreach="taxes_taxable[tax]" t-as="data" style="border:1px solid black; padding-bottom:20px">
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="data"/></td>
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="taxes_taxable[tax][data]"/></td>
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="taxes_total[tax][data]"/></td>
+			          			</tr>
+			          			<tr style="border:1px solid black; padding-bottom:20px">
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><b>Total</b></td>
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="sum(taxes_taxable[tax].values())"/></td>
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="sum(taxes_total[tax].values())"/></td>
+			          			</tr>
+			          		</table>
+			          	</t>
+		          	</t>
+		          	<table width="100%">
+			       		
+			       	</table>
+	            </div>
+	       	</t>
+		</template>
+
+		<template id="report_lr_doc">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+        			<t t-call="lr_doc.report_lr_doc_document" />
+        		</t>
+			</t>
+		</template>
+
+	</data>
+</openerp>

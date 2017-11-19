@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="view_employee_form_hr_india_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='notes']" position="before">
+                <group name="joinging_and_relieving">
+                    <group string="Joining Dates" name="joining">
+                    	<field name="date_of_joining"/>
+                    	<field name="date_of_conformation"/>
+                    </group>
+                    <group string="Relieving Dates" name="relieving">
+                    	<field name="date_of_resignation"/>
+                    	<field name="date_of_relieving"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='bank_account_id']" position="before">
+                <field name="pancard_card_no"/>
+                <field name="aadhar_card_id"/>
+                <field name="election_card_id"/>
+                <field name="driving_license_no"/>
+                <field name="provident_fund_no"/>
+            </xpath>
+            <xpath expr="//field[@name='address_home_id']" position="after">
+                <field name="address_permanent_same_as_address_home"/>
+                <field name="address_permanent_id" context="{'show_address': 1, 'default_customer': False}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+            </xpath>
+            <!--<field name="user_id" position="attributes">-->
+            	<!--<attribute name="domain">['|',('employee_ids','=',False),('employee_ids','=',[context.get('active_id', False)])]</attribute>-->
+            <!--</field>-->
+        </field>
+    </record>
+  </data>
+</openerp>
