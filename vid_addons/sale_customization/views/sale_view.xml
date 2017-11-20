@@ -398,6 +398,7 @@
 					position="after">
 					<field name="additional_discount" attrs="{'readonly':[('state', 'not in',  ('draft', 'confirm', 'sent', 'cancel'))]}"/>
 					<field name="partner_type" invisible="1"/>
+					<field name="sale_sub_type" invisible="1"/>
 				</xpath>
 				<!-- <xpath
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='discount']"

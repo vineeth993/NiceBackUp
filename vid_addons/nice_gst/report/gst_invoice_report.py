@@ -26,7 +26,7 @@ class ReportInvoice(models.AbstractModel):
         for line in invoice.invoice_line:
             count += 1
             total_qty += line.quantity
-            discount_perc = (((line.quantity * line.price_unit) - line.price_subtotal) * 100/(line.quantity * line.price_unit))
+            discount_perc = round((((line.quantity * line.price_unit) - line.price_subtotal) * 100/(line.quantity * line.price_unit)),2)
             subtotal = line.quantity*line.price_unit
             total_nodiscount += subtotal
             discount = subtotal * discount_perc / 100

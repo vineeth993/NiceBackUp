@@ -58,7 +58,7 @@
                             <span t-field="l.price_unit"/>
                         </td>
                         <td class="text-center">
-                            <span t-esc="(((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit))"/>
+                            <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
                         </td>
                         <td class="text-center">
                             <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>

@@ -38,8 +38,11 @@ class SaleOrderLine(models.Model):
             lang = partner.lang
             gst, igst = False, False
         for line in self:
+	    taxes_ids = []
             company = self.env['res.users'].browse(self._uid).company_id
-            company_gst = company.gst_no and company.gst_no[:2] or ''
+            sub_type_id = self.env['sale.order.sub.type'].browse(int(line.sale_sub_type))
+            gst, igst = False, False
+	    company_gst = company.gst_no and company.gst_no[:2] or ''
             partner_gst = partner.gst_no and partner.gst_no[:2] or ''
             if company_gst and partner_gst:
                 if company_gst == partner_gst:
@@ -48,6 +51,15 @@ class SaleOrderLine(models.Model):
                     igst = True
             else:
                 gst = True
+            if sub_type_id:
+                if sub_type_id and sub_type_id.tax_categ == 'gst':
+                    gst = True
+                    igst = False
+                elif sub_type_id and sub_type_id.tax_categ == 'igst':
+                    gst = False
+                    igst = True
+                else:
+                    gst = igst = False
             fpos = line.order_id.partner_id.property_account_position
             for prod_tax in line.product_id.taxes_id:
                 if prod_tax.company_id.id == company.id:
@@ -81,6 +93,7 @@ class SaleOrderLine(models.Model):
     extra_discount = fields.Float('Extra Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True)
     additional_discount = fields.Float('Scheme Discount (%)', digits_compute=dp.get_precision('Discount'))
     partner_type = fields.Char(string="Partner")
+    sale_sub_type = fields.Char(string="Sub Type")
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -90,6 +103,8 @@ class SaleOrderLine(models.Model):
             fiscal_position=fiscal_position, flag=flag, context=context)
         partner_obj = self.pool.get('res.partner')
 
+        if context.get('sub_type_id', '/') != '/':
+            res['value']['sale_sub_type'] = context.get('sub_type_id')
 
         if context.get("partner_type", '/') != '/':
             res['value']['partner_type'] = context.get("partner_type")
