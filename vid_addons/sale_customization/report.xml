@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<report
+	    	id="partner_envolope"
+	    	model="res.partner"
+	    	string="Print Envolope"
+	    	report_type="qweb-pdf"
+	    	name="sale_customization.print_on_envolope"
+	    	multi="True"
+	    />
+	</data>
+</openerp>

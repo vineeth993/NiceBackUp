@@ -8,14 +8,16 @@
     'description': '''
 CRM/Sales Customization
   ''',
-    'depends': ['base', 'crm', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet'],
+    'depends': ['base', 'crm', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal'],
     'data': [
+        'report.xml',
         'views/lead_view.xml',
         'views/partner_selling_type_view.xml',
         'views/partner_view.xml',
         'views/product_view.xml',
         'views/sale_view.xml',
         'views/account_view.xml',
+        'views/print_on_envolope.xml',
 #         'security/ir.model.access.csv',
         'views/base_view.xml',
     ],

@@ -38,12 +38,13 @@ class SaleOrderLine(models.Model):
             lang = partner.lang
             gst, igst = False, False
         for line in self:
-	    taxes_ids = []
-            company = self.env['res.users'].browse(self._uid).company_id
-            sub_type_id = self.env['sale.order.sub.type'].browse(int(line.sale_sub_type))
+            taxes_ids = []
             gst, igst = False, False
-	    company_gst = company.gst_no and company.gst_no[:2] or ''
+            sub_type_id = self.env['sale.order.sub.type'].browse(int(line.sale_sub_type))
+            company = self.env['res.users'].browse(self._uid).company_id
+            company_gst = company.gst_no and company.gst_no[:2] or ''
             partner_gst = partner.gst_no and partner.gst_no[:2] or ''
+
             if company_gst and partner_gst:
                 if company_gst == partner_gst:
                     gst = True
@@ -51,6 +52,7 @@ class SaleOrderLine(models.Model):
                     igst = True
             else:
                 gst = True
+
             if sub_type_id:
                 if sub_type_id and sub_type_id.tax_categ == 'gst':
                     gst = True
@@ -110,7 +112,12 @@ class SaleOrderLine(models.Model):
             res['value']['partner_type'] = context.get("partner_type")
         if res and 'price_unit' in res['value'] and res['value']['price_unit'] <=0 :
             raise exceptions.Warning('Product Price cannot zero or less than zero.')
-        
+        if product:
+            _logger.info("testing = "+str(product))
+            product_obj = self.pool.get('product.product').browse(cr, uid, product)
+            _logger.info("testing = "+str(product_obj))
+            if product_obj.price_list and res['value']['partner_type'] != 'special':
+                raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
         return res
 
 

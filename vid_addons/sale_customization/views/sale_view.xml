@@ -322,8 +322,8 @@
  -->
 
 				<xpath expr="//field[@name='pricelist_id']" position="after">
-					<!--<field name="transaction_type" />-->
-					<field name="partner_selling_type" required="1"/>
+					<field name="transaction_type" />
+					<field name="partner_selling_type" />
 					<!-- <field name="partner_selling_type_id" readonly="1" /> -->
 					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'in', ('progress','done'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
 					<field name="extra_discount" 
@@ -421,6 +421,7 @@
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal']"
 					position="after">
 					<field name="extra_discount" invisible="1"/>
+					
 				</xpath>
 
 				<!-- <xpath expr="//field[@name='state']" position="attributes"> <attribute 
@@ -501,11 +502,28 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_order_tree" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='amount_total']" position="after">
+					<field name="partner_selling_type"/>
+				</xpath>
 				<xpath expr="//field[@name='state']" position="attributes">
 					<attribute name="string">Status</attribute>
 				</xpath>
+
 			</field>
 		</record>
+
+		<record id="sale_journal_cust_view" model="ir.ui.view">
+			<field name='name'>sale.journal.sale.order.cust</field>
+			<field name='model'>sale.order</field>
+			<field name='inherit_id' ref='sale_journal.sale_journal_sale_order_tree'/>
+			<field name='arch' type='xml'>
+				<xpath expr='//field[@name="invoice_type_id"]' position='attributes'>
+					<attribute name="invisible">1</attribute>
+				</xpath>				
+			</field>
+		</record>
+
+
 
 		<menuitem name="Reasons For Sale" id="sale_reasons" parent="base.menu_sales"
 			action="sale_reason_act" groups="base.group_sale_salesman,base.group_sale_manager" />

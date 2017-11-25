@@ -9,15 +9,13 @@ class EnvolopePrinting(models.AbstractModel):
 
 	@api.model
 	def render_html(self, docids, data):
-		_logger.info("context value in render html = "+str(docids))
-		if data:
-			doc_id = self.env["lr.doc"].browse(data["doc_id"])
-		else:
-			doc_id = self.env["lr.doc"].browse(docids)
+		doc_id = self.env["res.partner"].browse(docids)
 
+		_logger.info("Printing on envolope = "+str(doc_id))
+		
 		docargs = {
 			"doc_ids":docids,
 			"docs":doc_id,
 			"data" : {}
 		}
-		return self.env['report'].render("lr_doc.print_on_envolope", docargs)
+		return self.env['report'].render("sale_customization.print_on_envolope", docargs)

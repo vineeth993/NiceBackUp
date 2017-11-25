@@ -39,7 +39,6 @@ class ReportLr(models.AbstractModel):
 					else:
 						tax_lines_total[str(tax_percnt)].update({inv_obj.number: round(total_amount, 2)})
 
-		_logger.info("Tax Lines are = "+str(doc_id))
 		docargs = {
 			"doc_id": docids,
 			"docs": doc_id,
