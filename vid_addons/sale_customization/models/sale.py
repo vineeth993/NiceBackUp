@@ -199,8 +199,9 @@ class SaleOrder(models.Model):
     
     @api.depends('partner_id')
     def _get_extra_discount(self):
-        self.normal_disc = self.partner_id.disc
-        self.extra_discount = self.partner_id.adisc
+        for line in self:
+            line.normal_disc = line.partner_id.disc
+            line.extra_discount = line.partner_id.adisc
         
     transaction_type = fields.Selection([('local', 'Local'), ('inter_state', 'Interstate')], 'Transaction Type')
     normal_disc = fields.Float("Normal Discount", compute="_get_extra_discount")
