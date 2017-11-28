@@ -39,6 +39,16 @@
 					<attribute name="invisible">1</attribute>
 				</xpath>
             </field>
+        </record>
+        <record id="invoice_tree_cust" model="ir.ui.view"> 
+         	<field name="name">account.invoice.tree.cust</field>
+         	<field name="model">account.invoice</field>
+         	<field name="inherit_id" ref="account.invoice_tree"/>
+         	<field name="arch" type="xml">
+         		<xpath expr="//tree[@string='Invoice']" position="attributes">
+         			<attribute name="default_order">date_invoice desc</attribute>
+         		</xpath>
+         	</field>
          </record>
         
         
