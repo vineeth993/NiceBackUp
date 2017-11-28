@@ -42,6 +42,7 @@
 						</group>
 						<group>
 							<field name="date"/>
+							<field name="city_id" attrs="{'readonly':[('state', '=', 'validate')]}"/>
 							<field name="port_id" placeholder="If Export" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 							<field name="docket_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 							<field name="docket_date" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
@@ -62,7 +63,9 @@
 			<field name="arch" type="xml">
 				<tree string="LR Tree">
 					<field name="name" string="Lr ID"/>
+					<field name="date"/>
 					<field name="partner_id"/>
+					<field name="courier_name"/>
 					<field name="total_amount"/>
 					<field name="state"/>
 				</tree>

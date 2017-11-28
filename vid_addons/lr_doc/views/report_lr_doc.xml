@@ -80,6 +80,10 @@
 		          		</tr>
 		          	</table>
 		          	<table width="100%">
+		          		<tr style="padding-bottom:20px">
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:20px"><b>FROM: EDAPPALLY</b></td>
+		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:20px"><b>TO:</b><span t-if="o.city_id"><b><span t-field="o.city_id.name"/></b></span></td>
+		          		</tr>
 		          		<tr style="border:2px solid black; padding-bottom:20px">
 		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Name and Address of the Consignee</b></td>
 		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:20px">
@@ -105,7 +109,7 @@
 		          			</td>
 		          		</tr>
 		          		<tr style="border:2px solid black; padding-bottom:20px">
-		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Freight Type</b></td>
+		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Mode Of Dispatch</b></td>
 		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px">
 		          				<t t-if="o.freight_payment_type"><span t-field="o.freight_payment_type"/></t>
 		          			</td>
@@ -117,7 +121,7 @@
 		          			</td>
 		          		</tr>
 		          		<tr style="border:2px solid black; padding-bottom:20px">
-			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Mode of Dispatch</b></td>
+			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Transport</b></td>
 			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.dispatch_mode"><span t-field="o.dispatch_mode"/></t></td>
 			       		</tr>
 			       		<tr style="border:2px solid black; padding-bottom:20px">
@@ -163,7 +167,7 @@
 		          					<b>Total Amount (With tax)</b></td>
 			          			</tr>
 			          			<tr t-foreach="taxes_taxable[tax]" t-as="data" style="border:1px solid black; padding-bottom:20px">
-			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="data"/></td>
+			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="data.replace('SAJ-', '')"/></td>
 			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="taxes_taxable[tax][data]"/></td>
 			          				<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="taxes_total[tax][data]"/></td>
 			          			</tr>

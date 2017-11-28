@@ -13,7 +13,7 @@ PAYMENT_MODE = [("tp", "To Pay"),
 		("p","Paid"),
 		("pdd", "Paid Delivery"),
 		]
-DISPATCH_MODE = [("tl", "Truck Load"),
+DISPATCH_MODE = [("tl", "Parcel Service"),
 		("rail", "Rail Freight"),
 		("van", "Van"),
 		("shipping", "Shipping"),
@@ -32,7 +32,7 @@ class LrDoc(models.Model):
 			}
 			total_amount = 0
 			for invoice in line.invoice_id:
-				total_amount += invoice.amount_untaxed
+				total_amount += invoice.amount_total
 			line.total_amount = total_amount
 	
 	@api.one
@@ -54,8 +54,8 @@ class LrDoc(models.Model):
 	date = fields.Datetime("Date", required=True, select=True, readonly=True, default=fields.Date.today(), states={"draft":[('readonly', False)]})
 	docket_no = fields.Char(string="Docket No")
 	docket_date = fields.Datetime("Docket Date", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
-	freight_payment_type = fields.Selection(PAYMENT_MODE, string="Freight Payment Type", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
-	dispatch_mode = fields.Selection(DISPATCH_MODE, string="Mode of Dispatch", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
+	freight_payment_type = fields.Selection(PAYMENT_MODE, string="Mode Of Dispatch", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
+	dispatch_mode = fields.Selection(DISPATCH_MODE, string="Transport", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
  	freight_amount = fields.Float("Freight Amount")
 	articles = fields.Text(string="Articles")
 	driver_name = fields.Char(string="Driver Name")
@@ -70,6 +70,7 @@ class LrDoc(models.Model):
 	total_amount = fields.Float("Total Amount", compute="_compute_amount")
 	amount_in_words = fields.Char("Amount in Words", compute="_amount_in_words")
 	port_id = fields.Many2one("port.code" ,string="Port Code" )
+	city_id = fields.Many2one("res.city", string="City")
 
 	@api.model
 	def create(self, val):
