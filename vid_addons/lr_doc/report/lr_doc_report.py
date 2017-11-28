@@ -14,13 +14,14 @@ class ReportLr(models.AbstractModel):
 		tax_lines_taxable = {'0.0':{}, '5.0': {}, '12.0': {}, '18.0': {}, '28.0': {}}
 		tax_lines_total = {'0.0':{}, '5.0': {}, '12.0': {}, '18.0': {}, '28.0': {}}
 		doc_id = self.env["lr.doc"].browse(data["doc_id"])
+		taxable_amount = 0
 		for inv_id in data:
 			if inv_id != "doc_id":
 				inv_obj = self.env['account.invoice'].browse(data[inv_id])
 				for invoice_line in inv_obj.invoice_line:
 					tax_percnt = 0.0
 					total_amount = 0.0
-					if invoice_line.invoice_line_tax_id[0]:
+					if invoice_line.invoice_line_tax_id:
 						if invoice_line.invoice_line_tax_id[0].gst_type == "sgst" or invoice_line.invoice_line_tax_id[0].gst_type == "cgst":
 							tax_percnt = (invoice_line.invoice_line_tax_id[0].amount * 2)*100
 						elif invoice_line.invoice_line_tax_id[0].gst_type == "igst":
@@ -39,11 +40,14 @@ class ReportLr(models.AbstractModel):
 					else:
 						tax_lines_total[str(tax_percnt)].update({inv_obj.number: round(total_amount, 2)})
 
+				taxable_amount += inv_obj.amount_untaxed
+
 		docargs = {
 			"doc_id": docids,
 			"docs": doc_id,
 			"doc_model":'lr.doc',
 			"taxes_taxable" : tax_lines_taxable,
-			"taxes_total" : tax_lines_total
+			"taxes_total" : tax_lines_total,
+			"taxable_amount": taxable_amount
 		}
 		return self.env['report'].render('lr_doc.report_lr_doc', docargs)

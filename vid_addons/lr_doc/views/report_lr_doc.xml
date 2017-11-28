@@ -180,7 +180,11 @@
 			          	</t>
 		          	</t>
 		          	<table width="100%">
-			       		
+			       		<tr style="border:1px solid black; padding-bottom:20px">
+			          		<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><b>Total Invoice Amount</b></td>
+			          		<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="taxable_amount"/></td>
+			          			<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="o.total_amount"/></td>
+			          	</tr>
 			       	</table>
 	            </div>
 	       	</t>
