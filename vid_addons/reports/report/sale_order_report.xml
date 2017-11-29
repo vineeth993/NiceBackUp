@@ -20,6 +20,13 @@
                                 <span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
                             </td>
                     </tr>
+		    <tr>
+                        <td><b>GSTN</b></td>
+                        <td>:</td>
+                        <td style="padding-left: 3px;">
+                            <span t-if="o.partner_id.street"><span t-field="o.partner_id.gst_no"/><br/></span>   
+                        </td>
+                    </tr>
                 </table>
                 
             </xpath>
@@ -64,13 +71,14 @@
                             <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>
                         </td>
                         <td class="text-center">
-
+			  <t t-if="l.tax_id">
                             <t t-if="l.tax_id[0].gst_type == 'igst'">
                                 INTER
                             </t>
                             <t t-if="l.tax_id[0].gst_type == 'cgst' or l.tax_id[0].gst_type == 'sgst'">
                                 LOCAL
                             </t>
+			  </t>
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal"
