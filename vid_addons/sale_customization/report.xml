@@ -10,5 +10,14 @@
 	    	name="sale_customization.print_on_envolope"
 	    	multi="True"
 	    />
+
+	    <report
+	    	id="pending_report"
+	    	model="sale.order"
+	    	string="Pending Report"
+	    	report_type="qweb-pdf"
+	    	name="sale_customization.sale_report_picking"
+	    	multi="True"
+	    />
 	</data>
 </openerp>
