@@ -26,7 +26,7 @@ class SaleReason(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-
+    _order = 'product_name asc'
 
    
     @api.depends('product_id')
@@ -96,6 +96,7 @@ class SaleOrderLine(models.Model):
     additional_discount = fields.Float('Scheme Discount (%)', digits_compute=dp.get_precision('Discount'))
     partner_type = fields.Char(string="Partner")
     sale_sub_type = fields.Char(string="Sub Type")
+    product_name = fields.Char(string="Prod Name")
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -113,9 +114,8 @@ class SaleOrderLine(models.Model):
         if res and 'price_unit' in res['value'] and res['value']['price_unit'] <=0 :
             raise exceptions.Warning('Product Price cannot zero or less than zero.')
         if product:
-            _logger.info("testing = "+str(product))
             product_obj = self.pool.get('product.product').browse(cr, uid, product)
-            _logger.info("testing = "+str(product_obj))
+            res['value']['product_name'] = product_obj.name
             if product_obj.price_list and res['value']['partner_type'] != 'special':
                 raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
         return res
