@@ -78,6 +78,7 @@
                 <tr style="border-top: solid 1px black;border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:left;
                             font-size:12px;">
                     <td colspan="4" style="border-right: solid 1px black;padding-left: 5px;"><b>Terms &amp; Conditions</b><br/>
+
                         Goods once sold will not be taken back.<br/>
                         Payment of bills to be made within <span t-field="o.partner_id.property_payment_term.name"/> of receipt of goods.<br/>
                         Default payment attract interest @24% p.a. will be charged.<br/>
@@ -118,25 +119,26 @@
                         <td width="50%" style="border-right: solid 1px black;">
                             <table width="100%">
                                 <tr style="border-bottom: solid 1px black;">
-                                    <td width="35%" style="padding-left: 5px;">
+                                    <td width="25%" style="padding-left: 5px;">
                                         <b>INVOICE No.</b><br/>
                                         <b>INVOICE DATE</b><br/>
-                                        <b>Mode of Transport</b><br/>
-                                        <b>Documents Through</b>
+                                        <b>MODE OF TRANSPORT</b><br/>
+                                        <b>DOCUMENTS THROUGH</b>
                                     </td>
-                                    <td width="5%">
+                                    <td width="1%">
                                         :<br/>
                                         :<br/>
                                         :<br/>
                                         :
                                     </td>
-                                    <td width="60%" style="padding-right: 3px;">
+                                    <td width="74%" style="padding-right: 3px;">
                                         <span t-if="o.number"><span t-esc="o.number.replace('SAJ-', '')"/></span>
                                         <t t-if="o.sale_sub_type_id"><span style="font-size:8px;margin-left:30px"><span t-field="o.sale_sub_type_id.name"/><br/></span></t>
                                         <t t-if="not o.sale_sub_type_id"><br/></t>
                                         <span t-if="not o.number"><b>DRAFT</b><br/></span>
                                         <span t-field="o.date_invoice" t-field-options='{"format": "dd-MMMM-yyyy"}'/><br/>
                                         <br/>
+                                        <t t-if="o.dispatch_type"><span t-field="o.dispatch_type"/></t>
                                     </td>
                                 </tr>
                             </table>
@@ -145,17 +147,23 @@
                             <t t-set="order_line" t-value="o.order_line()"/>
                             <table width="100%">
                                 <tr style="border-bottom: solid 1px black;">
-                                    <td width="45%" style="padding-left: 5px;">
+                                    <td width="20%" style="padding-left: 5px;">
                                         <b>ORDER No.</b><br/>
                                         <b>ORDER DATE</b><br/>
                                         <b>REVERSE CHARGE</b><br/>
                                         <b>VEH. No</b>
                                     </td>
-                                    <td width="55%" style="padding-right: 3px;">
-                                        :<t t-foreach="order_line" t-as="o_line"> <span t-field="o_line.name"/> - <span t-field="o_line.client_order_ref"/></t><br/>
-                                        :<t t-foreach="order_line" t-as="o_line"> <span t-field="o_line.date_order"/> </t><br/>
-                                        : No<br/>
+                                    <td width="1%">
+                                        :<br/>
+                                        :<br/>
+                                        :<br/>
                                         :
+                                    </td>
+                                    <td width="79%" style="padding-right: 3px;">
+                                        <t t-foreach="order_line" t-as="o_line"> <span t-field="o_line.name"/> - <span t-field="o_line.client_order_ref"/></t><br/>
+                                        <t t-foreach="order_line" t-as="o_line"> <span t-field="o_line.date_order"/> </t><br/>
+                                        No<br/>
+                                        <t t-if="o.licence_number"><span t-field="o.licence_number" /></t>
                                     </td>
                                 </tr>
                             </table>
@@ -171,12 +179,12 @@
                         <td width="50%" style="border-right: solid 1px black;padding-left: 5px;">
                             <table>
                                 <tr>
-                                    <td width="28%" ><b>Party</b></td>
-                                    <td width="2%">:</td>
-                                    <td width="70%"><span t-field="o.partner_id.name"/></td>
+                                    <td width="18%" ><b>PARTY</b></td>
+                                    <td width="1%">:</td>
+                                    <td width="81%"><span t-field="o.partner_id.name"/></td>
                                 </tr>
                                 <tr>
-                                    <td ><b>Address</b></td>
+                                    <td ><b>ADDRESS</b></td>
                                     <td>:</td>
                                     <td style="padding-right: 3px;">
                                         <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
@@ -209,9 +217,9 @@
                         <td width="50%">
                             <table>
                                 <tr>
-                                    <td width="28%" style="padding-left: 5px;"><b>Party</b></td>
-                                    <td width="2%">:</td>
-                                    <td width="70%" style="padding-right: 3px;"><span t-field="o.partner_id.name"/></td>
+                                    <td width="18%" style="padding-left: 5px;"><b>Party</b></td>
+                                    <td width="1%">:</td>
+                                    <td width="81%" style="padding-right: 3px;"><span t-field="o.partner_id.name"/></td>
                                 </tr>
                                 <tr>
                                     <td style="padding-left: 5px;"><b>Address</b></td>
@@ -251,9 +259,9 @@
                         <td width="2%" style="border-right: solid 1px black;padding-left: 5px;"><b>SI. No.</b></td>
                         <td width="6%" style="vertical-align: middle;border-right: solid 1px black;"><b>ITEM CODE</b></td>
                         <td width="7%" style="vertical-align: middle;border-right: solid 1px black;"><b>HSN</b></td>
-                        <td width="21%" style="vertical-align: middle; border-right: solid 1px black;"><b>PRODUCT PARTICULARS</b></td>
-                        <td width="6%" style="vertical-align: middle; border-right: solid 1px black;"><b>QTY</b></td>
-                        <td width="6%" style="vertical-align: middle; border-right: solid 1px black;"><b>PACK</b></td>
+                        <td width="24%" style="vertical-align: middle; border-right: solid 1px black;"><b>PRODUCT PARTICULARS</b></td>
+                        <td width="4%" style="vertical-align: middle; border-right: solid 1px black;"><b>QTY</b></td>
+                        <td width="5%" style="vertical-align: middle; border-right: solid 1px black;"><b>PACK</b></td>
                         <td width="8%" style="vertical-align: middle; border-right: solid 1px black;"><b>UNIT RATE</b></td>
                         <td width="10%" style="vertical-align: middle;border-right: solid 1px black;"><b>TOTAL</b></td>
                         <td width="5%" style="vertical-align: middle; border-right: solid 1px black;"><b>DISC %</b></td>
@@ -268,10 +276,10 @@
                         <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="line['hsn']"/></td>
                         <td style="border-right: solid 1px black;text-align:left;padding: 5px 2px;"><span t-esc="line['name']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="int(line['qty'])"/></td>
-                        <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><t t-if="line['volume']"><span t-esc="line['volume']"/> <span t-esc="line['volume_uom']"/></t><t t-if="line['weight']"> <span t-esc="line['weight']"/> <span t-esc="line['weight_uom']"/></t><t t-if="line['weight_net']"> <span t-esc="line['weight_net']"/> <span t-esc="line['weight_net_uom']"/></t></td>
+                        <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><t t-if="line['volume']"><span t-esc="int(line['volume'])"/> <span t-esc="line['volume_uom']"/></t><t t-if="line['weight']"> <span t-esc="int(line['weight'])"/> <span t-esc="line['weight_uom']"/></t><t t-if="line['weight_net']"> <span t-esc="int(line['weight_net'])"/> <span t-esc="line['weight_net_uom']"/></t></td>
                         <td style="border-right: solid 1px black;text-align:right;padding: 5px 2px;"><span t-esc="'%.2f'%line['price_unit']"/></td>
                         <td style="border-right: solid 1px black;text-align:right;padding: 5px 2px;"><span t-esc="line['subtotal']"/></td>
-                        <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="line['disc_perc']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="line['disc_perc']"/><t t-if="line['scheme_disc']"> *</t></td>
                         <td style="border-right: solid 1px black;text-align:right;padding: 5px 2px;"><span t-esc="line['discount']"/></td>
                         <td style="border-right: solid 1px black;text-align:right;padding: 5px 2px;"><span t-esc="line['taxable_value']"/></td>
                         <td style="border-right: solid 1px black;text-align:right;padding: 5px 2px;"><span t-esc="line['gst_perc']"/></td>
@@ -306,99 +314,121 @@
                         <td style="border-right: solid 1px black;text-align:right;"></td>
                         <td style="text-align:right;padding-right: 3px;"><b><span t-field="o.amount_tax"/></b></td>
                     </tr>
+                </table>
+                <table width="100%">
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;">TAX DETAILS</td>
-                        <td style="border-right: solid 1px black;">TAXABLE VALUE</td>
-                        <td style="border-right: solid 1px black;">SGST</td>
-                        <td style="border-right: solid 1px black;">SGST AMT.</td>
-                        <td style="border-right: solid 1px black;">CGST</td>
-                        <td style="border-right: solid 1px black;">CGST AMT.</td>
-                        <td style="border-right: solid 1px black;">IGST</td>
-                        <td style="border-right: solid 1px black;">IGST AMT.</td>
-                        <td colspan="3" style="padding-right: 3px;">TOTAL VALUE</td>
+                        <td style="border-right: solid 1px black;text-align:center;">DISCOUNT</td>
+                        <td style="border-right: solid 1px black;text-align:center;">DISCOUNT AMOUNT</td>
+                        <td style="border-right: solid 1px black;text-align:center;">TAX DETAILS</td>
+                        <td style="border-right: solid 1px black;text-align:center;">TAXABLE VALUE</td>
+                        <td style="border-right: solid 1px black;text-align:center;">IGST</td>
+                        <td style="border-right: solid 1px black;text-align:center;">IGST AMT.</td>
+                        <td style="border-right: solid 1px black;text-align:center;">CGST</td>
+                        <td style="border-right: solid 1px black;text-align:center;">CGST AMT.</td>
+                        <td style="border-right: solid 1px black;text-align:center;">SGST</td>
+                        <td style="border-right: solid 1px black;text-align:center;">SGST AMT.</td>
+                        <td style="border-right: solid 1px black;text-align:center;">TOTAL VALUE</td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;">0% GST SALES</td>
+                        <td style="border-right: solid 1px black;"></td>
+                        <td style="border-right: solid 1px black;"></td>
+                        <td style="border-right: solid 1px black;text-align:center;">0% GST SALES</td>
                         <td style="border-right: solid 1px black;padding: 0px 2px;"><span t-esc="taxable_values['0.0']"/></td>
-                        <td style="border-right: solid 1px black;padding: 0px 2px;">0%</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;text-align:center;">0%</td>
                         <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
-                        <td style="border-right: solid 1px black;padding: 0px 2px;">0%</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;text-align:center;">0%</td>
                         <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
-                        <td style="border-right: solid 1px black;padding: 0px 2px;">0.00%</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;text-align:center;">0.00%</td>
                         <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
-                        <td colspan="3" style="padding-right: 3px;padding: 0px 2px;">0.00
-                        </td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;">5% GST SALES</td>
+                        <td style="border-right: solid 1px black;text-align:center">Normal(<span t-esc="disc"/>)</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;"><span t-esc='normal_disc'/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">5% GST SALES</td>
                         <td style="border-right: solid 1px black;"><span t-esc="taxable_values['5.0']"/></td>
-                        <td style="border-right: solid 1px black;">2.5%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['2.5']"/></td>
-                        <td style="border-right: solid 1px black;">2.5%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['2.5']"/></td>
-                        <td style="border-right: solid 1px black;">5%</td>
+                        <td style="border-right: solid 1px black;text-align:center;">5%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="igst_values['5.0']"/></td>
-                        <td colspan="3" style="padding-right: 3px;"><b><t t-if="total_values['total_5']"><span t-esc="total_values['total_5']"
+                        <td style="border-right: solid 1px black;text-align:center;">2.5%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['2.5']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">2.5%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['2.5']"/></td>
+                        
+                        <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_5']"><span t-esc="total_values['total_5']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;">12% GST SALES</td>
+                        <td style="border-right: solid 1px black;text-align:center">Additional(<span t-esc="e_disc"/>)</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;"><span t-esc='add_disc'/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">12% GST SALES</td>
                         <td style="border-right: solid 1px black;"><span t-esc="taxable_values['12.0']"/></td>
-                        <td style="border-right: solid 1px black;">6%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['6.0']"/></td>
-                        <td style="border-right: solid 1px black;">6%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['6.0']"/></td>
-                        <td style="border-right: solid 1px black;">12%</td>
+                        <td style="border-right: solid 1px black;text-align:center;">12%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="igst_values['12.0']"/></td>
-                        <td colspan="3" style="padding-right: 3px;"><b><t t-if="total_values['total_12']"><span t-esc="total_values['total_12']"
+                        <td style="border-right: solid 1px black;text-align:center;">6%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['6.0']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">6%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['6.0']"/></td>
+                        <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_12']"><span t-esc="total_values['total_12']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;">18% GST SALES</td>
+                        <td style="border-right: solid 1px black;text-align:center">Scheme</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;"><span t-esc='scheme_disc'/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">18% GST SALES</td>
                         <td style="border-right: solid 1px black;"><span t-esc="taxable_values['18.0']"/></td>
-                        <td style="border-right: solid 1px black;">9%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['9.0']"/></td>
-                        <td style="border-right: solid 1px black;">9%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['9.0']"/></td>
-                        <td style="border-right: solid 1px black;">18%</td>
+                        <td style="border-right: solid 1px black;text-align:center;">18%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="igst_values['18.0']"/></td>
-                        <td colspan="3" style="padding-right: 3px;"><b><t t-if="total_values['total_18']"><span t-esc="total_values['total_18']"
+                        <td style="border-right: solid 1px black;text-align:center;">9%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['9.0']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">9%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['9.0']"/></td>
+                        <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_18']"><span t-esc="total_values['total_18']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;">28% GST SALES</td>
+                        <td style="border-right: solid 1px black;text-align:center;"></td>
+                        <td style="border-right: solid 1px black;text-align:center;"></td>
+                        <td style="border-right: solid 1px black;text-align:center;">28% GST SALES</td>
                         <td style="border-right: solid 1px black;"><span t-esc="taxable_values['28.0']"/></td>
-                        <td style="border-right: solid 1px black;">14%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['14.0']"/></td>
-                        <td style="border-right: solid 1px black;">14%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['14.0']"/></td>
-                        <td style="border-right: solid 1px black;">28%</td>
+                        <td style="border-right: solid 1px black;text-align:center;">28%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="igst_values['28.0']"/></td>
-                        <td colspan="3" style="padding-right: 3px;"><b><t t-if="total_values['total_28']"><span t-esc="total_values['total_28']"
+                        <td style="border-right: solid 1px black;text-align:center;">14%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="sgst_values['14.0']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;">14%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="cgst_values['14.0']"/></td>
+                        <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_28']"><span t-esc="total_values['total_28']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:center;padding-left: 5px;"><b>TOTAL</b></td>
+                        <td style="border-right: solid 1px black;text-align:center;padding-left: 5px;"><b>TOTAL</b></td>
+                        <td style="border-right: solid 1px black;"><b><span t-esc="total_values['total_discount']" /></b></td>
+                        <td style="border-right: solid 1px black;"/>
                         <td style="border-right: solid 1px black;"><b><span t-field="o.amount_untaxed"
                             t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+                        <td style="border-right: solid 1px black;"></td>
+                        <td style="border-right: solid 1px black;"><b><t t-if="igst_values['igst_total']"><span t-esc="igst_values['igst_total']"
+                            t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                         <td style="border-right: solid 1px black;"></td>
                         <td style="border-right: solid 1px black;"><b><t t-if="sgst_values['sgst_total']"><span t-esc="sgst_values['sgst_total']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                         <td style="border-right: solid 1px black;"></td>
                         <td style="border-right: solid 1px black;"><b><t t-if="cgst_values['cgst_total']"><span t-esc="cgst_values['cgst_total']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
-                        <td style="border-right: solid 1px black;"></td>
-                        <td style="border-right: solid 1px black;"><b><t t-if="igst_values['igst_total']"><span t-esc="igst_values['igst_total']"
-                            t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
-                        <td colspan="3" style="padding-right: 3px;"><b><span t-field="o.amount_total"
+                        <td style="padding-right: 3px;"><b><span t-field="o.amount_total"
                             t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
-                        <td colspan="3" style="border-right: solid 1px black;text-align:left;padding-left: 5px;">Amount in Words:</td>
+                        <td style="border-right: solid 1px black;text-align:left;padding-left: 5px;">Amount in Words:</td>
                         <td colspan="5" style="padding-left:5px; border-right: solid 1px black;text-align:left;"><b><span t-field="o.amount_in_words"/></b></td>
-                        <td colspan="2" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
-                        <td colspan="3" style="text-align:right;padding-right: 3px;"><b><span style="font-size: 20px" t-field="o.amount_total"
+                        <td colspan="3" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
+                        <td colspan="2" style="text-align:right;padding-right: 3px;"><b><span style="font-size: 20px" t-field="o.amount_total"
                             t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
+                    </tr>
+                    <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
+                        <td  style="border-right: solid 1px black;text-align:left;padding-left: 5px;"><b>Place of Supply:</b></td>
+                        <td  style="padding-left:5px; border-right: solid 1px black;text-align:left;"><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,<span t-field="o.partner_id.state_id.code"/></span></td>
+                        <td ><b>Date &amp; Time of Removal :</b></td>
+                        <td colspan="8" style="padding-left:5px; border-right: solid 1px black;text-align:left;">Test</td>
                     </tr>
                 </table>
                 <table width="100%">

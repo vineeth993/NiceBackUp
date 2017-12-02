@@ -4,7 +4,6 @@ from openerp import models, fields, api, _
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _order = 'order_id desc, sequence, id'
     
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,

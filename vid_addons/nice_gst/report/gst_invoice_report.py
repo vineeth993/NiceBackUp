@@ -23,10 +23,20 @@ class ReportInvoice(models.AbstractModel):
         igst_values = {'5.0': 0.0, '12.0': 0.0, '18.0': 0.0, '28.0': 0.0}
         taxable_values = {'0.0':0.0, '5.0': 0.0, '12.0': 0.0, '18.0': 0.0, '28.0': 0.0}
         total_nodiscount, total_discount, total_qty = 0.0, 0.0, 0.0
+        total_disc_amt = 0
+        total_extra_amt = 0
+        total_scheme_disc = 0
+
+        disc = 0
+        e_disc = 0
+
         for line in invoice.invoice_line:
+            normal_disc = 0
+            extra_disc = 0
+            add_disc = 0
             count += 1
             total_qty += line.quantity
-            discount_perc = round((((line.quantity * line.price_unit) - line.price_subtotal) * 100/(line.quantity * line.price_unit)),2)
+            discount_perc = round((((line.quantity * line.price_unit) - line.price_subtotal) * 100/(line.quantity * line.price_unit)), 2)
             subtotal = line.quantity*line.price_unit
             total_nodiscount += subtotal
             discount = subtotal * discount_perc / 100
@@ -46,6 +56,17 @@ class ReportInvoice(models.AbstractModel):
                     igst_perc = tax.amount*100
                     igst_amt  = round(igst_perc * taxable_value / 100, 2)
 
+            normal_disc = subtotal - ((subtotal * line.discount) / 100)
+            extra_disc = normal_disc - ((normal_disc * line.extra_discount) / 100)
+            add_disc = extra_disc - ((extra_disc * line.additional_discount) / 100)
+
+            if line.discount:
+                total_disc_amt +=  (subtotal - normal_disc)
+            if line.extra_discount:
+                total_extra_amt += (normal_disc - extra_disc)
+            if line.additional_discount:
+                total_scheme_disc += (extra_disc - add_disc)
+
             gst = gst_perc * taxable_value / 100
             gst_perc_str = str(gst_perc)
             sgst_perc_str = str(sgst_perc)
@@ -64,6 +85,10 @@ class ReportInvoice(models.AbstractModel):
             # else:
             #     name = line.product_id.name
             # _logger.info("Names = "+str(name)+","+str(len(name)))
+
+            disc = line.discount
+            e_disc = line.extra_discount
+
             lines.append({
                 's_no': count,
                 'hsn': line.product_id.hs_code_id and line.product_id.hs_code_id.code or '', 
@@ -82,7 +107,8 @@ class ReportInvoice(models.AbstractModel):
                 'subtotal': '%.2f' % subtotal,
                 'gst_perc': gst_perc,
                 'gst': '%.2f' % gst,
-                'taxable_value': '%.2f' % taxable_value
+                'taxable_value': '%.2f' % taxable_value,
+                'scheme_disc':line.additional_discount
                 })
 
         sgst_values.update({'sgst_total': sum(sgst_values.values())})
@@ -98,7 +124,7 @@ class ReportInvoice(models.AbstractModel):
             'total_qty': total_qty
             }
         blank_lines = []
-        min_count = 18
+        min_count = 17
         if count < min_count:
             for line_count in range(count+1, min_count):
                 blank_lines.append({'no': line_count})
@@ -140,6 +166,11 @@ class ReportInvoice(models.AbstractModel):
             'igst_values': igst_values,
             'taxable_values': taxable_values,
             'total_values': total_values,
-            'blank_lines': blank_lines
+            'blank_lines': blank_lines,
+            'normal_disc':total_disc_amt,
+            'add_disc':total_extra_amt,
+            'scheme_disc':total_scheme_disc,
+            'disc':disc,
+            'e_disc':e_disc
         }
         return self.env['report'].render('nice_gst.report_invoice_gst', docargs)
