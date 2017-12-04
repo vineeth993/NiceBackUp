@@ -15,6 +15,8 @@
 				</xpath>
 				 -->
 				<xpath expr="//field[@name='account_id']" position="after">
+
+					<field name="sale_order" />
 					<field name="partner_selling_type" attrs="{'readonly':[('state', 'in', ('open','paid'))]}"/>
 					<!-- <field name="partner_selling_type_id"  /> -->
 					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'in', ('open','paid'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>

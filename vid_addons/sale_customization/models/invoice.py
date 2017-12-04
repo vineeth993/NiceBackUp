@@ -73,6 +73,7 @@ class AccountInvoice(models.Model):
     nonread_extra_disocunt = fields.Float('Additional Discount(%)',digits_compute=dp.get_precision('Account'),copy=False)
     nonread_normal_disocunt = fields.Float('Normal Discount',digits_compute=dp.get_precision('Account'),copy=False)
     # extra_discount_amount = fields.Float(string='Extra Discount', readonly=True, compute='_compute_amount', track_visibility='always')
+    sale_order = fields.Char("Sale Order", readonly=True, store=True)
     
     @api.multi
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
