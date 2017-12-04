@@ -311,7 +311,14 @@
 				<!-- <attribute name="context">{'active_id':id} -->
 				<!-- </attribute> -->
 				<!-- </field> -->
-
+				<xpath expr="//h1" position="replace">
+					<h1>
+						<label string="Not Confirmed " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+	                    <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+	                    <field name="name" class="oe_inline" readonly="1"/>
+	                </h1>
+				</xpath>
+				
 				<xpath expr="//field[@name='pricelist_id']" position="attributes">
 					<attribute name="invisible">1</attribute>
 				</xpath>
