@@ -9,6 +9,9 @@ from openerp import models, api
 from openerp import workflow
 from openerp.osv.orm import browse_record, browse_null
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
@@ -23,10 +26,11 @@ class AccountInvoice(models.Model):
     @api.model
     def _get_invoice_line_key_cols(self):
         fields = [
-            'name',  'discount', 'invoice_line_tax_id', 'price_unit',
+            'name',  'discount', 'extra_discount', 'additional_discount', 'invoice_line_tax_id', 'price_unit',
             'product_id', 'account_id', 'account_analytic_id',
         ]
         for field in ['analytics_id']:
+
             if field in self.env['account.invoice.line']._fields:
                 fields.append(field)
         return fields
@@ -52,6 +56,11 @@ class AccountInvoice(models.Model):
             'partner_bank_id': invoice.partner_bank_id.id,
             'sale_type_id':invoice.sale_type_id.id,
             'sale_sub_type_id':invoice.sale_sub_type_id.id,
+            'partner_selling_type':invoice.partner_selling_type,
+            'normal_disc':invoice.normal_disc,
+            'extra_discount':invoice.extra_discount,
+            'nonread_extra_disocunt':invoice.nonread_extra_disocunt,
+            'nonread_normal_disocunt':invoice.nonread_normal_disocunt
         }
 
     @api.model
@@ -108,6 +117,8 @@ class AccountInvoice(models.Model):
 
         # compute what the new invoices should contain
 
+        order_id = ''
+        origin_id = ''
         new_invoices = {}
         draft_invoices = [invoice
                           for invoice in self
@@ -121,6 +132,9 @@ class AccountInvoice(models.Model):
             client_refs = seen_client_refs.setdefault(invoice_key, set())
             new_invoice[1].append(account_invoice.id)
             invoice_infos = new_invoice[0]
+            order_id += str(account_invoice.sale_order) + ', '
+            origin_id += str(account_invoice.origin) + ', '
+
             if not invoice_infos:
                 invoice_infos.update(
                     self._get_first_invoice_fields(account_invoice))
@@ -161,6 +175,7 @@ class AccountInvoice(models.Model):
         allinvoices = []
         invoices_info = {}
         invoice_lines_info = {}
+        invoice_infos.update({'sale_order':order_id, 'origin':origin_id})
         for invoice_key, (invoice_data, old_ids) in new_invoices.iteritems():
             if len(old_ids) < 2:
                 allinvoices += (old_ids or [])

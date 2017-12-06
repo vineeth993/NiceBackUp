@@ -58,6 +58,9 @@ class InvoiceMerge(models.TransientModel):
                 if d['journal_id'] != invs[0]['journal_id']:
                     raise UserError(
                         _('Not all invoices are at the same journal!'))
+                if d['partner_selling_type'] != invs[0]['partner_selling_type']:
+                    raise UserError(
+                        _('Not all invoices are of same bill type !'))
         return {}
 
     @api.model
