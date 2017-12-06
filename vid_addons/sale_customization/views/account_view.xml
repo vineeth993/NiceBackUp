@@ -34,6 +34,8 @@
 					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='discount']"
 					position="after">
 					<field name="additional_discount"/>
+					<field name="product_name" invisible="1"/>
+					<field name="extra_discount" invisible="1"/>
 				</xpath>
 				<xpath
 					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='discount']"

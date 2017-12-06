@@ -103,7 +103,6 @@
                 <field name="default_code" position="after">
                     <field name="gcode" />
                     <field name="cas_no"/>
-                    <field name="price_list"/>
                     <field name="specific_gravity"/>
                     <field name="schedule"/>
                     <field name="grade"/>

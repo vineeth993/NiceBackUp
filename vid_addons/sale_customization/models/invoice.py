@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
+    _order = "product_name"
 
     @api.depends('product_id','invoice_id.extra_discount')
     def _get_product_values(self):
@@ -34,8 +35,13 @@ class AccountInvoiceLine(models.Model):
         self.price_subtotal = price_subtotal
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
-            
-           
+
+    @api.depends("product_id")
+    def _get_name(self):
+        for line in self:
+            line.product_name = line.product_id.name
+
+    product_name = fields.Char("Product Name", store=True, compute=_get_name)                   
     discount = fields.Float('Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True,)
     extra_discount = fields.Float('Extra Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True)
     additional_discount = fields.Float('Scheme Discount (%)', digits_compute=dp.get_precision('Discount'))

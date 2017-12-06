@@ -120,7 +120,7 @@ class ProductTemplate(models.Model):
     schedule = fields.Many2one('product.schedule', 'Schedule')
     grade = fields.Many2one('product.grade', string="Grade")
     hs_code_id = fields.Many2one('hs.code', 'H.S.Code')
-    price_list = fields.Boolean("Special")
+    price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
 
     _defaults = {
         'type': 'product',
