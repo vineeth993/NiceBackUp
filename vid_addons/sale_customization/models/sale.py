@@ -26,7 +26,7 @@ class SaleReason(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _order = 'product_name asc'
+    _order = 'product_name asc, sequence, id'
 
    
     @api.depends('product_id')
