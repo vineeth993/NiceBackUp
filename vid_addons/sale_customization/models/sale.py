@@ -26,7 +26,7 @@ class SaleReason(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _order = 'product_name asc, sequence, id'
+    _order = 'order_id desc, sequence, id'
 
    
     @api.depends('product_id')
@@ -263,8 +263,8 @@ class SaleOrder(models.Model):
     @api.multi
     def action_quotation_confirm(self):
         self.state = 'confirm'
-        order_lines = self.env['sale.order.line'].search([('order_id', '=', self.id)], order='product_id')
-        seq = 0
+        order_lines = self.env['sale.order.line'].search([('order_id', '=', self.id)], order='product_name')
+        seq = 1
         for line in order_lines:
             line.sequence = seq
             seq += 1
