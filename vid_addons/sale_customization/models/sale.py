@@ -166,7 +166,7 @@ class StockWarehouse(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
     
-    @api.depends('order_line.price_subtotal','extra_discount')
+    @api.depends('order_line.price_subtotal', 'extra_discount', 'normal_disc', 'nonread_extra_disocunt', 'nonread_normal_disocunt')
     def _amount_all(self):
         """
         Compute the total amounts of the SO.
