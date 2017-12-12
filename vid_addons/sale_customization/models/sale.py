@@ -280,7 +280,11 @@ class SaleOrder(models.Model):
     
     @api.multi
     def action_button_confirm(self):
-        for line in self.order_line:
+        order_lines = self.env['sale.order.line'].search([('order_id', '=', self.id)], order='product_name')
+        seq = 1
+        for line in order_lines:
+            line.sequence = seq
+            seq += 1
             if line.product_uom_qty <= 0:
                 raise exceptions.Warning('Quantity cannot be less than zero')
         return super(SaleOrder, self).action_button_confirm()
