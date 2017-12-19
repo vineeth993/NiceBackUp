@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		
+		<record id="sale_order_partial_close_main" model="ir.ui.view">
+			<field name="name">Sale Order Partial Cancel</field>
+			<field name="model">sale.partial.close</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					 <group colspan="4" col="4">
+                        <field name="order_id" required="1"/>
+                    </group>
+				</form>
+				<notebook>
+					<page name="partial list">
+						<field name="line_id">
+							<tree string="Partial List" editable="bottom">
+								<field name="product_id"/>
+								<field name="quantity" />
+								<field name="packop_id" />
+								<field name="close" />
+							</tree>
+						</field>						
+					</page>
+				</notebook>
+				<button name="process_cancel" string="Cancel Product" type="object" />
+			</field>
+		</record>
+
+		<record id="action_sale_order_partial_close" model="ir.actions.act_window">
+			<field name="name">Sale Order Partial Cancel</field>
+			<field name="res_model">sale.partial.close</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="sale_order_partial_close_main"/>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="sale_order_partia_close_action" parent="base.menu_sales" action="action_sale_order_partial_close" sequence="100"/>
+
+	</data>
+</openerp>

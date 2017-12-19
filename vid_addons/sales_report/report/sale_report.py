@@ -58,11 +58,13 @@ class sale_status_report(report_xls):
                 ])
         count = 3
         
+
         sales = sale_obj.browse(cr, uid, sale_ids)
-        ws.write(0, 3, "Pending Sale Order For "+str(sales[0].partner_id.name), title2)
+        if sales:
+            ws.write(0, 3, "Pending Sale Order For "+str(sales[0].partner_id.name), title2)
 
         headers = {
-            0: 'SO DATE', 1: 'SO NUMBER', 2: 'Product', 3: 'Total Quantity', 4: 'ISSUED QTY', 5: 'Pending Quantity',
+            0: 'SO DATE', 1: 'SO NUMBER', 2: 'Product', 3:'Normal Disc', 4:'Additional Disc', 5:'Extra Disc',6: 'Total Quantity', 7: 'ISSUED QTY', 8: 'Pending Quantity',
             }
   
         for header in headers:
@@ -71,7 +73,11 @@ class sale_status_report(report_xls):
         count = count + 1
         invoiceQty = {}
         orderLineQty = {}
+        stockQty = {}
         for sale in sales:
+            stock_ids = picking_obj.search(cr, uid, [('state', 'not in', ('cancel', 'done')), ('origin', '=', sale.name)])
+            stocks = picking_obj.browse(cr, uid, stock_ids)
+            # stockQty = {line.product_id.name:line.product_uom_qty for line in stocks.move_lines}
             date = datetime.datetime.strptime(sale.date_order, '%Y-%m-%d %H:%M:%S').date().strftime('%d-%m-%Y')
             for invoice in sale.invoice_ids:
                 for line in invoice.invoice_line:
@@ -81,28 +87,36 @@ class sale_status_report(report_xls):
                         invoiceQty.update({str(line.product_id.name):line.quantity})
             for line in sale.order_line:
                 if orderLineQty.has_key(str(line.product_id.name)):
-                    orderLineQty[str(line.product_id.name)] += line.product_uom_qty
+                    orderLineQty[str(line.product_id.name)][0] += line.product_uom_qty
                 else:
-                    orderLineQty.update({str(line.product_id.name):line.product_uom_qty})
+                    orderLineQty.update({str(line.product_id.name):[line.product_uom_qty, line.discount, line.extra_discount, line.additional_discount, line.product_id.default_code]})
+
+            for line in stocks.move_lines:
+                if stockQty.has_key(str(line.product_id.name)):
+                    stockQty[str(line.product_id.name)] += line.product_uom_qty
+                else:
+                    stockQty.update({str(line.product_id.name):line.product_uom_qty})
 
             for orderLine in orderLineQty:
-                
+                if stockQty.has_key(orderLine):
+                    quantityPending = stockQty[orderLine]
+                    if invoiceQty.has_key(orderLine):
+                        issuedQuan = invoiceQty[orderLine]
+                    else:
+                        issuedQuan = 0
 
-                if invoiceQty.has_key(orderLine):
-                    quantityPending = orderLineQty[orderLine] - invoiceQty[orderLine]
-                    issuedQuan = invoiceQty[orderLine]
-                else:
-                    quantityPending = orderLineQty[orderLine]
-                    issuedQuan = 0
-
-                if quantityPending > 0:
-                    ws.write(count, 0, date, normal)
-                    ws.write(count, 1, sale.name, normal)
-                    ws.write(count, 2, orderLine, normal)
-                    ws.write(count, 3, orderLineQty[orderLine], number)
-                    ws.write(count, 4, issuedQuan, number)
-                    ws.write(count, 5, quantityPending, number)
-                    count += 1
+                    if quantityPending > 0:
+                        ws.write(count, 0, date, normal)
+                        ws.write(count, 1, sale.name, normal)
+                        ws.write(count, 2, '['+str(orderLineQty[orderLine][4])+']'+str(orderLine), normal)
+                        ws.write(count, 3, orderLineQty[orderLine][1], normal)
+                        ws.write(count, 4, orderLineQty[orderLine][2], normal)
+                        ws.write(count, 5, orderLineQty[orderLine][3], normal)
+                        ws.write(count, 6, orderLineQty[orderLine][0], normal)
+                        ws.write(count, 7, issuedQuan, normal)
+                        ws.write(count, 8, quantityPending, normal)
+                        count += 1
             invoiceQty = {}
             orderLineQty = {}
+            stockQty = {}
 sale_status_report('report.sale.status.report', 'sale.status.report', parser=sale_status_report_parser)
