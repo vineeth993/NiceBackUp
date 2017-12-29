@@ -34,7 +34,7 @@ class B2bSummary(report_xls):
         for col in cols:
             ws.col(col).width = 4000
 
-        headers = {0:"GSTIN/UIN of Recipient", 1:"Invoice Number", 2:'Invoice Date', 3:"Invoice Value", 4:'Place Of Supply', 5:'Reverse Charge', 6:'Invoice Type', 7:'E-Commerce GSTIN', 8:'Rate', 9:'Taxable Value', 10:'Cess Amount'}
+        headers = {0:"GSTIN/UIN of Recipient", 1:"Reciever", 2:"Invoice Number", 3:'Invoice Date', 4:"Invoice Value", 5:'Place Of Supply', 6:'Reverse Charge', 7:'Invoice Type', 8:'E-Commerce GSTIN', 9:'Rate', 10:'Taxable Value', 11:'Cess Amount'}
 
         for header in headers:
             ws.write(3, header, headers[header], self.title2)
@@ -96,15 +96,16 @@ class B2bSummary(report_xls):
                 date_invoice = date_invoice_obj.strftime('%d-%b-%Y')
             for tax in sorted(taxes.iterkeys()):
                 ws.write(count, 0, invoice.partner_id.gst_no, self.normal)
-                ws.write(count, 1, invoice_no, self.normal)
-                ws.write(count, 2, str(date_invoice), self.normal)
-                ws.write(count, 3, invoice.amount_total, self.number)
-                ws.write(count, 4, place_supply, self.normal)
-                ws.write(count, 5, 'N', self.normal)
-                ws.write(count, 6, cust_type, self.normal)
-                ws.write(count, 8, tax, self.number)
-                ws.write(count, 9, taxes[tax], self.number)
-                ws.write(count, 10, 0.0, self.number)
+                ws.write(count, 1, invoice.partner_id.name, self.normal)
+                ws.write(count, 2, invoice_no, self.normal)
+                ws.write(count, 3, str(date_invoice), self.normal)
+                ws.write(count, 4, invoice.amount_total, self.number)
+                ws.write(count, 5, place_supply, self.normal)
+                ws.write(count, 6, 'N', self.normal)
+                ws.write(count, 7, cust_type, self.normal)
+                ws.write(count, 9, tax, self.number)
+                ws.write(count, 10, taxes[tax], self.number)
+                ws.write(count, 11, 0.0, self.number)
                 count+=1
             
             total_inv_amt += invoice.amount_total
