@@ -23,7 +23,9 @@ from openerp.osv import osv, fields
 from datetime import datetime
 from dateutil import parser
 from datetime import date
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class crm_make_sale(osv.osv_memory):
     """ Make sale  order for crm """
@@ -50,6 +52,12 @@ class crm_make_sale(osv.osv_memory):
         sale_line_obj = self.pool.get('sale.order.line')
         partner_obj = self.pool.get('res.partner')
         data = context and context.get('active_ids', []) or []
+        _logger.info("The data = "+str(data))
+        
+        if data:
+            lead = case_obj.browse(cr, uid, data)
+            _logger.info("Lead = "+str(lead.name))
+            lead.write({"lead_state": "quot"})
 
         for make in self.browse(cr, uid, ids, context=context):
             partner = make.partner_id
@@ -79,6 +87,8 @@ class crm_make_sale(osv.osv_memory):
                     'partner_invoice_id': partner_addr['invoice'],
                     'partner_shipping_id': partner_addr['delivery'],
                     'date_order': fields.datetime.now(),
+                    'type_id':partner.sale_type.id,
+                    'sub_type_id':partner.sale_sub_type_id[0].id,
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
                     'note': sale_obj.get_salenote(cr, uid, [case.id], partner.id, context=context),
@@ -88,7 +98,7 @@ class crm_make_sale(osv.osv_memory):
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 for each in case.product_ids:
-                    sale_line_obj.create(cr,uid,{'order_id':new_id,'product_id':each.product_id.id},context=None)
+                    sale_line_obj.create(cr,uid,{'order_id':new_id,'product_id':each.product_id.id,'product_uom_qty':each.quantity},context=None)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
                 message = ("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)

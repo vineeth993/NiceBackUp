@@ -1,7 +1,12 @@
 from openerp import models, fields, api, _
 from openerp.osv import osv
 from datetime import date
+import logging
+from openerp import tools
+from openerp.tools import email_re, email_split
+from openerp.exceptions import ValidationError
 
+_logger = logging.getLogger(__name__)
 
 class CrmStage(models.Model):
     _inherit = 'crm.case.stage'
@@ -72,6 +77,86 @@ class LeadCustom(models.Model):
     planned_revenue = fields.Float(string="Expected Revenue", compute='calculate_revenue', store=True)
     planned_cost = fields.Float(string="Planned Costs", compute='calculate_costs', store=True)
     margin = fields.Float(string="Margin", required=False, compute='calculate_margin', store=True)
+    gst_reg = fields.Selection([('registered', 'Registered'), ('unregistered', 'Not Registered')], string="GST Registered", default="unregistered")
+    gst_category = fields.Selection([
+    ('gst', 'Local'),
+    ('igst', 'Interstate'),
+    ], string="GST Category")
+    gst_no = fields.Char('GST No', size=64)
+    ref = fields.Char(string="Reference")
+    sale_type = fields.Many2one(
+        comodel_name='sale.order.type', string='Sale Order Type',
+        company_dependent=True)
+    sale_sub_type_id = fields.Many2many("sale.order.sub.type", "sale_order_sub_type_rel", "partner_id", "type_id", string="Sub Type")
+    lead_state = fields.Selection([("draft", "Draft"), 
+        ("approve", "Waiting For Approval"), 
+        ("approved", "Approved"),
+        ("quot", "Quotation Created"), 
+        ("cancel", "Cancel")], string="State", default='draft')
+    city = fields.Many2one("res.city", string="City")
+    country_base_gst_type = fields.Selection([('national', 'National'), ('international', 'International')], string="GST Type")
+
+    def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
+        partner = self.pool.get('res.partner')
+        vals = {'name': name,
+            'user_id': lead.user_id.id,
+            'comment': lead.description,
+            'section_id': lead.section_id.id or False,
+            'parent_id': parent_id,
+            'phone': lead.phone,
+            'mobile': lead.mobile,
+            'email': tools.email_split(lead.email_from) and tools.email_split(lead.email_from)[0] or False,
+            'fax': lead.fax,
+            'title': lead.title and lead.title.id or False,
+            'function': lead.function,
+            'street': lead.street,
+            'street2': lead.street2,
+            'zip': lead.zip,
+            'city_id': lead.city.id,
+            'country_id': lead.country_id and lead.country_id.id or False,
+            'state_id': lead.state_id and lead.state_id.id or False,
+            'is_company': is_company,
+            'type': 'contact'
+        }
+        if is_company:
+            vals['ref'] = lead.ref
+            vals['country_base_gst_type'] = lead.country_base_gst_type
+            vals['gst_reg'] = lead.gst_reg
+            vals['gst_category'] = lead.gst_category
+            vals['gst_no'] = lead.gst_no
+            vals['sale_type'] = lead.sale_type.id
+            vals['sale_sub_type_id'] = [(6, 0, [sale_sub_type.id for sale_sub_type in lead.sale_sub_type_id])]
+        partner = partner.create(cr, uid, vals, context=context)
+        return partner
+
+    @api.onchange('gst_no', 'country_id')
+    def onchange_gst_no(self):
+        if self.country_id == self.company_id.country_id:
+            self.country_base_gst_type = 'national'
+        elif self.country_id:
+            self.country_base_gst_type = 'international'
+
+    @api.multi
+    def onchange_state(self, state_id):
+        res = super(LeadCustom, self).onchange_state(state_id)
+        if state_id and state_id == self.env.user.company_id.state_id.id:
+            res['value']['gst_category'] = 'gst'
+        elif state_id:
+            res['value']['gst_category'] = 'igst'
+        return res
+
+    @api.multi
+    def on_change_partner_id(self, partner_id):
+        res = super(LeadCustom, self).on_change_partner_id(partner_id)
+        if partner_id:
+            partner = self.env['res.partner'].browse(partner_id)
+            res['value']['city'] = partner.city_id and partner.city_id.id or False
+            res['value']['gst_reg'] = partner.gst_reg
+            res['value']['gst_no'] = partner.gst_no
+            res['value']['ref'] = partner.ref
+            res['value']['sale_type'] = partner.sale_type and partner.sale_type.id or False
+            res['value']['sale_sub_type_id'] = [(6, 0, [sale_sub_type.id for sale_sub_type in partner.sale_sub_type_id])]
+        return res
 
     @api.depends('product_ids.total_price')
     @api.multi
@@ -108,11 +193,55 @@ class LeadCustom(models.Model):
             else:
                 pass
 
+    @api.multi
+    def action_approve(self):
+        self.lead_state = "approve"
 
+    @api.multi
+    def action_approved(self):
+        if not self.partner_name or not self.ref or not self.sale_sub_type_id or not self.sale_type:
+            raise ValidationError("Please Enter These Fields Company Name, Reference, Sale Order Type, Sub Type")
+        self.lead_state = "approved"
 
+    @api.multi
+    def action_reset(self):
+        self.write({"stage_id":1})
+        self.lead_state = "draft"
 
+    @api.model
+    def create(self, vals):
+        vals = super(LeadCustom, self).create(vals)
+        if vals["partner_id"]:
+            vals["lead_state"] = "approved"
+        return vals
 
+    # @api.model
+    # def write(self, vals):
+    #     _logger.info("The value before updation is ="+str(vals))
+    #     vals = super(LeadCustom, self).write(vals)
+    #     if vals["partner_id"]:
+    #         vals["lead_state"] = "approved"
+    #     else:
+    #         vals["lead_state"] = "approve"
+    #     _logger.info("In write Function = "+str(vals))
+    #     return vals
 
-
-
-
+    def _create_lead_partner(self, cr, uid, lead, context=None):
+        partner_id = False
+        contact_id = False
+        if lead.partner_name and lead.contact_name:
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+            contact_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
+        elif lead.partner_name and not lead.contact_name:
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+        elif not lead.partner_name and lead.contact_name:
+            contact_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
+        elif lead.email_from and self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]:
+            contact_name = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]
+            contact_id = self._lead_create_contact(cr, uid, lead, contact_name, False, context=context)
+        else:
+            raise osv.except_osv(
+                _('Warning!'),
+                _('No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email ("Name <email@address>")')
+            )
+        return partner_id or contact_id

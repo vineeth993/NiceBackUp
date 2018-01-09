@@ -29,9 +29,9 @@ class crm_case_section_stage_config(models.Model):
     _description = 'Sales Team Stages Configuration'
 
     section_id = fields.Many2one('crm.case.section', 'Sales Team', ondelete='cascade')
-    stage_id = fields.Many2one('crm.case.stage', 'Stage', domain=[('type', '!=', 'lead'), ('probability', '!=', 0.0)], required=True)
-    next_stage_id = fields.Many2one('crm.case.stage', 'Next Stage', domain=[('type', '!=', 'lead'), ('probability', '!=', 0.0)])
-    back_stage_id = fields.Many2one('crm.case.stage', 'Back Stage', domain=[('type', '!=', 'lead'), ('probability', '!=', 0.0)])
+    stage_id = fields.Many2one('crm.case.stage', 'Stage', domain=[('type', '!=', 'lead')], required=True)
+    next_stage_id = fields.Many2one('crm.case.stage', 'Next Stage', domain=[('type', '!=', 'lead'), ('probability', '!=', 100)])
+    back_stage_id = fields.Many2one('crm.case.stage', 'Back Stage', domain=[('type', '!=', 'lead')])
     user_id = fields.Many2one('res.users', 'Responsible')
     sequence = fields.Integer('Sequence')
     days_for_stage = fields.Integer('Days for Stage', required=True)
@@ -43,7 +43,7 @@ class sales_team(models.Model):
 
     stage_config_ids = fields.One2many('crm.case.section.stage_config', 'section_id', 'Stages Config')
     default_stage_id = fields.Many2one('crm.case.stage', 'Default Stage', 
-       domain=[('type', '!=', 'lead'), ('probability', '!=', 100.0), ('probability', '!=', 0.0)])
+       domain=[('type', '!=', 'lead'), ('probability', '!=', 100.0)])
     track_act = fields.Boolean('Track Activities', help="Track Sales Team Activities", default=True)
 
     @api.one

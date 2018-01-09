@@ -11,10 +11,10 @@ class SaleOrderLine(osv.osv):
 
 	def _calc_line_base_price(self, cr, uid, line, context=None):
 	 	price_unit_normal = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-	 	if line.extra_discount:
-	 		price_unit_normal = price_unit_normal * (1 - (line.extra_discount or 0.0) / 100.0)
-	 	if line.additional_discount:
-	 		price_unit_normal = price_unit_normal * (1 - (line.additional_discount or 0.0) / 100.0)
+	 	# if line.extra_discount:
+	 	price_unit_normal = price_unit_normal * (1 - (line.extra_discount or 0.0) / 100.0)
+	 	# if line.additional_discount:
+	 	price_unit_normal = price_unit_normal * (1 - (line.additional_discount or 0.0) / 100.0)
 	 	return price_unit_normal
 
 	def _amount_line(self, cr, uid, ids, field_name, arg, context=None):

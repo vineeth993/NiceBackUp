@@ -53,16 +53,16 @@
                 <button name="case_mark_won" string="Mark Won" position="before">
                     <button name="next_stage" string="Next Stage" type="object"
                         help="Go to Next Stage" class="oe_highlight"
-                        attrs="{'invisible': ['|', ('probability', '=', 100.0), ('probability', '=', 0.0)]}"
+                        attrs="{'invisible': ['|', ('probability', '=', 100.0), ('stage_id','=',7)]}"
                     />
                     <button name="back_stage" string="Back Stage" type="object"
                         help="Jump to back Stage"
-                        attrs="{'invisible': ['|', ('probability', '=', 100.0), ('probability', '=', 0.0)]}"
+                        attrs="{'invisible': ['|', '|', ('probability', '=', 100.0), ('probability' , '=', 0.0), ('stage_id','=',7)]}"
                     />                                                            
                 </button>
                 <button name="case_mark_lost" position="after">
                     <button name="reset_stage" string="Reset Stages" type="object"
-                        help="Go to Default Stage"
+                        help="Go to Default Stage" attrs="{'invisible':[('probability', '=', 100.0)]}"
                     />                    
                 </button>
                 <field name="probability" position="attributes">

@@ -183,6 +183,7 @@ class SaleOrder(models.Model):
             val = val1 = add_disc =  0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
+                _logger.info("Val1 ="+str(line.price_subtotal))
                 val1 += line.price_subtotal
                 val += self._amount_line_tax(line)
             order.update({

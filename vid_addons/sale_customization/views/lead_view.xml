@@ -6,9 +6,23 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
             <field name="arch" type="xml">
+
+                <xpath expr="//header" position="replace">
+                    <header>
+                        <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action" help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible':[('lead_state', '!=', 'approved')]}"/>
+                        <field name="stage_id" widget="statusbar" clickable="True" domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]" options="{'fold_field': 'fold'}" on_change="onchange_stage_id(stage_id)" attrs="{'invisible':[('lead_state', '!=', 'approved')]}"/>
+                        <button name="action_approve" type="object" string="Approval Process" attrs="{'invisible':[('lead_state', '!=', 'draft')]}" class="oe_highlight"/>
+                        <button name="action_approved" type="object" string="Approved" attrs="{'invisible':[('lead_state', '!=', 'approve')]}" class="oe_highlight"/>
+                        <button name="%(crm_lead_lost_reason.action_crm_lead_lost)d" string="Mark Lost" type="action" class="oe_highlight" groups="base.group_user" attrs="{'invisible':['|', ('stage_id','=',7), ('lead_state', 'in', ('approved', 'cancel'))]}"/>
+                        <field name="lead_state" widget="statusbar" statusbar_visible="draft, approve, approved" attrs="{'invisible':[('lead_state', 'in', ('approved', 'cancel'))]}"/>
+                        <button name="action_reset" type="object" string="Reset To Draft" class="oe_highlight" attrs="{'invisible':[('lead_state', '!=', 'cancel')]}" />
+                    </header>
+                </xpath>
+
                 <field name="partner_id" position="before">
                     <field name="customer_type"/>
                 </field>
+
                 <field name="partner_id" position="attributes">
                     <attribute name="domain">[('customer_type', '=', customer_type)]</attribute>
                 </field>
@@ -16,6 +30,20 @@
                 <field name="partner_name" position="before">
                     <field name="lead_type"/>
                 </field>
+
+                <xpath expr="//field[@name='user_id']" position="before">
+                    <field name="country_base_gst_type" widget="radio" />
+                    <field name="gst_category" widget="radio"/>
+                    <field name="gst_reg" widget="radio"/>
+                    <field name="gst_no" attrs="{'invisible': [('gst_reg', '=', 'unregistered')], 'required': [('gst_reg', '=', 'registered')]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='categ_ids']" position="after">
+                    <field name="ref" attrs="{'invisible':[('lead_state', '=', 'draft')]}"/>
+                    <field name="sale_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'sale')]" context="{'default_object_type': 'sale'}" attrs="{'invisible':[('lead_state', '=', 'draft')]}"/>
+                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" widget="many2many_tags" context="{'default_type_id': sale_type}" attrs="{'invisible':[('lead_state', '=', 'draft')]}"/>
+                </xpath>
+
                 <xpath expr="//page[@string='Extra Info']/group[1]/group[@string='Mailings']" position="after">
                     <group string="Tender" attrs="{'invisible':[('lead_type','not in',(3,4))]}">
                         <field name="tender_advertizment_date"/>
@@ -28,6 +56,7 @@
                         <field name="contact_date"/>
                     </group>
                 </xpath>
+
                 <field name="phone" position="after">
                      <field name="planned_revenue" invisible="1"/>
                 </field>
@@ -54,6 +83,9 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
+                <header>
+                    <field name="lead_state" widget="statusbar" statusbar_visible="draft, approve, approved" invisible="1"/>
+                </header>
                 <field name="partner_id" position="before">
                     <field name="customer_type"/>
                 </field>
@@ -116,5 +148,6 @@
                 </field>
             </field>
         </record>
+        
     </data>
 </openerp>

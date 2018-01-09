@@ -24,6 +24,9 @@ from openerp import models, fields, api
 from datetime import datetime, timedelta
 from openerp.exceptions import Warning
 from openerp.tools.translate import _
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class crm_lead_stage_log(models.Model):
     _name = 'crm.lead.stage_log'
@@ -71,7 +74,9 @@ class crm_lead(models.Model):
     def get_stage_config(self):
         stage_config = self.env['crm.case.section.stage_config'].search(
             [('section_id', '!=', False), ('section_id', '=', self.section_id.id), ('stage_id', '=', self.stage_id.id)])
+        _logger.info("The stage id = "+str(self.stage_id.id))
         while stage_config:
+            _logger.info("The stage config in get_stage_config = "+str(stage_config))
             return stage_config 
 
     @api.multi
@@ -94,6 +99,7 @@ class crm_lead(models.Model):
     @api.one
     def next_stage(self):
         stage_config = self.get_stage_config()
+        _logger.info("The Stage Config = "+str(stage_config))
         if stage_config:
             if stage_config.next_stage_id: 
                 if stage_config.next_stage_id:

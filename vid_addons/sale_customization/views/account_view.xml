@@ -15,7 +15,6 @@
 				</xpath>
 				 -->
 				<xpath expr="//field[@name='account_id']" position="after">
-
 					<field name="sale_order" />
 					<field name="partner_selling_type" attrs="{'readonly':[('state', 'in', ('open','paid'))]}"/>
 					<!-- <field name="partner_selling_type_id"  /> -->
@@ -26,6 +25,7 @@
 						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))], 'readonly':[('state', 'in', ('open','paid'))]}" />
 					<field name="nonread_extra_disocunt"
 						attrs="{'invisible':[('partner_selling_type', '==','normal')], 'readonly':[('state', 'in', ('open','paid'))]}" />
+
 
 					<!-- <field name="additional_extra_disocunt"
 						attrs="{'invisible':[('partner_selling_type','!=','special'),('partner_selling_type','!=','extra')]}" /> -->
