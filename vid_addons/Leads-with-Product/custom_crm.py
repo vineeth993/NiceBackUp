@@ -52,11 +52,9 @@ class crm_make_sale(osv.osv_memory):
         sale_line_obj = self.pool.get('sale.order.line')
         partner_obj = self.pool.get('res.partner')
         data = context and context.get('active_ids', []) or []
-        _logger.info("The data = "+str(data))
-        
+
         if data:
             lead = case_obj.browse(cr, uid, data)
-            _logger.info("Lead = "+str(lead.name))
             lead.write({"lead_state": "quot"})
 
         for make in self.browse(cr, uid, ids, context=context):
