@@ -2,9 +2,9 @@ from openerp import api, models, fields
 from openerp.exceptions import ValidationError, Warning
 import logging
 
-from datetime import date
 import math
 from openerp.tools import amount_to_text_en
+from datetime import date
 
 _logger = logging.getLogger(__name__)
 
@@ -13,6 +13,8 @@ PAYMENT_MODE = [("tp", "To Pay"),
 		("cca", "To Pay(CCA)"),
 		("p","Paid"),
 		("pdd", "Paid Delivery"),
+		("pcca", "Paid (CCA)"),
+		("dd", "Door Delivery")
 		]
 DISPATCH_MODE = [("tl", "Parcel Service"),
 		("rail", "Rail Freight"),
@@ -52,7 +54,7 @@ class LrDoc(models.Model):
 	name = fields.Char("Name")
 	partner_id = fields.Many2one("res.partner", string="Customer", required=True, readonly=True, domain=[("customer", "=", True)], states={"draft":[('readonly',False)]})
 	invoice_id = fields.Many2many("account.invoice", "partner_invoices_rel", "partner_id", "invoice_id", string="Invoices", required=True, readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
-	date = fields.Datetime("Date", required=True, select=True, readonly=True, default=lambda x:date.today(), states={"draft":[('readonly', False)]})
+	date = fields.Datetime("Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
 	docket_no = fields.Char(string="Docket No")
 	docket_date = fields.Datetime("Docket Date", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
 	freight_payment_type = fields.Selection(PAYMENT_MODE, string="Mode Of Dispatch", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})

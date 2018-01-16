@@ -117,7 +117,7 @@
 		          		<tr style="border:2px solid black; padding-bottom:20px">
 		          			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Invoice and Date</b></td>
 		          			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px">
-		          				<t t-foreach="o.invoice_id" t-as="invoices"><span style="margin-right:10px; margin-top:10px" t-esc="invoices.number.replace('SAJ-', '')" />Date:<span style="margin-left:10px" t-esc="invoices.date_invoice"/><br/><br/></t>
+		          				<t t-foreach="o.invoice_id" t-as="invoices"><span style="margin-right:10px; margin-top:10px" t-esc="invoices.number.replace('SAJ-', '')" />Date:<span style="margin-left:10px" t-field="invoices.date_invoice" t-field-options='{"format": "dd-MM-YYYY"}'/><br/><br/></t>
 		          			</td>
 		          		</tr>
 		          		<tr style="border:2px solid black; padding-bottom:20px">
@@ -134,7 +134,7 @@
 			       		</tr>
 			       		<tr style="border:2px solid black; padding-bottom:20px">
 			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Docket Date</b></td>
-			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.docket_date"><span t-field="o.docket_date"/></t></td>
+			       			<td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:10px"><t t-if="o.docket_date"><span t-field="o.docket_date" t-field-options='{"format": "dd-MM-YYYY"}'/></t></td>
 			       		</tr>
 			       		<tr style="border:2px solid black; padding-bottom:20px">
 			       			<td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Vehicle and Driver Details</b></td>
@@ -179,13 +179,62 @@
 			          		</table>
 			          	</t>
 		          	</t>
-		          	<table width="100%">
-			       		<tr style="border:1px solid black; padding-bottom:20px">
+		          	<table width="100%" style="margin-top:20px">
+			       		<tr style="border:1px solid black; padding-bottom:20px; ">
 			          		<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><b>Total Invoice Amount</b></td>
 			          		<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="taxable_amount"/></td>
 			          			<td width="33%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="o.total_amount"/></td>
 			          	</tr>
 			       	</table>
+
+			       	<table width="100%">
+		          		<tr>
+		          			<td width="100%" style="font-size:15px;text-align:center; padding-top:25px">
+		          				<b>Invoice Based HSN Summary</b>
+		          			</td>
+		          		</tr>
+		          	</table>
+
+		          	<t t-foreach="invoice_hsn_values" t-as="invoice">
+		          		<t t-if="invoice_hsn_values[invoice]">
+	          				<table width="100%">
+			          			<tr>
+			          				<td width="100%" style="font-size:15px;text-align:center; padding-top:25px">
+			          					<b><span t-esc="invoice.replace('SAJ-', '')"/></b>
+			          				</td>
+			          			</tr>
+			          		</table>
+			          		<table width="100%">
+			          			<tr width="50%" style="border:1px solid black; padding-bottom:20px">
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><b>HSN</b></td>
+			          				<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>Taxable Value</b></td>
+		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>Tax (%)</b></td>
+		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>IGST</b></td>
+		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>SGST</b></td>
+		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>CGST</b></td>
+		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>CESS</b></td>
+		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
+		          					<b>Sub Total</b></td>		          							 
+			          			</tr>
+			          			<tr t-foreach="invoice_hsn_values[invoice]" t-as="hsn" style="border:1px solid black; padding-bottom:20px">
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="hsn"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][1]"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][0]"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][2]"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][3]"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][4]"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][5]"/></td>
+			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="sum(invoice_hsn_values[invoice][hsn][1:6])"/></td>
+			          			</tr>
+			          		</table>			          		
+		          		</t>		          		
+		          	</t>
 	            </div>
 	       	</t>
 		</template>
