@@ -12,9 +12,12 @@
                     <group colspan="4" col="4">
                         <field name="date_from" required="1"/>
                         <field name="date_to" required="1"/>
+                        <field name="prod_or_cust" />
+                        <field name="company_id" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}"/>
                     </group>
                     <group>
-                        <field name="customer" reaquired="1"/>
+                        <field name="product" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}"/>
+                        <field name="customer" attrs="{'invisible':[('prod_or_cust', '=', 'prod')]}"/>
                     </group>
                     <footer>
                         <button name="print_sales_report" string="Print" type="object" icon="gtk-print"/>
