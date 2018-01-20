@@ -50,10 +50,10 @@ class ReportLr(models.AbstractModel):
 				taxable_amount += inv_obj.amount_untaxed
 
 				for hsn in hsn_temp:
-					hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total = 0, 0, 0, 0
-					hsn_total_taxablevalue = 0
-					tax_percnt = 0
 					for invoice_line in inv_obj.invoice_line:
+						hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total = 0, 0, 0, 0
+						hsn_total_taxablevalue = 0
+						tax_percnt = 0
 						if hsn != invoice_line.product_id.hs_code_id.code[0:2]:
 							continue
 						hsn_total_taxablevalue += invoice_line.price_subtotal
@@ -62,14 +62,24 @@ class ReportLr(models.AbstractModel):
 								hsn_cgst_total += round((invoice_line.price_subtotal * tax.amount), 2)
 							elif tax.gst_type == "sgst":
 								tax_percnt = (tax.amount * 2)*100
-								hsn_sgst_total += round((invoice_line.price_subtotal * tax.amount), 2)
+								hsn_sgst_total = round((invoice_line.price_subtotal * tax.amount), 2)
 							elif tax.gst_type == "igst":
 								tax_percnt = (tax.amount)*100
-								hsn_igst_total += round((invoice_line.price_subtotal * tax.amount), 2)
+								hsn_igst_total = round((invoice_line.price_subtotal * tax.amount), 2)
 							elif tax.gst_type == "cess":
-								hsn_cess_total += round((invoice_line.price_subtotal * tax.amount), 2)
-					if not hsn_particulars.has_key(hsn):
-						hsn_particulars.update({hsn:[round(tax_percnt, 2), round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2)]})
+								hsn_cess_total = round((invoice_line.price_subtotal * tax.amount), 2)
+						if not hsn_particulars.has_key(hsn):
+							hsn_particulars.update({hsn:{round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2)]}})
+						else:
+							if not hsn_particulars[hsn].has_key(round(tax_percnt, 2)):
+								hsn_particulars[hsn].update({round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2)]})
+							else:
+								hsn_particulars[hsn][round(tax_percnt, 2)][0] += round(hsn_total_taxablevalue, 2)
+								hsn_particulars[hsn][round(tax_percnt, 2)][1] += round(hsn_igst_total, 2)
+								hsn_particulars[hsn][round(tax_percnt, 2)][2] += round(hsn_sgst_total, 2)
+								hsn_particulars[hsn][round(tax_percnt, 2)][3] += round(hsn_cgst_total, 2)
+								hsn_particulars[hsn][round(tax_percnt, 2)][4] += round(hsn_cess_total, 2)
+
 				if not invoice_hsn_values.has_key(inv_obj.number):
 					invoice_hsn_values.update({inv_obj.number:hsn_particulars})
 		docargs = {

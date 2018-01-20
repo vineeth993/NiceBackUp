@@ -222,16 +222,18 @@
 		          					<td width="12%" style="border-right:1px solid black;padding-left:10px; padding-right:5px; padding-bottom:20px">
 		          					<b>Sub Total</b></td>		          							 
 			          			</tr>
-			          			<tr t-foreach="invoice_hsn_values[invoice]" t-as="hsn" style="border:1px solid black; padding-bottom:20px">
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="hsn"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][1]"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][0]"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][2]"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][3]"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][4]"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][5]"/></td>
-			          				<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="sum(invoice_hsn_values[invoice][hsn][1:6])"/></td>
-			          			</tr>
+			          			<t t-foreach="invoice_hsn_values[invoice]" t-as="hsn" >
+			          				<tr t-foreach="invoice_hsn_values[invoice][hsn]" t-as="tax" style="border:1px solid black; padding-bottom:20px">
+			          					<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="hsn"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][tax][0]"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="tax"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][tax][1]"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][tax][2]"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][tax][3]"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="invoice_hsn_values[invoice][hsn][tax][4]"/></td>
+										<td width="12%" style="border-right:1px solid black; padding-left:10px; padding-top:10px; padding-bottom:20px"><span t-esc="sum(invoice_hsn_values[invoice][hsn][tax][0:5])"/></td>
+			          				</tr>
+			          			</t>
 			          		</table>			          		
 		          		</t>		          		
 		          	</t>
