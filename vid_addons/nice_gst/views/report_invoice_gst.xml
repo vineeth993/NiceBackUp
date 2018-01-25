@@ -105,7 +105,7 @@
 
     <template id="report_invoice_gst_document">
         <t t-call="nice_gst.external_layout">
-            <div class="page" style="font-size:10px;font-family: Century Gothic;">
+            <div class="page" style="font-size:10px;">
                 <t t-set="company" t-value="res_company"></t>
                 <table width="100%">
                     <tr style="border-top: solid 3px black;border-left: solid 3px black;border-right: solid 3px black;">
@@ -119,7 +119,7 @@
                         <td width="50%" style="border-right: solid 1px black;">
                             <table width="100%">
                                 <tr style="border-bottom: solid 1px black;">
-                                    <td width="25%" style="padding-left: 5px;">
+                                    <td width="28%" style="padding-left: 5px;">
                                         <b>INVOICE No.</b><br/>
                                         <b>INVOICE DATE</b><br/>
                                         <b>MODE OF TRANSPORT</b><br/>
@@ -131,7 +131,7 @@
                                         :<br/>
                                         :
                                     </td>
-                                    <td width="74%" style="padding-right: 3px;">
+                                    <td width="71%" style="padding-right: 3px;">
                                         <span t-if="o.number"><span t-esc="o.number.replace('SAJ-', '')"/></span>
                                         <t t-if="o.sale_sub_type_id"><span style="font-size:8px;margin-left:30px"><span t-field="o.sale_sub_type_id.name"/><br/></span></t>
                                         <t t-if="not o.sale_sub_type_id"><br/></t>
@@ -147,7 +147,7 @@
                             <t t-set="order_line" t-value="o.order_line()"/>
                             <table width="100%">
                                 <tr style="border-bottom: solid 1px black;">
-                                    <td width="20%" style="padding-left: 5px;">
+                                    <td width="24%" style="padding-left: 5px;">
                                         <b>ORDER No.</b><br/>
                                         <b>ORDER DATE</b><br/>
                                         <b>REVERSE CHARGE</b><br/>
@@ -159,7 +159,7 @@
                                         :<br/>
                                         :
                                     </td>
-                                    <td width="79%" style="padding-right: 3px;">
+                                    <td width="75%" style="padding-right: 3px;">
                                         <t t-foreach="order_line" t-as="o_line"> <span t-field="o_line.name"/> - <span t-field="o_line.client_order_ref"/></t><br/>
                                         <t t-foreach="order_line" t-as="o_line"> <span t-field="o_line.date_order"/> </t><br/>
                                         No<br/>
@@ -176,15 +176,15 @@
                 </table>
                 <table width="100%">
                     <tr style="border-left: solid 3px black;border-right: solid 3px black;border-bottom: solid 3px black;">
-                        <td width="50%" style="border-right: solid 1px black;padding-left: 5px;">
+                        <td width="50%" style="border-right: solid 1px black;">
                             <table>
                                 <tr>
-                                    <td width="18%" ><b>PARTY</b></td>
+                                    <td width="18%"  style="padding-left:5px;" ><b>PARTY</b></td>
                                     <td width="1%">:</td>
                                     <td width="81%"><span t-field="o.partner_id.name"/></td>
                                 </tr>
                                 <tr>
-                                    <td ><b>ADDRESS</b></td>
+                                    <td  style="padding-left:5px;"><b>ADDRESS</b></td>
                                     <td>:</td>
                                     <td style="padding-right: 3px;">
                                         <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
@@ -195,18 +195,18 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-right: 3px;"><b>PHONE NO</b></td>
+                                    <td  style="padding-left:5px;"><b>PHONE NO</b></td>
                                     <td>:</td>
                                     <t t-if="o.partner_id.mobile"><td style="padding-right: 3px;"><span t-field="o.partner_id.mobile"/></td></t>
                                     <t t-if=" not o.partner_id.mobile"><td style="padding-right: 3px;"/></t>
                                 </tr>
                                 <tr>
-                                    <td ><b>GSTIN</b></td>
+                                    <td  style="padding-left:5px;"><b>GSTIN</b></td>
                                     <td>:</td>
                                     <td style="padding-right: 3px;"><span t-field="o.partner_id.gst_no"/></td>
                                 </tr>
                                 <tr>
-                                    <td ><b>STATE &amp; CODE</b></td>
+                                    <td  style="padding-left:5px;"><b>STATE &amp; CODE</b></td>
                                     <td>:</td>
                                     <td style="padding-right: 3px;"><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,
                                         <span t-field="o.partner_id.state_id.code"/></span>
@@ -261,12 +261,12 @@
                         <td width="7%" style="vertical-align: middle;border-right: solid 1px black;"><b>HSN</b></td>
                         <td width="24%" style="vertical-align: middle; border-right: solid 1px black;"><b>PRODUCT PARTICULARS</b></td>
                         <td width="4%" style="vertical-align: middle; border-right: solid 1px black;"><b>QTY</b></td>
-                        <td width="5%" style="vertical-align: middle; border-right: solid 1px black;"><b>PACK</b></td>
-                        <td width="8%" style="vertical-align: middle; border-right: solid 1px black;"><b>UNIT RATE</b></td>
+                        <td width="7%" style="vertical-align: middle; border-right: solid 1px black;"><b>PACK</b></td>
+                        <td width="7%" style="vertical-align: middle; border-right: solid 1px black;"><b>UNIT RATE</b></td>
                         <td width="10%" style="vertical-align: middle;border-right: solid 1px black;"><b>TOTAL</b></td>
                         <td width="5%" style="vertical-align: middle; border-right: solid 1px black;"><b>DISC %</b></td>
                         <td width="6%" style="vertical-align: middle; border-right: solid 1px black;"><b>DISC</b></td>
-                        <td width="10%" style="vertical-align: middle; border-right: solid 1px black;"><b>TAXABLE VALUE</b></td>
+                        <td width="9%" style="vertical-align: middle; border-right: solid 1px black;"><b>TAXABLE VALUE</b></td>
                         <td width="5%" style="vertical-align: middle; border-right: solid 1px black;"><b>GST %</b></td>
                         <td width="8%" style="vertical-align: middle; padding-right: 3px;"><b>GST</b></td>
                     </tr>
@@ -428,7 +428,7 @@
                         <td  style="border-right: solid 1px black;text-align:left;padding-left: 5px;"><b>Place of Supply:</b></td>
                         <td  style="padding-left:5px; border-right: solid 1px black;text-align:left;"><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,<span t-field="o.partner_id.state_id.code"/></span></td>
                         <td ><b>Date &amp; Time of Removal :</b></td>
-                        <td colspan="8" style="padding-left:5px; border-right: solid 1px black;text-align:left;"></td>
+                        <td colspan="8" style="padding-left:5px; border-right: solid 1px black;text-align:left;">Test</td>
                     </tr>
                 </table>
                 <table width="100%">
