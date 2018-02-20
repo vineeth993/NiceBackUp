@@ -46,6 +46,7 @@ class AccountInvoiceLine(models.Model):
     extra_discount = fields.Float('Extra Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True)
     additional_discount = fields.Float('Scheme Discount (%)', digits_compute=dp.get_precision('Discount'))
     price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'), store=True, readonly=True, compute='_compute_price')
+    batch_no = fields.Char("Batch No")
 
     @api.model
     def move_line_get_item(self, line):

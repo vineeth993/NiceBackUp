@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		
+		<record id='company_retirement_age' model='ir.ui.view'>
+			<field name='name'>company.retirement.age</field>
+			<field name='model'>res.company</field>
+			<field name='inherit_id' ref='base.view_company_form' />
+			<field name ='arch' type='xml'>
+				<xpath expr='//group[@string="Accounting"]' position='after'>
+					<group string='Retirement'>
+						<field name='retirement_age' />
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+		<record id='employee_retirement_age' model='ir.ui.view'>
+			<field name='name'>employee.retirement.age</field>
+			<field name='model'>hr.employee</field>
+			<field name='inherit_id' ref='hr.view_employee_form'/>
+			<field name='arch' type='xml'>
+				<xpath expr='//group[@string="Birth"]' position='after'>
+					<group string='Retirement Details'>
+						<field name='age'/>
+						<field name='company_retire_age'/>
+						<field name='expected_retire_year'/>
+						<field name='years_of_service'/>
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>

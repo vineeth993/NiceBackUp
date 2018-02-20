@@ -118,9 +118,8 @@ class SaleOrderLine(models.Model):
             res['value']['product_name'] = product_obj.name
             if product_obj.price_list and res['value']['partner_type'] != 'special':
                 raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
+
         return res
-
-
 
     def open_form_view(self, cr, uid, ids, context=None):
         if not ids: return []
@@ -152,7 +151,6 @@ class SaleOrderLine(models.Model):
                         'price_unit':line.product_id.lst_price
                         })
 
-
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
     
@@ -166,7 +164,7 @@ class StockWarehouse(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
     
-    @api.depends('order_line.price_subtotal', 'extra_discount', 'normal_disc', 'nonread_extra_disocunt', 'nonread_normal_disocunt')
+    @api.depends('order_line.price_subtotal', 'extra_discount', 'normal_disc', 'nonread_extra_disocunt', 'nonread_normal_disocunt', 'partner_selling_type')
     def _amount_all(self):
         """
         Compute the total amounts of the SO.
@@ -183,7 +181,6 @@ class SaleOrder(models.Model):
             val = val1 = add_disc =  0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
-                _logger.info("Val1 ="+str(line.price_subtotal))
                 val1 += line.price_subtotal
                 val += self._amount_line_tax(line)
             order.update({
@@ -231,6 +228,11 @@ class SaleOrder(models.Model):
     amount_tax = fields.Float(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
    
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+        res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+        res['name'] = line.product_name
+        return res
+
     @api.multi
     def onchange_partner_id(self, partner_id):
         res = super(SaleOrder, self).onchange_partner_id(partner_id)
@@ -260,7 +262,23 @@ class SaleOrder(models.Model):
                     'nonread_normal_disocunt':0.0,
                     'nonread_extra_disocunt':0.0,
                     })
-                
+
+    @api.onchange('partner_selling_type', 'normal_disc', 'extra_discount', 'nonread_extra_disocunt', 'nonread_normal_disocunt')
+    def onchange_discount(self):
+        for line in self.order_line:
+            if self.partner_selling_type == 'normal':
+                line.update({'partner_type':'normal',
+                            'discount':self.normal_disc,
+                            'extra_discount':self.extra_discount})
+            elif self.partner_selling_type == 'extra':
+                line.update({'partner_type':'extra',
+                            'discount':self.normal_disc,
+                            'extra_discount':self.nonread_extra_disocunt})
+            elif self.partner_selling_type == 'special':
+                line.update({'partner_type':'special',
+                            'discount':self.nonread_normal_disocunt,
+                            'extra_discount':self.nonread_extra_disocunt})
+
     @api.multi
     def action_quotation_confirm(self):
         self.state = 'confirm'
@@ -281,13 +299,15 @@ class SaleOrder(models.Model):
     
     @api.multi
     def action_button_confirm(self):
+        order_line_obj = self.env['sale.order.line']
         order_lines = self.env['sale.order.line'].search([('order_id', '=', self.id)], order='product_name')
         seq = 1
+        temp_product = {}
         for line in order_lines:
             line.sequence = seq
             seq += 1
             if line.product_uom_qty <= 0:
-                raise exceptions.Warning('Quantity cannot be less than zero')
+                raise exceptions.Warning('Quantity cannot be less than zero')                
         return super(SaleOrder, self).action_button_confirm()
     
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
@@ -303,6 +323,10 @@ class SaleOrder(models.Model):
             inv_obj.write(cr, uid, res, vals, context=context)
         return res
 
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        res = super(SaleOrder, self).onchange_partner_id(cr, uid, ids, part=part, context=context)
+        res["value"]["user_id"] = uid
+        return res
     
 class TransportDocument(models.Model):
     _name = 'transport.document'

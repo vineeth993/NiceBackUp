@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<record id="smtp_config_action" model="ir.actions.act_window">
+			<field name="name">SMTP Config</field>
+			<field name="res_model">smtp.config</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+		</record>
+
+		<record id="smtp_config_form" model="ir.ui.view">
+			<field name="name">SMTP Config</field>
+			<field name="model">smtp.config</field>
+			<field name="arch" type="xml">
+				<form string="SMTP Config">
+					<group>
+						<group>
+							<field name="name"/>
+						</group>
+						<group>
+							<field name="smtp_server"/>
+							<field name="smtp_port"/>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+	</data>
+</openerp>

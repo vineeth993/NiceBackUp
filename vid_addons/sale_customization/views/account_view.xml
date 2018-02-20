@@ -30,6 +30,13 @@
 					<!-- <field name="additional_extra_disocunt"
 						attrs="{'invisible':[('partner_selling_type','!=','special'),('partner_selling_type','!=','extra')]}" /> -->
 				</xpath>
+				
+				<xpath
+					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='name']"
+					position="after">
+					<field name="batch_no" />
+				</xpath>
+
 				<xpath
 					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='discount']"
 					position="after">
@@ -52,6 +59,12 @@
          	<field name="arch" type="xml">
          		<xpath expr="//tree[@string='Invoice']" position="attributes">
          			<attribute name="default_order">date_invoice desc</attribute>
+         		</xpath>
+         		<xpath expr="//field[@name='company_id']" position="after">
+         			<field name="partner_selling_type" />          			
+         		</xpath>
+         		<xpath expr="//field[@name='origin']" position="attributes">
+         			<attribute name="invisible">1</attribute>
          		</xpath>
          	</field>
          </record>

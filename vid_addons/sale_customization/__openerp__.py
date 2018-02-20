@@ -19,7 +19,7 @@ CRM/Sales Customization
         'views/account_view.xml',
         'views/print_on_envolope.xml',
         'views/sale_report_picking.xml',
-
+        # 'wizard/stock_transfer_details.xml',
         'views/base_view.xml',
     ],
     'installable': True,
