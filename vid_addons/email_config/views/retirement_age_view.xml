@@ -21,6 +21,45 @@
 			<field name='model'>hr.employee</field>
 			<field name='inherit_id' ref='hr.view_employee_form'/>
 			<field name='arch' type='xml'>
+				<xpath expr="//label[@for='name']" position="before">
+					<label for="title" class="oe_edit_only"/>
+                    <field name="title" />
+				</xpath>
+				<xpath expr="//field[@name='country_id']" position="before">
+					<field name="employee_id" />
+				</xpath>
+				<xpath expr="//field[@name='bank_account_id']" position="before">
+	                <field name="pf_status" />
+	                <field name="esic_status"/>
+	                <field name="tds"/>
+	            </xpath>
+	            <xpath expr="//field[@name='passport_id']" position='before'>
+	            	<field name="blood_group"/>
+	            	<field name="qualification"/>
+	            	<field name="religion"/>
+	            	<field name="category"/>
+	            </xpath>
+	            <xpath expr='//group[@string="Status"]' position='before'>
+	            	<group string="Provident Fund" attrs='{"invisible":[("pf_status", "=", "no")]}'>
+						<field name="provident_fund_no"/>
+					</group>
+					<group string="ESIC Details" attrs='{"invisible":[("esic_status", "=", "no")]}'>
+						<field name="esic_no"/>
+						<field name="esic_office"/>
+						<field name="esic_dispansary"/>
+					</group>					
+					<group string="TDS" attrs='{"invisible":[("tds", "=", "no")]}'>
+						<field name="tds_perc"/>
+					</group>
+					<group string="Emergency Contact Details">
+						<field name="contact_person_1"/>
+						<field name="contact_relationship_1"/>
+						<field name="contact_mobile_1"/>
+						<field name="contact_person_2"/>
+						<field name="contact_relationship_2"/>
+						<field name="contact_mobile_2"/>
+					</group>
+	            </xpath>
 				<xpath expr='//group[@string="Birth"]' position='after'>
 					<group string='Retirement Details'>
 						<field name='age'/>
