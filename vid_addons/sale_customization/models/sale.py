@@ -322,11 +322,6 @@ class SaleOrder(models.Model):
                     }
             inv_obj.write(cr, uid, res, vals, context=context)
         return res
-
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        res = super(SaleOrder, self).onchange_partner_id(cr, uid, ids, part=part, context=context)
-        res["value"]["user_id"] = uid
-        return res
     
 class TransportDocument(models.Model):
     _name = 'transport.document'
