@@ -34,14 +34,19 @@
                         <group>
                             <group string="Spouse">
                                 <field name="fam_spouse"/>
+                                <field name="fam_dob_spouse"/>
+                                <field name="fam_spouse_occupation"/>
+                                <field name="fam_spouse_aadhar"/>
                                 <field name="fam_spouse_employer"/>
                                 <field name="fam_spouse_tel"/>
                             </group>
                             <group string="Parents">
                                 <field name="fam_father"/>
                                 <field name="fam_father_date_of_birth"/>
+                                <field name="fam_father_aadhar"/>
                                 <field name="fam_mother"/>
                                 <field name="fam_mother_date_of_birth"/>
+                                <field name="fam_mother_aadhar"/>
                             </group>
                         </group>
                         <group string="Children">

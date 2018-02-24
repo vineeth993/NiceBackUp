@@ -14,7 +14,6 @@ class hr_employee(models.Model):
     aadhar_card_id = fields.Char(string="Aadhar Card Id")
     election_card_id = fields.Char(string="Election Card Id")
     driving_license_no = fields.Char(string="Driving License No")
-    provident_fund_no = fields.Char(string="Provident Fund No")
 
     address_permanent_same_as_address_home = fields.Boolean(string="Same As Home Address")
     address_permanent_id = fields.Many2one(comodel_name='res.partner',string="Permanent Address")

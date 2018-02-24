@@ -26,6 +26,9 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     fam_spouse = fields.Char("Name")
+    fam_dob_spouse = fields.Date("Date of Birth")
+    fam_spouse_occupation = fields.Char("Occupation")
+    fam_spouse_aadhar = fields.Char("Aadhar Number")
     fam_spouse_employer = fields.Char("Employer")
     fam_spouse_tel = fields.Char("Telephone.")
     fam_children_ids = fields.One2many(
@@ -33,6 +36,8 @@ class HrEmployee(models.Model):
     fam_father = fields.Char("Father's Name")
     fam_father_date_of_birth = fields.Date(
         "Date of Birth", oldname='fam_father_dob')
+    fam_father_aadhar = fields.Char("Aadhar Number")
     fam_mother = fields.Char("Mother's Name")
     fam_mother_date_of_birth = fields.Date(
         "Date of Birth", oldname='fam_mother_dob')
+    fam_mother_aadhar = fields.Char("Aadhar Number")

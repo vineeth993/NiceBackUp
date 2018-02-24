@@ -23,7 +23,6 @@
                 <field name="aadhar_card_id"/>
                 <field name="election_card_id"/>
                 <field name="driving_license_no"/>
-                <field name="provident_fund_no"/>
             </xpath>
             <xpath expr="//field[@name='address_home_id']" position="after">
                 <field name="address_permanent_same_as_address_home"/>
