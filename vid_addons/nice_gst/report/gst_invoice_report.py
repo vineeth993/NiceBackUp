@@ -11,8 +11,12 @@ class ReportInvoice(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        docs = self.env['account.invoice'].browse(data.get('id', []))
-        invoice_id = data['id']
+        if data:
+            docs = self.env['account.invoice'].browse(data.get('id', []))
+            invoice_id = data['id']
+        else:
+            docs = self.env['account.invoice'].browse(docids[0])
+            invoice_id = docids[0]
         invoice_obj = self.env['account.invoice']
         invoice = invoice_obj.browse(invoice_id)
         templates = {}
@@ -88,11 +92,11 @@ class ReportInvoice(models.AbstractModel):
 
             disc = line.discount
             e_disc = line.extra_discount
-
+            _logger.info("The batch no = "+str(line.batch_no))
             lines.append({
                 's_no': count,
                 'hsn': line.product_id.hs_code_id and line.product_id.hs_code_id.code or '',
-                'b_no':line.batch_no or '',
+                'b_no':line.batch_no or '', 
                 'code': line.product_id.default_code,
                 'name': line.product_id.name,
                 'volume': line.product_id.volume,
