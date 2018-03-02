@@ -322,6 +322,7 @@ class SaleOrder(models.Model):
                     }
             inv_obj.write(cr, uid, res, vals, context=context)
         return res
+
     
 class TransportDocument(models.Model):
     _name = 'transport.document'
