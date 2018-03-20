@@ -23,10 +23,10 @@
                         <div class="item oe_img_bg active" style="background-image: url(&quot;/ornate_shop_module/static/src/img/slide01.jpg&quot;);">
                           <div class="container">
                             <div class="row content">
-                              <div style="position:absolute;top:50%;left:40%;transform: translate(-60%, -60%);">
+                              <div class="carousel-content col-sm-12 col-md-7">
                                 <b>
-                                  <h1 style="color:white;">Quality Policy</h1>
-                                  <p1 style="color:yellow;">Our Quality Policy is to give total satisfaction to our customers by ensuring availability and supply of quality products supported by prompt service. We shall continually improve our performance in meeting customer requirements.</p1>
+                                  <h1>Quality Policy</h1>
+                                  <p1>Our Quality Policy is to give total satisfaction to our customers by ensuring availability and supply of quality products supported by prompt service. We shall continually improve our performance in meeting customer requirements.</p1>
                                 </b>
                               </div>
                               <div class="carousel-img col-md-6 hidden-sm hidden-xs" />
