@@ -10,6 +10,8 @@ from openerp import api, fields, models
 TAX_TYPES = [
     ('gst', 'Local GST'),
     ('igst', 'Interstate GST'),
+    ('formstate', 'Form State'),
+    ('forminter', 'Form Interstate'),
     ('none', 'None'),
     ]
 GST_TYPES = [
