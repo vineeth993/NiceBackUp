@@ -445,6 +445,7 @@ padding-right: 15px;"> -->
                         
                 </table> -->
                 <!-- </div> -->
+                <t t-if="o.partner_id.tax_desc"><p style="font-size:15px">Declaration : <span t-field="o.partner_id.tax_desc"/></p></t>
             </div>
         </t>
     </template>

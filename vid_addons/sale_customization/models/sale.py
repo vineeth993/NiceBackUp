@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api, _, exceptions
 import openerp.addons.decimal_precision as dp
@@ -36,10 +36,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             partner = line.order_id.partner_id
             lang = partner.lang
-            gst, igst = False, False
+            gst, igst, formstate, forminter = False, False, False, False
         for line in self:
             taxes_ids = []
-            gst, igst = False, False
+            gst, igst, formstate, forminter = False, False, False, False
             sub_type_id = self.env['sale.order.sub.type'].browse(int(line.sale_sub_type))
             company = self.env['res.users'].browse(self._uid).company_id
             company_gst = company.gst_no and company.gst_no[:2] or ''
@@ -56,21 +56,37 @@ class SaleOrderLine(models.Model):
             if sub_type_id:
                 if sub_type_id and sub_type_id.tax_categ == 'gst':
                     gst = True
-                    igst = False
+                    igst, formstate, forminter = False, False, False
                 elif sub_type_id and sub_type_id.tax_categ == 'igst':
-                    gst = False
+                    gst, formstate, forminter = False, False, False
                     igst = True
+                elif sub_type_id and sub_type_id.tax_categ == 'formstate':
+                    gst, igst, forminter = False, False, False
+                    formstate = True
+                elif sub_type_id and sub_type_id.tax_categ == 'forminter':
+                    gst, igst, formstate = False, False, False
+                    forminter = True
                 else:
-                    gst = igst = False
+                    gst, igst, formstate, forminter = False, False, False, False
             fpos = line.order_id.partner_id.property_account_position
-            for prod_tax in line.product_id.taxes_id:
-                if prod_tax.company_id.id == company.id:
-                    if gst:
-                        if prod_tax.tax_categ == 'gst':
-                            taxes_ids.append(prod_tax.id)
-                    elif igst:
-                        if prod_tax.tax_categ == 'igst':
-                            taxes_ids.append(prod_tax.id)
+            if gst or igst:
+                for prod_tax in line.product_id.taxes_id:
+                    if prod_tax.company_id.id == company.id:
+                        if gst:
+                            if prod_tax.tax_categ == 'gst':
+                                taxes_ids.append(prod_tax.id)
+                        elif igst:
+                            if prod_tax.tax_categ == 'igst':
+                                taxes_ids.append(prod_tax.id)
+            elif formstate or forminter:
+                for parter_tax in line.order_partner_id.tax_id:
+                    if parter_tax.company_id.id == company.id:
+                        if formstate:
+                            if parter_tax.tax_categ == 'gst':
+                                taxes_ids.append(parter_tax.id)
+                        elif forminter:
+                            if parter_tax.tax_categ == 'igst':
+                                taxes_ids.append(parter_tax.id)
             line.tax_id = taxes_ids
             taxes = line.product_id.taxes_id
             taxes_id = self.env['account.fiscal.position'].map_tax(taxes)
@@ -97,6 +113,7 @@ class SaleOrderLine(models.Model):
     partner_type = fields.Char(string="Partner")
     sale_sub_type = fields.Char(string="Sub Type")
     product_name = fields.Char(string="Prod Name")
+    order_partner_id = fields.Many2one("res.partner")
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -104,7 +121,11 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos,
             name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
             fiscal_position=fiscal_position, flag=flag, context=context)
+        
         partner_obj = self.pool.get('res.partner')
+        partner_id = partner_obj.browse(cr, uid, partner_id)
+
+        res["value"]["order_partner_id"]  = partner_id
 
         if context.get('sub_type_id', '/') != '/':
             res['value']['sale_sub_type'] = context.get('sub_type_id')

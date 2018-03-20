@@ -15,8 +15,9 @@ class ResPartner(models.Model):
     tdisc = fields.Float(string='T Discount %')
     nedisc = fields.Float(string='Non-Excise Discount %')
     customer_type = fields.Many2one('customer.type', string='Customer Type')
-    tax_form = fields.Many2one('account.tax', string='Tax')
     lead_time = fields.Integer("Lead Time")
+    tax_id = fields.Many2many("account.tax", "form_wise_tax_in_partner", "partner_id", "taxes_id", "Customer Taxes")
+    tax_desc = fields.Text("Tax Description")
     # partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'),('extra', 'Extra')],string='Partner Selling Type')
     # partner_selling_type_id = fields.Many2one('partner.selling.type',string='Partner Selling Type-Discount')
     
