@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<record id="account_config_custom" model="ir.ui.view">
+			<field name="name">account.config.custom</field>
+			<field name="model">account.config.settings</field>
+			<field name="inherit_id" ref="account.view_account_config_settings"/>
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='bank_cash']" position="after">
+					<separator string="Round Off"/>
+					<group name="round_off_group">
+                       	<field name="round_off"/>
+                       	<field name="round_off_account"/>
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>

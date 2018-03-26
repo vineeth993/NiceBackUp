@@ -1,6 +1,7 @@
 from openerp import models, fields, api, _
 from openerp.osv import osv
 from datetime import date
+import datetime
 import logging
 from openerp import tools
 from openerp.tools import email_re, email_split
@@ -64,6 +65,11 @@ class CrmProducts(models.Model):
 class LeadCustom(models.Model):
     _inherit = 'crm.lead'
 
+    def get_end_date(self):
+        today = date.today()
+        end_time = today + datetime.timedelta(days=7)
+        return end_time.strftime('%Y-%m-%d')
+
     lead_type = fields.Selection([(1, 'Direct Lead / Customer'), (2, 'In-Direct Lead /Customer'),
                                   (3, 'Direct Tender'), (4, 'Indirect Tender')], string="Lead Type", required=True, default=1)
     customer_type = fields.Many2one('customer.type', related='partner_id.customer_type', string="Customer Type")
@@ -71,7 +77,7 @@ class LeadCustom(models.Model):
     tender_last_date = fields.Date("Tender Last Date")
     tender_opening_date = fields.Date("Tender Opening Date")
     enq_date = fields.Date("Enquiry Date", default=date.today().strftime('%Y-%m-%d'))
-    enq_end_date = fields.Date("Enquiry End Date")
+    enq_end_date = fields.Date("Enquiry End Date", default=get_end_date)
     contact_date = fields.Date("Contact Before Date")
     product_ids = fields.One2many("crm.products", "crm_lead_id", "Product")
     planned_revenue = fields.Float(string="Expected Revenue", compute='calculate_revenue', store=True)
@@ -128,6 +134,12 @@ class LeadCustom(models.Model):
             vals['sale_sub_type_id'] = [(6, 0, [sale_sub_type.id for sale_sub_type in lead.sale_sub_type_id])]
         partner = partner.create(cr, uid, vals, context=context)
         return partner
+
+
+    @api.onchange('city')
+    def onchange_city(self):
+        if self.city:
+            self.state_id = self.city.state_id
 
     @api.onchange('gst_no', 'country_id')
     def onchange_gst_no(self):
@@ -199,6 +211,10 @@ class LeadCustom(models.Model):
 
     @api.multi
     def action_approved(self):
+        if self.ref:
+            partner = self.env['res.partner'].search([('ref', '=', self.ref)])
+            if partner:
+                raise ValidationError("Partner Reference already exist")
         if not self.partner_name or not self.ref or not self.sale_sub_type_id or not self.sale_type:
             raise ValidationError("Please Enter These Fields Company Name, Reference, Sale Order Type, Sub Type")
         self.lead_state = "approved"
