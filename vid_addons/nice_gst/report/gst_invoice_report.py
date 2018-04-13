@@ -98,7 +98,7 @@ class ReportInvoice(models.AbstractModel):
                 'hsn': line.product_id.hs_code_id and line.product_id.hs_code_id.code or '',
                 'b_no':line.batch_no or '', 
                 'code': line.product_id.default_code,
-                'name': line.product_id.name,
+                'name': line.product_id.name.split("-")[0],
                 'volume': line.product_id.volume,
                 'volume_uom': line.product_id.product_tmpl_id.uom_id_one.name,
                 'weight': line.product_id.weight,
