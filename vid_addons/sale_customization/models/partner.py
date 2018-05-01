@@ -1,5 +1,5 @@
 from openerp import models, fields, api, _
-
+from openerp.exceptions import ValidationError, Warning
 
 class CustomerType(models.Model):
     _name = 'customer.type'
@@ -34,7 +34,20 @@ class ResPartner(models.Model):
     #         res.append((inst.id, name))
     #     return res
 
+    @api.one
+    @api.constrains('ref')
+    def _check_reference_len(self):
+        if self.is_company:
+            if self.ref:
+                if len(self.ref) != 7 or self.ref.startswith("PA"):
+                    raise ValidationError('Please Check Reference Number in Sales & Purchases Tab')
+                else:
+                    partner = self.search([('ref', '=', self.ref)])
 
+                    if len(partner) > 1:
+                        raise ValidationError('Partner Refernce Already in use')
+            else:
+                raise ValidationError('Please Provide a reference number in Sales & Purchases Tab')
 
 
 

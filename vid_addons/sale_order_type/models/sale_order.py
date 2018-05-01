@@ -36,6 +36,10 @@ class SaleOrder(models.Model):
             self.partner_id = False
             raise ValidationError(('Before choosing a customer,\n select a customer type in the sales form.'))
         self.type_id = self.partner_id.sale_type.id
+        if self.sub_type_id:
+            if self.sub_type_id.tax_categ in ('formstate', 'forminter'):
+                if not self.partner_invoice_id.tax_id:
+                    raise Warning("Tax are not defined in partner under form sale tab")
 
     @api.one
     @api.onchange('type_id')

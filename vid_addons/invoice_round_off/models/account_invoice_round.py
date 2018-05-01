@@ -8,9 +8,9 @@ class account_invoice_round(models.Model):
 
 	_inherit = "account.invoice"
 
-	round_off_active = fields.Boolean(string="Round Off", compute="get_round_off")
-	round_off_total = fields.Float(string="Rounded Total", compute="_compute_amount")
-	round_off_amount = fields.Float(string="Rounded Amount", compute="_compute_amount")
+	round_off_active = fields.Boolean(string="Round Off", compute="get_round_off", store=True)
+	round_off_total = fields.Float(string="Rounded Total", compute="_compute_amount", store=True)
+	round_off_amount = fields.Float(string="Rounded Amount", compute="_compute_amount", store=True)
 
 	@api.depends("partner_id")
 	def get_round_off(self):

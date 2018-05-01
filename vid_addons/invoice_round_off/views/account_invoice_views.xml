@@ -8,7 +8,7 @@
 			<field name="inherit_id" ref="account.invoice_form"/>
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='amount_total']" position="after">
-					<field name="round_off_active"/>
+					<field name="round_off_active" invisible='1'/>
 					<field name="round_off_total"/>
 					<field name="round_off_amount"/>
 				</xpath>

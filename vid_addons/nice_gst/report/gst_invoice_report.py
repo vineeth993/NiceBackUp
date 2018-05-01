@@ -92,7 +92,6 @@ class ReportInvoice(models.AbstractModel):
 
             disc = line.discount
             e_disc = line.extra_discount
-            _logger.info("The batch no = "+str(line.batch_no))
             lines.append({
                 's_no': count,
                 'hsn': line.product_id.hs_code_id and line.product_id.hs_code_id.code or '',

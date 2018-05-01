@@ -4,29 +4,62 @@
         <template id="report_saleorder_customized" inherit_id="sale.report_saleorder_document">
             <xpath expr="//div[@class='row']" position="replace">
                 <table>
-                    <tr>
-                        <td><b>Party</b></td>
-                        <td width="2%">:</td>
-                        <td width="70%"><span t-field="o.partner_id.display_name"/></td>
-                    </tr>
-                    <tr>
-                        <td ><b>Address</b></td>
-                        <td>:</td>
-                            <td style="padding-left: 3px;">
-                                <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
-                                <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
-                                <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
-                                <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
-                                <span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
-                            </td>
-                    </tr>
-		    <tr>
-                        <td><b>GSTN</b></td>
-                        <td>:</td>
-                        <td style="padding-left: 3px;">
-                            <span t-if="o.partner_id.street"><span t-field="o.partner_id.gst_no"/><br/></span>   
-                        </td>
-                    </tr>
+                    <td width="50%">
+                        <table>
+                            <tr>
+                                <td><b>Party</b></td>
+                                <td width="2%">:</td>
+                                <td width="70%"><span t-field="o.partner_id.display_name"/></td>
+                            </tr>
+                            <tr>
+                                <td ><b>Address</b></td>
+                                <td>:</td>
+                                    <td style="padding-left: 3px;">
+                                        <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+                                        <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+                                        <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+                                        <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+                                        <span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
+                                    </td>
+                            </tr>
+        		            <tr>
+                                <td><b>GSTN</b></td>
+                                <td>:</td>
+                                <td style="padding-left: 3px;">
+                                    <span t-if="o.partner_id.street"><span t-field="o.partner_id.gst_no"/><br/></span>   
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="50%">
+                        <table>
+                            <tr>
+                                <td>Partner Selling Type</td>
+                                <td>:</td>
+                                <td><span t-if="o.partner_selling_type"/><span t-field="o.partner_selling_type"/></td>
+                            </tr>
+                            <tr>
+                                <td>Normal Discount</td>
+                                <td>:</td>
+                                <t t-if="o.normal_disc">
+                                    <td><span t-field="o.normal_disc"/></td>
+                                </t>
+                                <t t-if="o.nonread_normal_disocunt">
+                                    <td><span t-field="o.nonread_normal_disocunt"/></td>    
+                                </t>
+                            </tr>
+                            <tr>
+                                <td>Additional Discount</td>
+                                <td>:</td>
+                                <t t-if="o.extra_discount">
+                                    <td><span t-field="o.extra_discount"/></td>
+                                </t>
+                                <t t-if="o.nonread_extra_disocunt">
+                                    <td><span t-field="o.nonread_extra_disocunt"/></td>    
+                                </t>
+                            </tr>
+                        </table>
+                    </td>
                 </table>
                 
             </xpath>
