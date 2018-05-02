@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -37,6 +38,10 @@ class stock_picking(osv.osv):
             'nonread_normal_disocunt':move.picking_id.sale_id.nonread_normal_disocunt,
             'sale_order':move.picking_id.sale_id.name
         }
+    def copy(self, cr, uid, id, default=None, context=None):
+        raise osv.except_osv(_('Forbbiden to duplicate'), _('Is not possible to duplicate the record, please create a new one.'))
+
+
 
 class stock_move(osv.osv):
 

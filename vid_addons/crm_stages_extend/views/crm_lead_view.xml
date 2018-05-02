@@ -53,7 +53,7 @@
                     </field>                
                     <tree string="Opportunities" position="attributes">
                         <attribute name="colors">gray:probability == 100;red:(date_deadline and (date_deadline &lt; current_date)) or (stage_deadline and (stage_deadline &lt; current_date))</attribute>
-                        <attribute name="default_order">title_action desc</attribute>
+                        <attribute name="default_order">date_action desc</attribute>
                     </tree>
                     <xpath expr="//field[@name='section_id']" position="attributes">
                         <attribute name="invisible">1</attribute>
