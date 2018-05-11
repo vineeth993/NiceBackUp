@@ -63,8 +63,39 @@
                 </table>
                 
             </xpath>
-            
-            <xpath expr="//table[@class='table table-condensed']//thead//tr" position="replace">
+
+            <xpath expr="//h2" position="replace">
+	            <h2>
+                	<span t-if="o.state not in ['draft','sent']">Order N° </span>
+                	<span t-if="o.state in ['draft','sent']">Pre-Order N° </span>
+                	<span t-field="o.name"/>
+            	    </h2>
+	    </xpath> 
+
+            <xpath expr="//div[@id='informations']" position="replace">
+		<div class="row mt32 mb32" id="informations">
+                <div t-if="o.client_order_ref" class="col-xs-3">
+                    <strong>Your Reference:</strong>
+                    <p t-field="o.client_order_ref"/>
+                </div>
+                <div t-if="o.date_order" class="col-xs-3">
+                    <strong t-if="o.state not in ['draft','sent']">Date Ordered:</strong>
+                    <strong t-if="o.state in ['draft','sent']">Pre-Order Date:</strong>
+                    <p t-field="o.date_order"/>
+                </div>
+                <div t-if="o.user_id.name" class="col-xs-3">
+                    <strong>Salesperson:</strong>
+                    <p t-field="o.user_id.name"/>
+                </div>
+                <div t-if="o.payment_term" class="col-xs-3">
+                    <strong>Payment Term:</strong>
+                    <p t-field="o.payment_term"/>
+                </div>
+            </div>
+
+	    </xpath>
+	    
+	  <xpath expr="//table[@class='table table-condensed']//thead//tr" position="replace">
                 <tr>
                     <th>SL</th>
                     <th>Description</th>
