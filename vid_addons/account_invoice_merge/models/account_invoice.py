@@ -220,9 +220,9 @@ class AccountInvoice(models.Model):
                         org_ilines = so_line.mapped('invoice_lines')
                         invoice_line_ids = []
                         for org_iline in org_ilines:
-                            invoice_line_ids.append(
-                                invoice_lines_info[
-                                    new_invoice_id][org_iline.id])
+                            if invoice_lines_info[new_invoice_id].has_key(org_iline.id):
+                                invoice_line_ids.append(
+                                        invoice_lines_info[new_invoice_id][org_iline.id])
                         so_line.write(
                             {'invoice_lines': [(6, 0, invoice_line_ids)]})
         # recreate link (if any) between original analytic account line
