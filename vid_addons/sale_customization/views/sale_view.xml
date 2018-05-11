@@ -482,6 +482,10 @@
 				{'readonly_by_pass': ['date_order']}
 			</field>
 		</record>
+		
+		<record id="sale.menu_sale_quotations" model="ir.ui.menu">
+			<field name="name">Create Order/Quote</field>
+		</record>
 
 		<menuitem action="sale.action_orders" id="sale.menu_sale_order"
 			parent="base.menu_sales" sequence="6" name="Orders"
