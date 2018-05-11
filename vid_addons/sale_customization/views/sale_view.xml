@@ -475,6 +475,7 @@
 		</record>
 
 		<record id="sale.action_quotations" model="ir.actions.act_window">
+			<field name="name">Pre-Order/Quote</field>
 			<field name="domain">[('state','in',('draft','sent','cancel',
 				'confirm'))]
 			</field>
@@ -484,7 +485,7 @@
 		</record>
 		
 		<record id="sale.menu_sale_quotations" model="ir.ui.menu">
-			<field name="name">Create Order/Quote</field>
+			<field name="name">Pre-Order/Quote</field>
 		</record>
 
 		<menuitem action="sale.action_orders" id="sale.menu_sale_order"
