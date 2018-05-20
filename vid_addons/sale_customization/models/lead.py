@@ -70,8 +70,9 @@ class LeadCustom(models.Model):
         end_time = today + datetime.timedelta(days=7)
         return end_time.strftime('%Y-%m-%d')
 
-    lead_type = fields.Selection([(1, 'Direct Lead / Customer'), (2, 'In-Direct Lead /Customer'),
-                                  (3, 'Direct Tender'), (4, 'Indirect Tender')], string="Lead Type", required=True, default=1)
+    sale_id = fields.Many2one('sale.order', string="Sale Order")
+    lead_type = fields.Selection([(1, 'Lead Execute Through Company'), (2, 'Lead Execute Through Dealer'),
+                                  (3, 'Tender Execute Through Company'), (4, 'Tender Execute Through Dealer')], string="Lead Type", required=True, default=1)
     customer_type = fields.Many2one('customer.type', related='partner_id.customer_type', string="Customer Type")
     tender_advertizment_date = fields.Date("Tender Advertizment Date")
     tender_last_date = fields.Date("Tender Last Date")
@@ -101,6 +102,16 @@ class LeadCustom(models.Model):
         ("cancel", "Cancel")], string="State", default='draft')
     city = fields.Many2one("res.city", string="City")
     country_base_gst_type = fields.Selection([('national', 'National'), ('international', 'International')], string="GST Type")
+
+    customer_name = fields.Char(string="Customer Name")
+    customer_street1 = fields.Char(string="Address")
+    customer_street2  = fields.Char(string="Address2")
+    customer_zip = fields.Char(string="PO")
+    customer_city = fields.Many2one('res.city', string="City")
+    customer_state = fields.Many2one('res.country.state', string="State")
+    customer_country = fields.Many2one('res.country', string="Country")
+    customer_phone = fields.Char(string="Phone Number")
+    customer_email = fields.Char(string="E-mail")
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
@@ -135,6 +146,15 @@ class LeadCustom(models.Model):
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 
+    @api.onchange("customer_city")
+    def onchange_customer_city(self):
+        if self.customer_city:
+            self.customer_state = self.customer_city.state_id
+
+    @api.onchange("customer_state")
+    def onchange_customer_state(self):
+        if self.customer_state:
+            self.customer_country = self.customer_state.country_id
 
     @api.onchange('city')
     def onchange_city(self):

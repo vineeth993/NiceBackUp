@@ -12,7 +12,7 @@
                         <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action" help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible':[('lead_state', '!=', 'approved')]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True" domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]" options="{'fold_field': 'fold'}" on_change="onchange_stage_id(stage_id)" attrs="{'invisible':[('lead_state', '!=', 'approved')]}"/>
                         <button name="action_approve" type="object" string="Approval Process" attrs="{'invisible':[('lead_state', '!=', 'draft')]}" class="oe_highlight"/>
-                        <button name="action_approved" type="object" string="Approved" attrs="{'invisible':[('lead_state', '!=', 'approve')]}" class="oe_highlight"/>
+                        <button name="action_approved" type="object" string="Approved" attrs="{'invisible':[('lead_state', '!=', 'approve')]}" class="oe_highlight" groups="base.group_sale_salesman_all_leads"/>
                         <button name="%(crm_lead_lost_reason.action_crm_lead_lost)d" string="Mark Lost" type="action" class="oe_highlight" groups="base.group_user" attrs="{'invisible':['|', ('stage_id','=',7), ('lead_state', 'in', ('approved', 'cancel'))]}"/>
                         <field name="lead_state" widget="statusbar" statusbar_visible="draft, approve, approved" attrs="{'invisible':[('lead_state', 'in', ('approved', 'cancel'))]}"/>
                         <button name="action_reset" type="object" string="Reset To Draft" class="oe_highlight" attrs="{'invisible':[('lead_state', '!=', 'cancel')]}" />
@@ -25,10 +25,13 @@
 
                 <field name="partner_id" position="attributes">
                     <attribute name="domain">[('customer_type', '=', customer_type)]</attribute>
+                    <attribute name="string">Customer / Supplier</attribute>
+                    <attribute name="options"> {'no_open': True, 'no_create_edit': True}</attribute>
+                    <attribute name="attrs">{"required":[("lead_type", "in", (2, 4))]}</attribute>
                 </field>
 
                 <field name="partner_name" position="before">
-                    <field name="lead_type"/>
+                    <field name="lead_type"/><label string="Please Fill the details in Customer Tab" nolabel="1" attrs='{"invisible":[("lead_type", "not in", (2, 4))]}' colspan="4" style='color:red;text-align:center;font-size:15px'/>
                 </field>
 
                 <xpath expr="//field[@name='street']" position="attributes">
@@ -97,7 +100,7 @@
                     <page string="Expected Product">
                         <field name="product_ids">
                             <tree editable="botton" class="product_width" colors="green:expected_sell >= 80 ;blue:expected_sell >= 50 ;red:expected_sell &lt;1">
-                                <field name="product_id" domain="[('sale_ok','=',True)]"/>
+                                <field name="product_id" domain="[('sale_ok','=',True)]" options="{'no_create_edit':True, 'no_open':True}"/>
                                 <field name="purpose" widget="many2many_tags"/>
                                 <field name="quantity"/>
                                 <field name="product_price" invisible="1"/>
@@ -105,6 +108,28 @@
                                 <field name="expected_sell"/>
                             </tree>
                         </field>
+                    </page>
+                    <page string="Customer Details" attrs='{"invisible":[("lead_type", "not in", (2, 4))]}'>
+                        <group>
+                            <group>
+                                <field name="customer_name" attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                                <label for="customer_street1" string="Address" />
+                                <div>
+                                    <field name="customer_street1" placeholder="Street..." attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                                    <field name="customer_street2"/>
+                                    <div class="address_format">
+                                        <field name="customer_city" placeholder="City" style="width: 40%" attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                                        <field name="customer_state" options="{&quot;no_open&quot;: True}" placeholder="State" style="width: 24%" attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                                        <field name="customer_zip" placeholder="ZIP" style="width: 34%"/>
+                                    </div>
+                                    <field name="customer_country" placeholder="Country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                                </div>   
+                            </group>
+                            <group>
+                                <field name="customer_phone" attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                                <field name="customer_email" widget="email" attrs='{"required":[("lead_type", "in", (2, 4))]}'/>
+                            </group>
+                        </group>
                     </page>
                 </page>
             </field>
@@ -127,6 +152,7 @@
 
                 <field name="partner_id" position="after">
                     <field name="lead_type"/>
+                    <field name="sale_id" readonly='1'/>
                 </field>
 
                 <xpath expr="//page[@string='Lead']/group[1]/group[@string='References']" position="after">

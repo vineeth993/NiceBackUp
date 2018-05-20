@@ -38,7 +38,10 @@ class CrmLeadLost(models.TransientModel):
             obj_lead.write({'stage_id': 2})
         if obj_lead.type == 'opportunity':
             obj_lead.write({'stage_id': 7})
-
+        if obj_lead.sale_id:
+            sale_id = self.env['sale.order'].browse(obj_lead.sale_id.id)
+            if sale_id.state == 'draft':
+                sale_id.write({'state':'cancel'}) 
 
 class CrmLeadWon(models.TransientModel):
     _name = 'crm.won'

@@ -41,7 +41,7 @@
                 </button>
                  <button name="%(sale_crm.action_crm_make_sale)d" string="Create Quotation" position="attributes">
                     <attribute name="domain">[('stage_id','=',6)]</attribute>
-                    <attribute name="attrs">{'invisible':['|', ('lead_state', '=', 'quot'), ('probability', '&lt;', 100.0)]}</attribute>
+                    <attribute name="attrs">{'invisible':['|', ('lead_state', 'in', ('quot','cancel'))]}</attribute>
                 </button>
             </field>
         </record>

@@ -96,11 +96,12 @@ class crm_make_sale(osv.osv_memory):
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 for each in case.product_ids:
-                    sale_line_obj.create(cr,uid,{'order_id':new_id,'product_id':each.product_id.id,'product_uom_qty':each.quantity},context=None)
+                    sale_line_obj.create(cr,uid,{'order_id':new_id,'product_id':each.product_id.id,'product_uom_qty':each.quantity, 'order_partner_id':case.partner_id.id},context=None)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
                 message = ("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
                 case.message_post(body=message)
+                case.write({'sale_id':sale_order.id})
             if make.close:
                 case_obj.case_mark_won(cr, uid, data, context=context)
             if not new_ids:
