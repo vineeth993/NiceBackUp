@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data noupdate='0'>
+		
+		<record id="lr_doc_mail_template" model="email.template">
+			<field name="name">Despatch - E-mail Intimation</field>
+			<field name="email_from">${(user.email or '')|safe}</field>
+			<field name="subject">Despatch details of consignment.</field>
+			<field name="partner_to">${object.partner_id.id},${object.partner_id.user_id.partner_id.id},${object.partner_id.section_id.user_id.partner_id.id}</field>
+			<field name="model_id" ref="model_lr_doc"/>
+			<field name="auto_delete" eval="True"/>
+			<field name="lang">${object.partner_id.lang}</field>
+			<field name="body_html"><![CDATA[
+				<p style="font-style:Century Gothic"> Dear Sirs,<br/><br/>&nbsp;&nbsp;&nbsp;We draw your kind attention that the following invoices are generated in your favour against your valuable order. The despatch details of the consignment are given below. Details of the items, which we were not executed, will be informing you separately. Please verify the consignment with the attached invoices and inform any irregularities within 5 days from the date of receipt of the consignment.<br/><br/>
+				Thanking you,<br/><br/>
+				Yours faithfully<br/>
+				For Nice Chemicals (P) Ltd.<br/><br/>
+				${user.name}<br/><br/>
+				</p>
+				<table>
+					<tr>
+						<td>Transporter/Courier</td>
+						<td>:</td>
+						<td>${(object.courier_name or '')}</td>
+					</tr>
+					<tr>
+						<td>LR / Courier Doc.No</td>						
+						<td>:</td>
+						<td>${(object.docket_no or '')}</td>
+					</tr>
+					<tr>
+						<td>Number of Cartons</td>						
+						<td>:</td>
+						<td>${(object.articles or '')}</td>
+					</tr>
+				</table><br/><br/<name />
+				<div style="display:table;">
+				    <div style="display:table-header-group;">
+				        <div style="display:table-row;">
+				        	<div style="display:table-cell; width:50px">Si No</div>
+				            <div style="display:table-cell; width:135px">Inv Number</div>
+				            <div style="display:table-cell; width:120px">Inv Date</div>
+				            <div style="display:table-cell; width:120px; text-align: right;">Inv Amount</div>
+				        </div>
+				    </div>
+				    <div style="display:table-row-group;">
+				        % for invoice in object.invoice_id:
+					        <div style="display:table-row;">
+					         	<div style="display:table-cell;text-align: center;">${loop.index}</div>
+					            <div style="display:table-cell;">${invoice.number.replace("SAJ-",'')}</div>
+					            <div style="display:table-cell;">${invoice.date_invoice.split('-')[2]+'-'+invoice.date_invoice.split('-')[1]+'-'+invoice.date_invoice.split('-')[0]}</div>
+					            <div style="display:table-cell;text-align: right;">${invoice.amount_total}</div>
+					        </div>
+				        % endfor
+				    </div>
+				</div>
+				
+				]]>
+			</field>
+		</record>
+
+	</data>
+</openerp>

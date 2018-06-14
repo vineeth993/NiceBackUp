@@ -14,5 +14,6 @@
 			<field eval="3" name="padding"/>
 			<field name="prefix">DD-%(year)s-</field>
 		</record>
+		
 	</data>
 </openerp>

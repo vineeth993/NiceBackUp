@@ -23,7 +23,8 @@
 					<header>
 						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':['|',('state','=','confirm'),('state','=','validate')]}" class="oe_highlight" />
 						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':['|',('state','=','draft'),('state','=','validate')]}" class="oe_highlight" />
-						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" />
+						<button name="mail_dispatch" type="object" string="Mail Document" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+ 						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" />
 						<button name="print_envolope" type="object" string="Print Envelope" class="oe_highlight" />
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
 					</header>
@@ -39,6 +40,7 @@
 							<field name="freight_amount" attrs="{'readonly':[('state','=', 'validate')]}"/>
 							<field name="total_amount"/>
 							<field name="articles" attrs="{'readonly':[('state', '=', 'validate')]}"/>
+							<field name="company_id"/>
 						</group>
 						<group>
 							<field name="date"/>
@@ -53,6 +55,10 @@
 
 						</group>
 					</group>
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
 				</form>
 			</field>			
 		</record>

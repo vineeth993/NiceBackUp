@@ -19,19 +19,28 @@
                     </header>
                 </xpath>
 
+                <field name="section_id" position="replace">
+                    <!-- <attribute name="options">{'no_open':True}</attribute> -->
+                </field>
+
                 <field name="partner_id" position="before">
-                    <field name="customer_type"/>
+                    <field name="customer_type" invisible='1'/>
+                </field>
+
+                <field name="partner_id" position="before">
+                    <field name="section_id" options="{'no_open':True, 'no_create':True, 'no_create_edit':True}"/>
+                    <field name="lead_type"/><label string="Please Fill the details in Customer Tab" nolabel="1" attrs='{"invisible":[("lead_type", "not in", (2, 4))]}' colspan="4" style='color:red;text-align:center;font-size:15px'/>
                 </field>
 
                 <field name="partner_id" position="attributes">
-                    <attribute name="domain">[('customer_type', '=', customer_type)]</attribute>
-                    <attribute name="string">Customer / Supplier</attribute>
-                    <attribute name="options"> {'no_open': True, 'no_create_edit': True}</attribute>
+                    <attribute name="domain">[('section_id', '=', section_id)]</attribute>
+                    <attribute name="string">Customer / Dealer</attribute>
+                    <attribute name="options"> {'no_open': True, 'no_create_edit': True, 'no_create':True}</attribute>
                     <attribute name="attrs">{"required":[("lead_type", "in", (2, 4))]}</attribute>
                 </field>
-
-                <field name="partner_name" position="before">
-                    <field name="lead_type"/><label string="Please Fill the details in Customer Tab" nolabel="1" attrs='{"invisible":[("lead_type", "not in", (2, 4))]}' colspan="4" style='color:red;text-align:center;font-size:15px'/>
+                
+                <field name="partner_id" position="after">
+                    <field name="partner_name" string="New Customer/Dealer" attrs="{'required':[('lead_state', '=', 'approve')]}"/>
                 </field>
 
                 <xpath expr="//field[@name='street']" position="attributes">
@@ -69,8 +78,7 @@
                     <field name="gst_no" attrs="{'invisible': [('gst_reg', '=', 'unregistered')], 'required': [('gst_reg', '=', 'registered')]}"/>
                 </xpath>
                 
-                <xpath expr="//field[@name='partner_name']" position="attributes">
-                    <attribute name="attrs">{'required':[('lead_state', '=', 'approve')]}</attribute>
+                <xpath expr="//field[@name='partner_name']" position="replace">
                 </xpath>
 
                 <xpath expr="//field[@name='categ_ids']" position="after">
@@ -85,7 +93,7 @@
                         <field name="tender_last_date"/>
                         <field name="tender_opening_date"/>
                     </group>
-                    <group string="Tender" attrs="{'invisible':[('lead_type','not in',(1,2))]}">
+                    <group string="Enquiry" attrs="{'invisible':[('lead_type','not in',(1,2))]}">
                         <field name="enq_date"/>
                         <field name="enq_end_date"/>
                         <field name="contact_date"/>
@@ -96,11 +104,19 @@
                      <field name="planned_revenue" invisible="1"/>
                 </field>
 
+                <field name="user_id" position="attributes">
+                    <attribute name="options">{'no_open':True, 'no_create':True, 'no_create_edit':True}</attribute>
+                </field>
+
+                <xpath expr="//page[@string='Assigned Partner']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                
                 <page string="Extra Info" position="after">
                     <page string="Expected Product">
                         <field name="product_ids">
                             <tree editable="botton" class="product_width" colors="green:expected_sell >= 80 ;blue:expected_sell >= 50 ;red:expected_sell &lt;1">
-                                <field name="product_id" domain="[('sale_ok','=',True)]" options="{'no_create_edit':True, 'no_open':True}"/>
+                                <field name="product_id" domain="[('sale_ok','=',True)]" options="{'no_create':True,'no_create_edit':True, 'no_open':True}"/>
                                 <field name="purpose" widget="many2many_tags"/>
                                 <field name="quantity"/>
                                 <field name="product_price" invisible="1"/>
@@ -177,7 +193,7 @@
                     <page string="Expected Product">
                         <field name="product_ids">
                             <tree editable="botton" class="product_width" colors="green:expected_sell >= 80 ;blue:expected_sell >= 50 ;red:expected_sell &lt;1">
-                                <field name="product_id" domain="[('sale_ok','=',True)]"/>
+                                <field name="product_id" domain="[('sale_ok','=',True)]" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
                                 <field name="purpose" widget="many2many_tags"/>
                                 <field name="quantity"/>
                                 <field name="product_price" invisible="1"/>

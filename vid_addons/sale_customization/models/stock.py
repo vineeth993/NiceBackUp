@@ -35,7 +35,8 @@ class stock_picking(osv.osv):
             'extra_discount':move.picking_id.sale_id.extra_discount,
             'nonread_extra_disocunt':move.picking_id.sale_id.nonread_extra_disocunt,
             'nonread_normal_disocunt':move.picking_id.sale_id.nonread_normal_disocunt,
-            'sale_order':move.picking_id.sale_id.name
+            'sale_order':move.picking_id.sale_id.name,
+            'comment':move.picking_id.sale_id.note
         }
 
 class stock_move(osv.osv):

@@ -30,7 +30,6 @@ class ReportInvoice(models.AbstractModel):
         total_disc_amt = 0
         total_extra_amt = 0
         total_scheme_disc = 0
-
         disc = 0
         e_disc = 0
 

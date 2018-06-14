@@ -110,7 +110,7 @@ class LeadCustom(models.Model):
     customer_city = fields.Many2one('res.city', string="City")
     customer_state = fields.Many2one('res.country.state', string="State")
     customer_country = fields.Many2one('res.country', string="Country")
-    customer_phone = fields.Char(string="Phone Number")
+    customer_phone = fields.Char(string="Mobile Number")
     customer_email = fields.Char(string="E-mail")
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
@@ -182,6 +182,7 @@ class LeadCustom(models.Model):
         res = super(LeadCustom, self).on_change_partner_id(partner_id)
         if partner_id:
             partner = self.env['res.partner'].browse(partner_id)
+            res['value']['user_id'] = partner.user_id.id or False
             res['value']['city'] = partner.city_id and partner.city_id.id or False
             res['value']['gst_reg'] = partner.gst_reg
             res['value']['gst_no'] = partner.gst_no

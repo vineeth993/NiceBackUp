@@ -446,7 +446,9 @@
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
                         <td  style="border-right: solid 1px black;text-align:left;padding-left: 5px;"><b>Place of Supply:</b></td>
                         <td  style="padding-left:5px; border-right: solid 1px black;text-align:left;"><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,<span t-field="o.partner_id.state_id.code"/></span></td>
-                        <td ><b>Date &amp; Time of Removal :</b></td>
+                        <td style="padding-left:5px;font-size:10px;" width="25">
+                            <b>REMARKS:</b><t t-if="o.comment"><span t-field="o.comment"/>, </t><t t-if="o.partner_id.tax_desc"><span t-field="o.partner_id.tax_desc"/></t>
+                        </td>
                         <td colspan="8" style="padding-left:5px; border-right: solid 1px black;text-align:left;"></td>
                     </tr>
                 </table>
@@ -464,7 +466,6 @@ padding-right: 15px;"> -->
                         
                 </table> -->
                 <!-- </div> -->
-		<t t-if="o.partner_id.tax_desc"><p style="font-size:15px">Remarks : <span t-field="o.partner_id.tax_desc"/></p></t>
             </div>
         </t>
     </template>

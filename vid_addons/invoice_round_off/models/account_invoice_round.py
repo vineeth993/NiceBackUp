@@ -1,6 +1,7 @@
 
 from openerp import fields, api, models, _
 import logging
+from openerp.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -14,9 +15,8 @@ class account_invoice_round(models.Model):
 
 	@api.depends("partner_id")
 	def get_round_off(self):
-		ir_values = self.env['ir.values']
 		for i in self:
-			i.round_off_active = ir_values.get_default('account.config.settings', 'round_off')
+			i.round_off_active = i.company_id.round_off
 
 	@api.one
 	@api.depends('invoice_line.price_subtotal', 'tax_line.amount')
@@ -133,7 +133,8 @@ class account_invoice_round(models.Model):
 			name = inv.supplier_invoice_number or inv.name or '/'
 			totlines = []
 			ir_config = self.env["ir.values"]
-			round_off_acc = ir_config.get_default('account.config.settings', 'round_off_account')
+			round_off_acc = inv.company_id.round_off_account
+			_logger.info("The value on ="+str(round_off_acc))
 			if inv.payment_term:
 				totlines = inv.with_context(ctx).payment_term.compute(total, date_invoice)[0]
 			if totlines:
@@ -149,8 +150,10 @@ class account_invoice_round(models.Model):
 					res_amount_currency -= amount_currency or 0
 					if i + 1 == len(totlines):
 						amount_currency += res_amount_currency
-					_logger.info("The t value is = "+str(t[1]))
 					if self.round_off_active and self.type == "out_invoice":
+						if not round_off_acc.id:
+							_logger.info("The value  = "+str(self.round_off_active))
+							raise ValidationError("Please Define Round off account in company master")
 						iml.append({
 							'type': 'dest',
 							'name': name,
@@ -165,7 +168,7 @@ class account_invoice_round(models.Model):
 							'type': 'dest',
 							'name': "Round Off",
 							'price': -self.round_off_amount,
-							'account_id': round_off_acc,
+							'account_id': round_off_acc.id,
 							'date_maturity': t[0],
 							'amount_currency': diff_currency and amount_currency,
 							'currency_id': diff_currency and inv.currency_id.id,
@@ -184,6 +187,9 @@ class account_invoice_round(models.Model):
 						})
 			else:
 				if self.round_off_active and self.type == "out_invoice":
+					if not round_off_acc.id:
+						_logger.info("The value  = "+str(self.round_off_active))
+						raise ValidationError("Please Define Round off account in company master")
 					iml.append({
 						'type': 'dest',
 						'name': name,
@@ -198,7 +204,7 @@ class account_invoice_round(models.Model):
 						'type': 'dest',
 						'name': "Round Off",
 						'price': -self.round_off_amount,
-						'account_id': round_off_acc,
+						'account_id': round_off_acc.id,
 						'date_maturity': inv.date_due,
 						'amount_currency': diff_currency and total_currency,
 						'currency_id': diff_currency and inv.currency_id.id,

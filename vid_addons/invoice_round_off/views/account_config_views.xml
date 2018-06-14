@@ -3,16 +3,17 @@
 <openerp>
 	<data>
 
-		<record id="account_config_custom" model="ir.ui.view">
-			<field name="name">account.config.custom</field>
-			<field name="model">account.config.settings</field>
-			<field name="inherit_id" ref="account.view_account_config_settings"/>
+		<record id="view_company_form_custom" model="ir.ui.view">
+			<field name="name">view.company.form.custom</field>
+			<field name="model">res.company</field>
+			<field name="inherit_id" ref="base.view_company_form"/>
 			<field name="arch" type="xml">
-				<xpath expr="//group[@name='bank_cash']" position="after">
-					<separator string="Round Off"/>
-					<group name="round_off_group">
-                       	<field name="round_off"/>
-                       	<field name="round_off_account"/>
+				<xpath expr="//group[@name='account_grp']" position="after">
+					<group>
+						<group name="round_off_group" string="Round Off Feature">
+	                       	<field name="round_off"/>
+	                       	<field name="round_off_account" attrs='{"invisible":[("round_off", "=", False)]}' options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
+						</group>
 					</group>
 				</xpath>
 			</field>

@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','account'],
+    'depends': ['base','account','nice_gst'],
 
     # always loaded
     'data': [
@@ -33,6 +33,8 @@
         'views/port_code_views.xml',
         'data/lr_data.xml',
         'security/ir.model.access.csv',
+        'data/lr_doc_access.xml',
+        'data/lr_doc_mail_template.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
