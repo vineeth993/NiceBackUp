@@ -29,7 +29,7 @@
 
                 <field name="partner_id" position="before">
                     <field name="section_id" options="{'no_open':True, 'no_create':True, 'no_create_edit':True}"/>
-                    <field name="lead_type"/><label string="Please Fill the details in Customer Tab" nolabel="1" attrs='{"invisible":[("lead_type", "not in", (2, 4))]}' colspan="4" style='color:red;text-align:center;font-size:15px'/>
+                    <field name="lead_type"/><label string="Select a Dealer &amp; Fill Customer Details in Below Tab" nolabel="1" attrs='{"invisible":[("lead_type", "not in", (2, 4))]}' colspan="4" style='color:red;text-align:center;font-size:15px'/>
                 </field>
 
                 <field name="partner_id" position="attributes">
@@ -60,11 +60,11 @@
                 </xpath>
 
                 <xpath expr="//field[@name='email_from']" position="attributes">
-                    <attribute name="attrs">{'required':[('lead_state', '=', 'approve')]}</attribute>
+                    <attribute name="attrs">{'required':['|',('lead_state', '=', 'approve'),('partner_id', '=', False)]}</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='mobile']" position="attributes">
-                    <attribute name="attrs">{'required':[('lead_state', '=', 'approve')]}</attribute>
+                    <attribute name="attrs">{'required':['|' ,('lead_state', '=', 'approve'),('partner_id', '=', False)]}</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='zip']" position="attributes">
@@ -250,6 +250,16 @@
                 </xpath>
             </field>
         </record> -->
-        
+        <record id="crm_case_phone_form_view_cust" model="ir.ui.view">
+            <field name="name">CRM - Phone Call Form</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm.crm_case_phone_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='opportunity_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
