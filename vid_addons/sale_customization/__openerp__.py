@@ -8,7 +8,7 @@
     'description': '''
 CRM/Sales Customization
   ''',
-    'depends': ['base', 'crm', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'stock', 'procurement', 'crm_lead_lost_reason'],
+    'depends': ['base', 'crm', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'stock', 'procurement', 'crm_lead_lost_reason', 'sales_team'],
     'data': [
         'report.xml',
         'views/lead_view.xml',

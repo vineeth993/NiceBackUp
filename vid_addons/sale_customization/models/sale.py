@@ -259,7 +259,7 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).onchange_partner_id(partner_id)
         if partner_id:
             partner = self.env['res.partner'].browse(partner_id)
-            if not partner.email or partner.mobile or partner.street:
+            if not partner.email or not partner.mobile or not partner.street:
                 raise ValidationError("Please Update Customer Master With Following Data\n1. Email\n2. Mobile\n3. Address ")
             res['value'].update({
                 'normal_disc':partner.disc,
