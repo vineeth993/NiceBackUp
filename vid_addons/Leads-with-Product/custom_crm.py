@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import _
 from openerp.osv import osv, fields
 from datetime import datetime
 from dateutil import parser
@@ -32,6 +33,14 @@ class crm_make_sale(osv.osv_memory):
 
     _inherit = "crm.make.sale"
     _description = "Make sales"
+
+    _columns = {
+        'employee_id': fields.many2one("hr.employee", string="Quotation Signer", required=True),
+        'payment_terms': fields.many2one("account.payment.term", string="Payment Terms", required=True),
+        'delivery_terms': fields.many2one("sale.delivery.term", string="Delivery Terms", required=True),
+        'validity_terms': fields.many2one("sale.validity.term", string="Validity Terms", required=True)
+    }
+
 
     def makeOrder(self, cr, uid, ids, context=None):
 	"""
@@ -66,6 +75,8 @@ class crm_make_sale(osv.osv_memory):
             payment_term = partner.property_payment_term and partner.property_payment_term.id or False
             new_ids = []
             for case in case_obj.browse(cr, uid, data, context=context):
+                if not case.product_ids:
+                    raise osv.except_osv(_('Product Empty'), _('Products are Not Defined in the Expected Product Tab'))
                 if not partner and case.partner_id:
                     partner = case.partner_id
                     fpos = partner.property_account_position and partner.property_account_position.id or False
@@ -90,6 +101,10 @@ class crm_make_sale(osv.osv_memory):
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
                     'note': sale_obj.get_salenote(cr, uid, [case.id], partner.id, context=context),
+                    'employee_id':make.employee_id.id,
+                    'payment_term':make.payment_terms.id,
+                    'delivery_term':make.delivery_terms.id,
+                    'validity_term':make.validity_terms.id
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid

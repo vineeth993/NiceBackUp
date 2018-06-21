@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="view_crm_make_sale_cust" model="ir.ui.view">
+			<field name="name">view.crm.make.sale</field>
+			<field name="model">crm.make.sale</field>
+			<field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
+			<field name="arch" type="xml">
+				<form string="Convert to Quotation"  position="replace">
+					<form string="Convert to Quotation"> 
+						<group>
+							<group string="Quotation Details">
+			                    <field name="partner_id" required="1"/>
+			                    <field name="employee_id"/>
+			                </group>
+			                <group string="Terms and Conditions">
+			                	<field name="payment_terms"/>
+			                	<field name="delivery_terms"/>
+			                	<field name="validity_terms"/>
+			                </group>
+						</group>
+						<footer>
+		                    <button name="makeOrder" string="_Create" type="object" class="oe_highlight"/>
+		                    or
+		                    <button string="Cancel" class="oe_link" special="cancel" />
+		                </footer>
+					</form>
+				</form>
+			</field>
+		</record>
+	</data>	
+</openerp>

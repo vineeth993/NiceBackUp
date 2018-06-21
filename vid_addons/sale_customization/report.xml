@@ -19,5 +19,12 @@
 	    	name="sale_customization.sale_report_picking"
 	    	multi="True"
 	    />
+
+	    <report 
+	    	id="quotation_print"
+	    	model="sale.order"
+	    	string="Quotation To send"
+	    	report_type="qweb-pdf"
+	    	name="sale_customization.report_quotation"/>
 	</data>
 </openerp>

@@ -248,7 +248,10 @@ class SaleOrder(models.Model):
     amount_untaxed = fields.Float(string='Taxable Value', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Float(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
-   
+    employee_id = fields.Many2one("hr.employee", string="Quotation Signer")
+    delivery_term = fields.Many2one("sale.delivery.term", string="Delivery Terms")
+    validity_term = fields.Many2one("sale.validity.term", string="Validity Terms")
+
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         res['name'] = line.product_name
@@ -372,4 +375,24 @@ class QuotationLine(models.Model):
     price_subtotal = fields.Float('Subtotal', compute=_subtotal)
     qunatity = fields.Float('Quantity')
     name = fields.Char('Description')
+
+class SaleDeliveryTerm(models.Model):
+
+    _name = "sale.delivery.term"
+    _description = "Stock Delivery Terms"
+
+    name = fields.Char('Delivery Terms', required=True)
+    note = fields.Text('Description')
+    active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the Delivery term without removing it.", default=True)
+
+class SaleValidityTerm(models.Model):
+
+    _name = "sale.validity.term"
+    _description = "Quotation Validity Terms"
+
+    name = fields.Char('Validity Terms', required=True)
+    note = fields.Text('Description')
+    active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the Validity term without removing it.", default=True)
+
+
 

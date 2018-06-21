@@ -26,6 +26,7 @@ class LrDoc(models.Model):
 
 	_name = "lr.doc"
 	_inherit = ['mail.thread']
+	_order = "name desc, id desc"
 
 	@api.depends("invoice_id")
 	def _compute_amount(self):
@@ -144,6 +145,7 @@ class LrDoc(models.Model):
 
 		if template_id:
 			template_id = self.pool.get('email.template').browse(cr, uid, template_id, context=context)
+			template_id.write({'attachment_ids':[(5,)]})
 			template_id.write({'attachment_ids':[(0, 0, pdf_attach)for pdf_attach in pdf]})
 
 		# _logger.info("The attachment = " +str(template_id.attachment_ids))
@@ -173,8 +175,10 @@ class LrDoc(models.Model):
 
 	@api.multi
 	def unlink(self):
-		if self.state != "draft":
-			raise ValidationError("Unable to delete record")
+		for lr in self:
+			if lr.state != "draft":
+				raise ValidationError("Unable to delete record")
+		return super(LrDoc, self).unlink()
 
 	@api.multi
 	def lr_doc_print(self):

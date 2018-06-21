@@ -339,7 +339,7 @@
 						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))]}" />
 					<field name="nonread_extra_disocunt"
 						attrs="{'invisible':[('partner_selling_type', '==','normal')]}" />
-					
+					<field name="employee_id" readonly="1" invisible='1'/>
 				</xpath>
 
 				<xpath
@@ -439,6 +439,12 @@
 					<button name="action_quotation_confirm" string="Confirm Quotation"
 						type="object" states="draft" />
 				</xpath>
+
+				<field name="payment_term" position="after">
+					<field name="delivery_term"/>
+					<field name="validity_term"/>
+				</field>
+				
 				<xpath expr="//page[@string='Other Information']" position="after">
 					<page string="Quotation Details" attrs="{'invisible': [('state', 'in', ('draft'))]}">
 						<group>
@@ -536,8 +542,58 @@
 			</field>
 		</record>
 
+		<!--Stock Delivery Terms Views-->
+		<record id="stock_delivery_term_act" model="ir.actions.act_window">
+			<field name="name">Stock Delivery Terms</field>
+			<field name="res_model">sale.delivery.term</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new Reason.
+				</p>
+			</field>
+		</record>
 
+		<record id="stock_delivery_term_tree" model="ir.ui.view">
+			<field name="name">stock.delivery.tree</field>
+			<field name="model">sale.delivery.term</field>
+			<field name="arch" type="xml">
+				<tree editable="top">
+					<field name="name"/>
+					<field name="active"/>
+					<field name="note"/>
+				</tree>
+			</field>
+		</record>
 
+		<!--Stock Validity Terms Views-->
+		<record id="stock_validity_term_act" model="ir.actions.act_window">
+			<field name="name">Stock validity Terms</field>
+			<field name="res_model">sale.validity.term</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new Reason.
+				</p>
+			</field>
+		</record>
+
+		<record id="stock_validity_term_tree" model="ir.ui.view">
+			<field name="name">stock.validity.tree</field>
+			<field name="model">sale.validity.term</field>
+			<field name="arch" type="xml">
+				<tree editable="top">
+					<field name="name"/>
+					<field name="active"/>
+					<field name="note"/>
+				</tree>
+			</field>
+		</record>
+
+		<menuitem name="Validity Terms" id="validity_terms" parent="base.menu_base_config" action="stock_validity_term_act" sequence="30"/>
+		<menuitem name="Delivery Terms" id="delivery_terms" parent="base.menu_base_config" action="stock_delivery_term_act" sequence="30"/>
 		<menuitem name="Reasons For Sale" id="sale_reasons" parent="base.menu_sales"
 			action="sale_reason_act" groups="base.group_sale_salesman,base.group_sale_manager" />
 	</data>
