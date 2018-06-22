@@ -70,7 +70,6 @@ class ProductProduct(models.Model):
     
     _defaults = {
         'type': 'product',
-
     }
 
     @api.one
@@ -133,5 +132,3 @@ class ProductTemplate(models.Model):
             names1 = self.search([('name', '=', self.name)])
             if len(names1) > 1:
                 raise Warning('A product with the same Name already exists')
-
-

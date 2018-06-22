@@ -1,5 +1,8 @@
 from openerp import models, fields, api, _
 from openerp.exceptions import ValidationError, Warning
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class CustomerType(models.Model):
     _name = 'customer.type'
@@ -8,6 +11,7 @@ class CustomerType(models.Model):
     customer_type = fields.Char(string='Customer Type')
     
 class ResPartner(models.Model):
+    
     _inherit = 'res.partner'
 
     disc = fields.Float(string='Normal Discount %')
@@ -22,16 +26,17 @@ class ResPartner(models.Model):
     # partner_selling_type_id = fields.Many2one('partner.selling.type',string='Partner Selling Type-Discount')
     
     # def name_get(self, cr, uid, ids, context=None):
+
+    #     if not isinstance(ids, list):
+    #         ids = [ids]
     #     res = []
-    #     for inst in self.browse(cr, uid, ids, context=context):
-    #         name = inst.name or '/'
-    #         if name and inst.zip:
-    #             name = name+' ,'+inst.zip
-    #         if name and inst.city:
-    #             name = name+' ,'+inst.city
-    #         if name and inst.street:
-    #             name = name+' ,'+inst.street
-    #         res.append((inst.id, name))
+    #     if not ids:
+    #         return res
+    #     reads = self.read(cr, uid, ids, ['name', 'ref'], context)
+    #     for record in reads:
+    #         name = record['name']
+    #         res.append((record['id'], record))
+    #     _logger.info("The value sale_cust name_get = "+str(res))
     #     return res
 
     @api.one
