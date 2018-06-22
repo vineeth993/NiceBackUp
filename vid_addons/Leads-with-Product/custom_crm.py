@@ -61,6 +61,7 @@ class crm_make_sale(osv.osv_memory):
         sale_line_obj = self.pool.get('sale.order.line')
         partner_obj = self.pool.get('res.partner')
         data = context and context.get('active_ids', []) or []
+        product_obj = self.pool.get('product.product')
 
         if data:
             lead = case_obj.browse(cr, uid, data)
@@ -86,7 +87,17 @@ class crm_make_sale(osv.osv_memory):
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
                     raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
-
+                spec = []
+                for product in case.product_ids:
+                    selling_type = product_obj.browse(cr, uid, product.product_id.id)
+                    spec.append(selling_type.price_list)
+                special = any(spec)   
+                partner_selling_type = "normal"
+                if special:
+                    partner_selling_type = "special"
+                             
+                sub_type_id = partner.sale_sub_type_id[0].id
+                
                 vals = {
                     'origin': ('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
@@ -97,21 +108,26 @@ class crm_make_sale(osv.osv_memory):
                     'partner_shipping_id': partner_addr['delivery'],
                     'date_order': fields.datetime.now(),
                     'type_id':partner.sale_type.id,
-                    'sub_type_id':partner.sale_sub_type_id[0].id,
+                    'sub_type_id':sub_type_id,
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
                     'note': sale_obj.get_salenote(cr, uid, [case.id], partner.id, context=context),
                     'employee_id':make.employee_id.id,
                     'payment_term':make.payment_terms.id,
                     'delivery_term':make.delivery_terms.id,
-                    'validity_term':make.validity_terms.id
+                    'validity_term':make.validity_terms.id,
+                    'partner_selling_type':partner_selling_type
                 }
+
+
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 for each in case.product_ids:
-                    sale_line_obj.create(cr,uid,{'order_id':new_id,'product_id':each.product_id.id,'product_uom_qty':each.quantity, 'order_partner_id':case.partner_id.id},context=None)
+                    context = {'sub_type_id':sub_type_id, 
+                                'partner_type':partner_selling_type}
+                    sale_line_obj.create(cr,uid,{'order_id':new_id,'product_id':each.product_id.id,'product_uom_qty':each.quantity, 'order_partner_id':case.partner_id.id}, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
                 message = ("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
