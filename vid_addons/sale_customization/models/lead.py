@@ -64,6 +64,7 @@ class CrmProducts(models.Model):
 
 class LeadCustom(models.Model):
     _inherit = 'crm.lead'
+    _order = 'date_open desc, id desc'
 
     def get_end_date(self):
         today = date.today()

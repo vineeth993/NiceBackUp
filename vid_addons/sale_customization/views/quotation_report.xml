@@ -21,9 +21,9 @@
         
     <template id="external_layout_header">
             <div class="header">
-                <div class="row">
+                <div class="row" style="padding-top:25px">
                     <div class="col-xs-3" style="display:inline-block;float:left;">
-                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 50px;"/>
                     </div>
                     <div class="col-xs-9" name="company_name" style="display:inline-block;">
                        <!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
@@ -115,9 +115,11 @@
                                 <th style="border-top:solid 1px">Product Description</th>
                                 <th style="border-top:solid 1px">HSN</th>
                                 <th style="border-top:solid 1px" class="text-right">Quantity</th>
-                                <th style="border-top:solid 1px" class="text-right">Unit Price</th>
+                                <th style="border-top:solid 1px" class="text-right">Gross Price</th>
+                                <th style="border-top:solid 1px" class="text-right">Net Price</th>
+                                <t t-if="doc.discount_stat"><th style="border-top:solid 1px" class="text-right">Disc(%)</th></t>
                                 <th style="border-top:solid 1px" class="text-right">Tax(%)</th>
-                                <th style="border-top:solid 1px" class="text-right price_tax_included">Total Price<br/><span style="font-size:8px;">(Without Tax)</span></th>
+                                <th style="border-top:solid 1px" class="text-right price_tax_included">Total Price<br/><t t-if="not doc.tax_stat"><span style="font-size:8px;">(Without Tax)</span></t><t t-if="doc.tax_stat"><span style="font-size:8px;">(With Tax)</span></t></th>
                             </tr>
                        </thead>
                        <tbody class="sale_tbody">
@@ -136,10 +138,28 @@
                                             <span t-field="l.price_unit" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                         </td>
                                         <td class="text-right">
+                                            <t t-if="doc.tax_stat">
+                                                <span t-esc="round((((l.price_subtotal * sum(map(lambda x: x.amount, l.tax_id)))+l.price_subtotal) / l.product_uom_qty), 2)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            </t>
+                                            <t t-if="not doc.tax_stat">
+                                                <span t-esc="round((l.price_subtotal / l.product_uom_qty), 2)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            </t>
+                                        </td>
+                                        <t t-if="doc.discount_stat">
+                                            <td class="text-center">
+                                                <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)))"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
                                             <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>
                                         </td>
                                         <td class="text-right">
-                                            <span t-esc="(l.product_uom_qty*l.price_unit)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            <t t-if="not doc.tax_stat">
+                                                <span t-field="round(l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            </t>
+                                            <t t-if="doc.tax_stat">
+                                                <span t-esc="round((l.price_subtotal * sum(map(lambda x: x.amount, l.tax_id)))+l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            </t>
                                         </td>
                                     </tr>
                                 </t>
@@ -150,10 +170,12 @@
                         <div class="col-xs-4 pull-right">
                                 <table class="table table-condensed">
                                     <tr class="border-black">
-                                        <td><strong>Total Without Taxes</strong></td>
+                                        <td><t t-if="not doc.tax_stat"><strong>Total Without Taxes</strong></t><t t-if="doc.tax_stat"><strong>Total With Taxes</strong></t></td>
                                         <td class="text-right">
-                                            <span t-field="doc.amount_untaxed"
-                                                t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            <t t-if="not doc.tax_stat"><span t-esc="round(doc.amount_untaxed)"
+                                                t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/></t>
+                                            <t t-if="doc.tax_stat"><span t-esc="round(doc.amount_total)"
+                                                t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/></t>
                                         </td>
                                     </tr>
                                 </table>
@@ -170,10 +192,17 @@
                 <div style="font-size:15px">
                     <b>Terms and conditions</b><br/><br/>
                     <table>
+                        <t t-if="doc.discount_stat">
+                            <tr>
+                                <td style="padding-bottom:10px" width="20%">Discount</td>
+                                <td width="3%">:</td>
+                                <td width="76%">Net Price reduced by discounts as applicable</td>
+                            </tr>
+                        </t>
                         <tr>
-                            <td width="20%">Taxes</td>
+                            <td  width="20%">Taxes</td>
                             <td width="3%">:</td>
-                            <td width="76%">GST extra as mentioned above</td>
+                            <td width="76%"><t t-if="not doc.tax_stat">Net Price exclusive of GST as mentioned above</t><t t-if="doc.tax_stat">Net Price inclusive of GST as mentioned above</t></td>
                         </tr>
                         <tr>
                             <td style="padding-top:10px">Delivery</td>
@@ -189,13 +218,18 @@
                             <td style="padding-top:10px">Validity</td>
                             <td>:</td>
                             <td><span t-field="doc.validity_term"/></td>
-                        </tr>                                        
+                        </tr>
+                        <tr>
+                            <td style="padding-top:10px">Other</td>
+                            <td>:</td>
+                            <td><span t-field="doc.other_terms"/></td>
+                        </tr>                                         
                     </table><br/>
                     <p>We thank you for your enquiry and assure our prompt service at all time.</p>
                     Awaiting your valuable order.
                     <br/><br/>
                     Thanking you,<br/>
-                    Yours Faithfully<br/><br/>
+                    Yours faithfully<br/><br/>
                     For Nice Chemicals Pvt.Ltd.
                     <br/><br/><br/>
                     <t t-if="doc.employee_id"><span t-field="doc.employee_id.name"/><br/><span t-field="doc.employee_id.job_id.name"/></t>

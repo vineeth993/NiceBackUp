@@ -37,8 +37,11 @@ class crm_make_sale(osv.osv_memory):
     _columns = {
         'employee_id': fields.many2one("hr.employee", string="Quotation Signer", required=True),
         'payment_terms': fields.many2one("account.payment.term", string="Payment Terms", required=True),
-        'delivery_terms': fields.many2one("sale.delivery.term", string="Delivery Terms", required=True),
-        'validity_terms': fields.many2one("sale.validity.term", string="Validity Terms", required=True)
+        'delivery_terms': fields.many2one("sale.delivery.term", string="Delivery Terms", required=True, domain=[('others', '=', False)]),
+        'validity_terms': fields.many2one("sale.validity.term", string="Validity Terms", required=True),
+        'discount_stat':fields.boolean("Discount"),
+        'tax_stat':fields.boolean("Inclusive of Tax"),
+        'other_terms': fields.many2one("sale.delivery.term", string="Other Terms", required=True, domain=[('others', '=', True)]),
     }
 
 
@@ -116,7 +119,10 @@ class crm_make_sale(osv.osv_memory):
                     'payment_term':make.payment_terms.id,
                     'delivery_term':make.delivery_terms.id,
                     'validity_term':make.validity_terms.id,
-                    'partner_selling_type':partner_selling_type
+                    'partner_selling_type':partner_selling_type,
+                    'discount_stat':make.discount_stat,
+                    'tax_stat':make.tax_stat,
+                    'other_terms':make.other_terms.id
                 }
 
 

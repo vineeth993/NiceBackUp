@@ -443,6 +443,9 @@
 				<field name="payment_term" position="after">
 					<field name="delivery_term"/>
 					<field name="validity_term"/>
+					<field name="other_terms"/>
+			        <field name="tax_stat"/>
+			        <field name="discount_stat"/>
 				</field>
 				
 				<xpath expr="//page[@string='Other Information']" position="after">

@@ -251,6 +251,9 @@ class SaleOrder(models.Model):
     employee_id = fields.Many2one("hr.employee", string="Quotation Signer")
     delivery_term = fields.Many2one("sale.delivery.term", string="Delivery Terms")
     validity_term = fields.Many2one("sale.validity.term", string="Validity Terms")
+    other_terms = fields.Many2one("sale.delivery.term", string="Other Terms")
+    tax_stat = fields.Boolean("Inclusive of Tax")
+    discount_stat = fields.Boolean("Discount")
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
@@ -383,6 +386,7 @@ class SaleDeliveryTerm(models.Model):
 
     name = fields.Char('Delivery Terms', required=True)
     note = fields.Text('Description')
+    others = fields.Boolean('Other Terms', help="Please check if it is other terms")
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the Delivery term without removing it.", default=True)
 
 class SaleValidityTerm(models.Model):

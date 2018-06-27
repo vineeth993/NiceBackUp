@@ -18,6 +18,11 @@
 			                	<field name="payment_terms"/>
 			                	<field name="delivery_terms"/>
 			                	<field name="validity_terms"/>
+			                	<field name="other_terms"/>
+			                </group>
+			                <group string="Tax and Discount Status">
+			                	<field name="tax_stat"/>
+			                	<field name="discount_stat"/>
 			                </group>
 						</group>
 						<footer>
