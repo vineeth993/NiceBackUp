@@ -155,7 +155,7 @@
                                         </td>
                                         <td class="text-right">
                                             <t t-if="not doc.tax_stat">
-                                                <span t-field="round(l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                                <span t-esc="round(l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                             </t>
                                             <t t-if="doc.tax_stat">
                                                 <span t-esc="round((l.price_subtotal * sum(map(lambda x: x.amount, l.tax_id)))+l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
