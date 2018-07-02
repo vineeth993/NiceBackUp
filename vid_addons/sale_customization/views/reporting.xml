@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+			<menuitem name="Leads Analysis" id="crm.menu_report_crm_leads_tree"
+            groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"
+            parent="base.next_id_64" action="crm.action_report_crm_lead" sequence="1"/>
+
+			<menuitem id="base.next_id_64" name="Sales" parent="base.menu_reporting" sequence="1" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
+	</data>
+</openerp>

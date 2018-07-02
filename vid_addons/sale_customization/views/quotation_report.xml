@@ -232,7 +232,7 @@
                     Yours faithfully<br/><br/>
                     For Nice Chemicals Pvt.Ltd.
                     <br/><br/><br/>
-                    <t t-if="doc.employee_id"><span t-field="doc.employee_id.name"/><br/><span t-field="doc.employee_id.job_id.name"/></t>
+                     <t t-if="doc.employee_id"><span t-field="doc.employee_id.name"/><br/><span t-field="doc.employee_id.job_id.name"/></t>
                     <t t-if="not doc.employee_id"><span t-field="doc.create_uid.name"/></t>
                     <div class="oe_structure"/>
                 </div>

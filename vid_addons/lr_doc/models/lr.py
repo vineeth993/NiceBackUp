@@ -53,13 +53,13 @@ class LrDoc(models.Model):
 
 
 	name = fields.Char("Name", track_visibility='onchange')
-	partner_id = fields.Many2one("res.partner", string="Customer", required=True, readonly=True, domain=[("customer", "=", True)], states={"draft":[('readonly',False)]})
-	invoice_id = fields.Many2many("account.invoice", "partner_invoices_rel", "partner_id", "invoice_id", string="Invoices", required=True, readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
-	date = fields.Datetime("Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	partner_id = fields.Many2one("res.partner", string="Customer", required=True, readonly=True, domain=[("customer", "=", True)], states={"draft":[('readonly',False)]}, track_visibility='onchange')
+	invoice_id = fields.Many2many("account.invoice", "partner_invoices_rel", "partner_id", "invoice_id", string="Invoices", required=True, readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]}, track_visibility='onchange')
+	date = fields.Datetime("Document Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
 	docket_no = fields.Char(string="Docket No")
 	docket_date = fields.Datetime("Docket Date", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
-	freight_payment_type = fields.Selection(PAYMENT_MODE, string="Mode Of Dispatch", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
-	dispatch_mode = fields.Selection(DISPATCH_MODE, string="Transport", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
+	freight_payment_type = fields.Selection(PAYMENT_MODE, string="Mode Of Dispatch", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]}, default="dd")
+	dispatch_mode = fields.Selection(DISPATCH_MODE, string="Transport", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]}, default="van")
 	freight_amount = fields.Float("Freight Amount")
 	articles = fields.Text(string="Articles")
 	driver_name = fields.Char(string="Driver Name")
@@ -70,11 +70,18 @@ class LrDoc(models.Model):
 		("confirm", "Confirm"),
 		("validate", "Done"),
 		], string="State", default="draft",track_visibility='onchange')
-	total_amount = fields.Float("Total Amount", compute="_compute_amount")
+	total_amount = fields.Float("Total Amount", compute="_compute_amount", store=True)
 	amount_in_words = fields.Char("Amount in Words", compute="_amount_in_words")
 	port_id = fields.Many2one("port.code" ,string="Port Code" )
 	city_id = fields.Many2one("res.city", string="City")
 	company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.user.company_id, readonly=True)
+	from_date = fields.Datetime("Invoice From", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	to_date = fields.Datetime("Invoice To", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+
+	@api.onchange("partner_id")
+	def onchange_partner_id(self):
+		if self.partner_id:
+			self.city_id = self.partner_id.city_id
 
 	@api.model
 	def create(self, val):

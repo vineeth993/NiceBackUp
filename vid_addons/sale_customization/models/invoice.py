@@ -2,6 +2,7 @@
 
 from openerp import models, fields, api, _, exceptions
 import openerp.addons.decimal_precision as dp
+import datetime
 
 import logging
 
@@ -72,7 +73,17 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.normal_disc = invoice.partner_id.disc
             invoice.extra_discount = invoice.partner_id.adisc
-        
+
+
+    def name_get(self, cr, uid, ids, context=None):
+        get_value = self.read(cr, uid, ids, ['number', 'date_invoice'], context=context)
+        res = []
+        for record in get_value:
+            date = datetime.datetime.strptime(record['date_invoice'], '%Y-%m-%d').strftime('%m/%d/%Y')
+            name = record['number'] +'-'+ date
+            res.append((record['id'], name))
+        return res
+
     transaction_type = fields.Selection([('local', 'Local'), ('inter_state', 'Interstate')], 'Transaction Type')
     normal_disc = fields.Float("Normal Discount (%)", compute=_get_extra_discount, digits_compute=dp.get_precision('Account'))
     partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string='Selling Type', default="normal")
