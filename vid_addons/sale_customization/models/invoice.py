@@ -79,8 +79,11 @@ class AccountInvoice(models.Model):
         get_value = self.read(cr, uid, ids, ['number', 'date_invoice'], context=context)
         res = []
         for record in get_value:
-            date = datetime.datetime.strptime(record['date_invoice'], '%Y-%m-%d').strftime('%m/%d/%Y')
-            name = record['number'] +'-'+ date
+            if record['date_invoice'] and record['number']:
+                date = datetime.datetime.strptime(record['date_invoice'], '%Y-%m-%d').strftime('%d/%m/%Y')
+                name = record['number'] +'-'+ date
+            else:
+                name = 'New'
             res.append((record['id'], name))
         return res
 
