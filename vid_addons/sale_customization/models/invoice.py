@@ -68,6 +68,11 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
         
+    def _get_partner_shipping(self):
+        if self.partner_id:
+            partner_shipping_address = self.partner_id
+            return partner_shipping_address
+
     @api.depends('partner_id')
     def _get_extra_discount(self):
         for invoice in self:
@@ -87,6 +92,7 @@ class AccountInvoice(models.Model):
             res.append((record['id'], name))
         return res
 
+    partner_shipping_id = fields.Many2one("res.partner", string="Shipping Address", default=_get_partner_shipping)
     transaction_type = fields.Selection([('local', 'Local'), ('inter_state', 'Interstate')], 'Transaction Type')
     normal_disc = fields.Float("Normal Discount (%)", compute=_get_extra_discount, digits_compute=dp.get_precision('Account'))
     partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string='Selling Type', default="normal")

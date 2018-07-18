@@ -216,40 +216,78 @@
                         </td>
                         <td width="50%">
                             <table>
-                                <tr>
-                                    <td width="20%" style="padding-left: 5px;"><b>Party</b></td>
-                                    <td width="1%">:</td>
-                                    <td width="79%" style="padding-right: 3px;"><span t-field="o.partner_id.name"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left: 5px;"><b>Address</b></td>
-                                    <td>:</td>
-                                    <td style="padding-right: 3px;">
-                                        <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
-                                        <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
-                                        <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
-                                        <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
-                                        <span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left: 5px;"><b>PHONE NO</b></td>
-                                    <td>:</td>
-                                    <t t-if="o.partner_id.mobile"><td style="padding-right: 3px;"><span t-field="o.partner_id.mobile"/></td></t>
-                                    <t t-if=" not o.partner_id.mobile"><td style="padding-right: 3px;"/></t>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left: 5px;"><b>GSTIN</b></td>
-                                    <td>:</td>
-                                    <td style="padding-right: 3px;"><span t-field="o.partner_id.gst_no"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left: 5px;"><b>STATE &amp; CODE</b></td>
-                                    <td>:</td>
-                                    <td style="padding-right: 3px;"><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,
-                                        <span t-field="o.partner_id.state_id.code"/></span>
-                                    </td>
-                                </tr>
+                                <t t-if="o.partner_shipping_id">
+                                    <tr>
+                                        <td width="20%" style="padding-left: 5px;"><b>Party</b></td>
+                                        <td width="1%">:</td>
+                                        <td width="79%" style="padding-right: 3px;"><span t-field="o.partner_shipping_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>Address</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;">
+                                            <span t-if="o.partner_shipping_id.street"><span t-field="o.partner_shipping_id.street"/><br/></span>
+                                            <span t-if="o.partner_shipping_id.street2"><span t-field="o.partner_shipping_id.street2"/></span>
+                                            <span t-if="o.partner_shipping_id.city"><br/><span t-field="o.partner_shipping_id.city"/>,</span>
+                                            <span t-if="o.partner_shipping_id.zip"><span t-field="o.partner_shipping_id.zip"/></span>
+                                            <span t-if="o.partner_shipping_id.state_id"><br/><span t-field="o.partner_shipping_id.state_id.name"/>,</span><span t-if="o.partner_shipping_id.country_id"><span t-field="o.partner_shipping_id.country_id.name"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>PHONE NO</b></td>
+                                        <td>:</td>
+                                        <t t-if="o.partner_shipping_id.mobile"><td style="padding-right: 3px;"><span t-field="o.partner_shipping_id.mobile"/></td></t>
+                                        <t t-if=" not o.partner_shipping_id.mobile"><td style="padding-right: 3px;"/></t>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>GSTIN</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;"><span t-field="o.partner_shipping_id.gst_no"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>STATE &amp; CODE</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;"><span t-if="o.partner_shipping_id.state_id"><span t-field="o.partner_shipping_id.state_id.name"/>,
+                                            <span t-field="o.partner_shipping_id.state_id.code"/></span>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="not o.partner_shipping_id">
+                                    <tr>
+                                        <td width="20%" style="padding-left: 5px;"><b>Party</b></td>
+                                        <td width="1%">:</td>
+                                        <td width="79%" style="padding-right: 3px;"><span t-field="o.partner_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>Address</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;">
+                                            <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+                                            <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+                                            <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+                                            <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+                                            <span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>PHONE NO</b></td>
+                                        <td>:</td>
+                                        <t t-if="o.partner_id.mobile"><td style="padding-right: 3px;"><span t-field="o.partner_id.mobile"/></td></t>
+                                        <t t-if=" not o.partner_id.mobile"><td style="padding-right: 3px;"/></t>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>GSTIN</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;"><span t-field="o.partner_id.gst_no"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 5px;"><b>STATE &amp; CODE</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;"><span t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>,
+                                            <span t-field="o.partner_id.state_id.code"/></span>
+                                        </td>
+                                    </tr>
+                                </t>
                             </table>
                         </td>
                     </tr>
