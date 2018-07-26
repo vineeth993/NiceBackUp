@@ -18,10 +18,12 @@ class B2BReport(models.TransientModel):
 		data = {}
 		data["id"] = self.id
 		data["form"] = self.read()[0]
-		_logger.info("Testing = "+str(data))
+		name = str(self.company.name) + str(self.type_id.name)
+
 		return {
     		"type":"ir.actions.report.xml",
     		"report_name":"gstr.b2b_report",
-    		"datas":data
+    		"datas":data,
+    		"name":name
     	}
 

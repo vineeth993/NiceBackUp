@@ -17,8 +17,10 @@ class HsnReport(models.TransientModel):
     	data = {}
     	data["id"] = self.id
     	data["form"] = self.read()[0]
+        name = str(self.company.name) +" HSN Report"
     	return{
     		'type':'ir.actions.report.xml',
     		'report_name':'gstr.hsn_report',
-    		'datas':data
+    		'datas':data,
+            'name':name
     	}

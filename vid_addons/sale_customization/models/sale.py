@@ -88,6 +88,7 @@ class SaleOrderLine(models.Model):
                             if parter_tax.tax_categ == 'igst':
                                 taxes_ids.append(parter_tax.id)
             line.tax_id = taxes_ids
+            line.case_lot = line.product_id.case_lot            
             taxes = line.product_id.taxes_id
             taxes_id = self.env['account.fiscal.position'].map_tax(taxes)
             tax=[]
@@ -114,6 +115,7 @@ class SaleOrderLine(models.Model):
     sale_sub_type = fields.Char(string="Sub Type")
     product_name = fields.Char(string="Prod Name")
     order_partner_id = fields.Many2one("res.partner")
+    case_lot = fields.Float('Case Lot', compute="_get_product_values", store=True)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,

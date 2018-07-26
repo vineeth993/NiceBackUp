@@ -72,6 +72,8 @@
                     <field name="gcode" />
                     <field name="cas_no"/>
                     <field name="price_list"/>
+                    <field name="case_lot"/>
+
                 </field>
 
                  <field name="list_price" position="after">
@@ -107,6 +109,7 @@
                     <field name="schedule"/>
                     <field name="grade"/>
                     <field name="price_list"/>
+                    <field name="case_lot"/>
                 </field>
             </field>
         </record>

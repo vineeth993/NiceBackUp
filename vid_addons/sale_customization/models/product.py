@@ -67,7 +67,8 @@ class ProductProduct(models.Model):
     schedule = fields.Many2one('product.schedule', 'Schedule')
     grade = fields.Many2one('product.grade', string="Grade")
     price_list = fields.Boolean("Special")
-    
+    case_lot = fields.Float('Case Lot')
+
     _defaults = {
         'type': 'product',
     }
@@ -120,7 +121,8 @@ class ProductTemplate(models.Model):
     grade = fields.Many2one('product.grade', string="Grade")
     hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
     price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
-
+    case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
+    
     _defaults = {
         'type': 'product',
         }
