@@ -225,9 +225,9 @@ class SaleOrder(models.Model):
             line.extra_discount = line.partner_id.adisc
         
     transaction_type = fields.Selection([('local', 'Local'), ('inter_state', 'Interstate')], 'Transaction Type')
-    normal_disc = fields.Float("Normal Discount", compute="_get_extra_discount")
+    normal_disc = fields.Float("Normal Discount", compute="_get_extra_discount", store=True)
     partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string='Selling Type', default="normal")
-    extra_discount = fields.Float('Additional Discount(%)', compute='_get_extra_discount',digits_compute=dp.get_precision('Account'))
+    extra_discount = fields.Float('Additional Discount(%)', compute='_get_extra_discount',digits_compute=dp.get_precision('Account'), store=True)
     nonread_extra_disocunt = fields.Float('Additional Discount(%)',digits_compute=dp.get_precision('Account'),copy=False)
     nonread_normal_disocunt = fields.Float('Normal Discount',digits_compute=dp.get_precision('Account'),copy=False)
     transport_document_ids = fields.One2many('transport.document', 'sale_id', 'Documents')
