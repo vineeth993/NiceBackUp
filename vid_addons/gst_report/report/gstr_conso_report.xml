@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+			
+		<record id="gstr_conso_report" model="ir.actions.report.xml">
+			<field name="name">gstr.conso.report</field>
+			<field name="model">gstr.consolidated</field>
+			<field name="type">ir.actions.report.xml</field>
+			<field name="report_name">gstr.consolidated</field>
+			<field name="report_type">xls</field>
+			<field name="auto" eval="False" />
+		</record>
+
+	</data>
+</openerp>
