@@ -79,8 +79,7 @@ class GstrSummaryReport(report_xls):
 		b2bTaxableZero = 0
 		b2cTaxableZero = 0
 		nilRated = 0
-
-		_logger.info("The value = "+str(invoice_id))
+		
 		if invoice_id:
 			for invoice in invoices:
 				if 'B2B' in invoice.sale_type_id.name:
