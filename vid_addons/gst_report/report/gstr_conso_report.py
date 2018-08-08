@@ -56,6 +56,11 @@ class GstrSummaryReport(report_xls):
 		b2cCgst = 0
 		b2cSgst = 0
 
+		b2tTaxable = 0
+		b2tIgst = 0
+		b2tCgst = 0
+		b2tSgst = 0
+
 		exportTaxableZero = 0
 		sezTaxableZero = 0
 		deemedTaxableZero = 0
@@ -78,6 +83,7 @@ class GstrSummaryReport(report_xls):
 
 		b2bTaxableZero = 0
 		b2cTaxableZero = 0
+		b2tTaxableZero = 0
 		nilRated = 0
 		
 		if invoice_id:
@@ -143,6 +149,21 @@ class GstrSummaryReport(report_xls):
 						else:
 							b2cTaxableZero += line.price_subtotal
 
+				elif 'B2T' in invoice.sale_type_id.name:
+					for line in invoice.invoice_line:
+						if line.invoice_line_tax_id:
+							b2tTaxable += line.price_subtotal
+							for tax in line.invoice_line_tax_id:
+								if tax.gst_type == "cgst":
+									b2tCgst += round((line.price_subtotal * tax.amount), 2)
+								elif tax.gst_type == "sgst":
+									b2tSgst += round((line.price_subtotal * tax.amount), 2)
+								elif tax.gst_type == "igst":
+									b2tIgst += round((line.price_subtotal * tax.amount), 2)
+
+						else:
+							b2tTaxableZero += line.price_subtotal
+
 				elif 'EXP' in invoice.sale_type_id.name:
 					for line in invoice.invoice_line:
 						if line.invoice_line_tax_id:
@@ -176,48 +197,57 @@ class GstrSummaryReport(report_xls):
 		ws.write(6, 3, b2cCgst, number)
 		ws.write(6, 4, b2cSgst, number)		
 
-		ws.write(7, 0, 'Deemed Export With Tax', normal)
-		ws.write(7, 1, deemedTaxable, number)
-		ws.write(7, 2, deemedIgst, number)
-		ws.write(7, 3, deemedCgst, number)
-		ws.write(7, 4, deemedSgst, number)
+		ws.write(7, 0, 'B2T', normal)
+		ws.write(7, 1, b2tTaxable, number)
+		ws.write(7, 2, b2tIgst, number)
+		ws.write(7, 3, b2tCgst, number)
+		ws.write(7, 4, b2tSgst, number)	
 
-		ws.write(8, 0, 'SEZ With Tax', normal)
-		ws.write(8, 1, sezTaxable, number)
-		ws.write(8, 2, sezIgst, number)
-		ws.write(8, 3, sezCgst, number)
-		ws.write(8, 4, sezSgst, number)
+		ws.write(8, 0, 'Deemed Export With Tax', normal)
+		ws.write(8, 1, deemedTaxable, number)
+		ws.write(8, 2, deemedIgst, number)
+		ws.write(8, 3, deemedCgst, number)
+		ws.write(8, 4, deemedSgst, number)
 
-		ws.write(9, 0, 'Export With Tax', normal)
-		ws.write(9, 1, exportTaxable, number)
-		ws.write(9, 2, exportIgst, number)
-		ws.write(9, 3, exportCgst, number)
-		ws.write(9, 4, exportSgst, number)
+		ws.write(9, 0, 'SEZ With Tax', normal)
+		ws.write(9, 1, sezTaxable, number)
+		ws.write(9, 2, sezIgst, number)
+		ws.write(9, 3, sezCgst, number)
+		ws.write(9, 4, sezSgst, number)
+
+		ws.write(10, 0, 'Export With Tax', normal)
+		ws.write(10, 1, exportTaxable, number)
+		ws.write(10, 2, exportIgst, number)
+		ws.write(10, 3, exportCgst, number)
+		ws.write(10, 4, exportSgst, number)
 		
-		ws.write(11, 0, 'Zero rated', title2)
-		ws.write(13, 0, 'Deemed Export Without Tax', normal)
-		ws.write(13, 1, deemedTaxableZero, number)
+		ws.write(12, 0, 'Zero rated', title2)
+		ws.write(14, 0, 'Deemed Export Without Tax', normal)
+		ws.write(14, 1, deemedTaxableZero, number)
 		
-		ws.write(14, 0, 'SEZ Without Tax', normal)
-		ws.write(14, 1, sezTaxableZero, number)
+		ws.write(15, 0, 'SEZ Without Tax', normal)
+		ws.write(15, 1, sezTaxableZero, number)
 		
-		ws.write(15, 0, 'Export Without Tax', normal)
-		ws.write(15, 1, exportTaxableZero, number)
+		ws.write(16, 0, 'Export Without Tax', normal)
+		ws.write(16, 1, exportTaxableZero, number)
 		
 		zeroRated = deemedTaxableZero + sezTaxableZero + exportTaxableZero
-		ws.write(16, 0, 'Zero Rated Total', normal)
-		ws.write(16, 1, zeroRated, number)
+		ws.write(17, 0, 'Zero Rated Total', normal)
+		ws.write(17, 1, zeroRated, number)
 
-		ws.write(18, 0, 'Nil Rated', title2)
-		ws.write(20, 0, 'B2B Zero Percentage', normal)
-		ws.write(20, 1, b2bTaxableZero, number)
+		ws.write(19, 0, 'Nil Rated', title2)
+		ws.write(21, 0, 'B2B Zero Percentage', normal)
+		ws.write(21, 1, b2bTaxableZero, number)
 
-		ws.write(21, 0, 'B2C Zero Percentage', normal)
-		ws.write(21, 1, b2cTaxableZero, number)
+		ws.write(22, 0, 'B2C Zero Percentage', normal)
+		ws.write(22, 1, b2cTaxableZero, number)
 
-		nilRated = b2bTaxableZero + b2cTaxableZero
+		ws.write(23, 0, 'B2T Zero Percentage', normal)
+		ws.write(23, 1, b2tTaxableZero, number)
 
-		ws.write(22, 0, 'Nil Rated Total', normal)
-		ws.write(22, 1, nilRated, number)
+		nilRated = b2bTaxableZero + b2cTaxableZero + b2tTaxableZero
+
+		ws.write(24, 0, 'Nil Rated Total', normal)
+		ws.write(24, 1, nilRated, number)
 
 GstrSummaryReport("report.gstr.consolidated", "gstr.consolidated", parser=gstr_conso_report)

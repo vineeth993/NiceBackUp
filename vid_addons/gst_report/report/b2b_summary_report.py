@@ -318,6 +318,109 @@ class B2bSummary(report_xls):
         ws.write(2, 5, '', self.number )
         ws.write(2, 10, total_taxable_amt, self.number)
 
+    def b2t_sale_summary(self, invoice_obj, cr, uid, wb, data):
+
+        report_name = 'B2T Sale Summary Report '
+        ws = wb.add_sheet(report_name)
+        ws.panes_frozen = True
+        ws.remove_splits = True
+        ws.portrait = 0  # Landscape
+        ws.fit_width_to_pages = 1
+        row_pos = 0
+        cols = range(10)
+        for col in cols:
+            ws.col(col).width = 4000
+
+        headers = {0:"GSTIN/UIN of Recipient", 1:"Reciever", 2:"Invoice Number", 3:'Invoice Date', 4:"Invoice Value", 5:'Place Of Supply', 6:'Reverse Charge', 7:'Applicable of Tax Rate' ,8:'Invoice Type', 9:'E-Commerce GSTIN', 10:'Rate', 11:'Taxable Value', 12:'Cess Amount'}
+
+        for header in headers:
+            ws.write(3, header, headers[header], self.title2)
+        invoice_id = invoice_obj.search(cr, uid, [('state','not in',('draft', 'cancel')), ("date_invoice", ">=", data['form']["from_date"]), ("date_invoice", "<=", data['form']['to_date']), ("company_id", "=", data['form']['company'][0]), ("sale_type_id", "=" , data['form']["type_id"][0])], order="id asc")
+        invoices = invoice_obj.browse(cr, uid, invoice_id)
+
+        total_invoice = 0
+        total_inv_amt = 0
+        total_taxable_amt = 0
+        recipients = []
+        count = 4
+        for invoice in invoices:
+
+            total_invoice += 1
+
+            invoice_no = invoice.number.replace("SAJ-","")
+            place_supply = str(invoice.partner_id.state_id.code) +'-'+ str(invoice.partner_id.state_id.name)
+            add_disc = int(invoice.partner_id.adisc)
+            sub_type = invoice.sale_sub_type_id.name
+            taxes = {}
+            tax_perc = 0
+            taxable_value = 0
+
+            if sub_type:
+                if "Regular" in sub_type:
+                   cust_type = 'Regular'
+                elif "Deemed Export" in sub_type:
+                    cust_type = "Deemed Exp"
+                elif "SEZ Without" in sub_type:
+                    cust_type = "SEZ supplies without payment"
+                elif "SEZ With" in sub_type or "SEZ WIth" in sub_type :
+                   cust_type = "SEZ supplies with payment"
+            else:
+                cust_type = 'False'
+
+            if invoice.partner_id.gst_no not in recipients:
+                recipients.append(invoice.partner_id.gst_no)
+
+            for line in invoice.invoice_line:
+                if line.invoice_line_tax_id:
+                    if line.invoice_line_tax_id[0].gst_type in ["sgst", "cgst"]:
+                        tax_perc = (line.invoice_line_tax_id[0].amount*2)*100
+                    elif line.invoice_line_tax_id[0].gst_type in ["igst", "cess"]:
+                        tax_perc = (line.invoice_line_tax_id[0].amount)*100
+                else:
+                    tax_perc = 0
+                # if add_disc:
+                #     taxable_value = line.price_subtotal - ((line.price_subtotal * add_disc)/100)
+                # else:
+                taxable_value = line.price_subtotal
+
+                if taxes.has_key(tax_perc):
+                    taxes[tax_perc] += round(taxable_value, 2)
+                else:
+                    taxes.update({tax_perc:round(taxable_value, 2)})
+
+                total_taxable_amt += taxable_value
+                date_invoice_obj = dt.strptime(str(invoice.date_invoice), '%Y-%m-%d')
+                date_invoice = date_invoice_obj.strftime('%d-%b-%Y')
+            for tax in sorted(taxes.iterkeys()):
+                ws.write(count, 0, invoice.partner_id.gst_no, self.normal)
+                ws.write(count, 1, invoice.partner_id.name, self.normal)
+                ws.write(count, 2, invoice_no, self.normal)
+                ws.write(count, 3, str(date_invoice), self.normal)
+                ws.write(count, 4, invoice.round_off_total, self.number)
+                ws.write(count, 5, place_supply, self.normal)
+                ws.write(count, 6, 'N', self.normal)
+                ws.write(count, 7, '', self.normal)
+                ws.write(count, 8, cust_type, self.normal)
+                ws.write(count, 9, '', self.normal)
+                ws.write(count, 10, tax, self.number)
+                ws.write(count, 11, taxes[tax], self.number)
+                ws.write(count, 12, 0.0, self.number)
+                count+=1
+            
+            total_inv_amt += invoice.round_off_total
+
+        ws.write(0, 0 ,"Summary For B2T", self.title2)
+        headers = {0:"No of Recipients", 2:"No Of Invoices", 4:"Total Invoice Value", 11:'Total Taxable Value', 12:'Total Cess'}
+        
+        for header in headers:
+            ws.write(1, header, headers[header], self.title2)
+
+        ws.write(2, 0, len(recipients), self.number)
+        ws.write(2, 2, total_invoice, self.number)
+        ws.write(2, 4, total_inv_amt, self.number)
+        ws.write(2, 11, total_taxable_amt, self.number)
+        ws.write(2, 12, 0, self.number)
+
     def generate_xls_report(self, parser, xls_styles, data, objects, wb):
 
         cr, uid = self.cr, self.uid
@@ -334,5 +437,7 @@ class B2bSummary(report_xls):
             self.b2c_sale_summary(invoice_obj, cr, uid, wb, data)
         elif "EXP" in data['form']["type_id"][1]:
             self.exp_sale_summary(invoice_obj, cr, uid, wb, data)
+        elif "B2T" in data['form']["type_id"][1]:
+            self.b2t_sale_summary(invoice_obj, cr, uid, wb, data)
 
 B2bSummary('report.gstr.b2b_report', "gstr.b2b_report", parser=sale_b2b_summary)
