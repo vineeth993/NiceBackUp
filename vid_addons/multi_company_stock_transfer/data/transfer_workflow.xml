@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record model="workflow" id="stock_workflow">
+			<field name="name">Transfer Workflow</field>
+			<field name="osv">multi.stock.outward</field>
+			<field name="on_create">True</field>
+		</record>
+
+		<record model="workflow.activity" id="process">
+			<field name="name">Process</field>
+			<field name="wkf_id" ref="stock_workflow"/>
+			<field name="flow_start" eval="True"/>
+			<field name="kind">function</field>
+			<field name="action">action_move()</field>
+		</record>
+
+		<record model="workflow.activity" id="end">
+			<field name="name">End</field>
+			<field name="wkf_id" ref="stock_workflow"/>
+			<field name="kind">dummy</field>
+		</record>
+
+		<record model="workflow.transition" id="stock_transfer_workflow">
+			<field name="act_from" ref="process"/>
+			<field name="act_to" ref="end"/>
+			<field name="condition">is_issued</field>
+		</record>
+	</data>
+</openerp>

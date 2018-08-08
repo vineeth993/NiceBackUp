@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data noupdate="1">
+
+		<record id="multi_stock_transfer_type" model="ir.sequence.type">
+			<field name="name">Stock tranfer</field>
+			<field name="code">multi.stock.transfer</field>
+		</record>
+
+		<record id="multi_stock_transfer_sequence" model="ir.sequence">  
+			<field name="name">Stock tranfer</field>
+			<field name="code">multi.stock.transfer</field>
+			<field eval="3" name="padding"/>
+			<field name="prefix">STI-%(year)s-</field>
+		</record>
+		
+		<record id="multi_stock_transfer_outward_type" model="ir.sequence.type">
+			<field name="name">Stock tranfer outward</field>
+			<field name="code">multi.stock.outward</field>
+		</record>
+
+		<record id="multi_stock_transfer_outward_sequence" model="ir.sequence">  
+			<field name="name">Stock tranfer outward</field>
+			<field name="code">multi.stock.outward</field>
+			<field eval="3" name="padding"/>
+			<field name="prefix">STO-%(year)s-</field>
+		</record>
+
+	</data>
+</openerp>

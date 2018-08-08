@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<report
+			id="report_dc_print"
+			model="multi.stock.outward"
+			string="DC Print"
+			report_type="qweb-pdf"
+			name="multi_company_stock_transfer.report_dc"
+			multi="True"
+			/>
+	</data>
+</openerp>

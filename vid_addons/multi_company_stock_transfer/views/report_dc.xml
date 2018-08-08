@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<template id="external_layout">
+	        <t t-if="not o and doc">
+	            <t t-set="o" t-value="doc"/>
+	        </t>
+	        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+	        <t t-call="multi_company_stock_transfer.external_layout_header" />
+	        <br/><br/>
+	        <t t-raw="0" />
+	    </template>
+
+		<template id="external_layout_header">
+			<div class="header" style="padding-top:50px;padding-left:80px">
+				<table width="100%">
+					<tr>
+						<td width="40%">
+							<table>
+								<tr>
+									<td width="43%" style="text-align:left;text-size: 1px;">
+										<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 50px;width: 150px;"/>
+				                    </td>
+				                </tr>
+							</table>
+						</td>
+						<td width="60%">
+							<table >
+								<tr>
+									<td width="43%" style="text-align:left;text-size: 1px;">
+				                            <b><span t-field="company.name"/><br/></b>
+				                            <span t-field="company.street"/><br/>
+				                            <span t-field="company.street2"/>,<span t-field="company.city"/>-<span t-field="company.zip"/><br/>
+				                            Tel:<span t-field="company.phone"/><br/>
+				                            Email:<span t-field="company.email"/><br/>
+				                            Website:<span t-field="company.website"/><br/>
+				                    </td>
+				                </tr>
+				                <tr>
+							        <td width="33%" style="text-align:left;text-size: 1px;" colspan="2">
+				                            GSTIN: <span t-field="company.gst_no"/><br/>
+				                            Poison Lic.No.: <span t-field="company.poison_lic_no"/><br/>
+				                            Drug Mfg.Lic.No: <span t-field="company.drug_mfg_lic_no"/><br/>
+				                    </td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</template>
+
+		<template id="report_dc_document">
+			<t t-call="multi_company_stock_transfer.external_layout">
+				<div class="page">
+					<b>testing</b>
+				</div>
+			</t>
+		</template>
+
+		<template id="report_dc">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+        			<t t-call="multi_company_stock_transfer.report_dc_document" />
+        		</t>
+			</t>
+		</template>
+	</data>
+</openerp>

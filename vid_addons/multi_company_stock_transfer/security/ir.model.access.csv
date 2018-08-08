@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_multi_stock_outward,access_multi_stock_outward,model_multi_stock_outward,,1,1,0,0
+access_multi_stock_outward_line,access_multi_stock_outward_line,model_multi_stock_outward_line,,1,1,0,0
+access_multi_stock_transfer,access_multi_stock_transfer,model_multi_stock_transfer,,1,1,1,1
+access_multi_stock_transfer_line,access_multi_stock_transfer_line,model_multi_stock_transfer_line,,1,1,1,1

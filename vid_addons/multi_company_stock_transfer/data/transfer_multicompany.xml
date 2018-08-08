@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data noupdate="1">
+		<record model="ir.rule" id="stock_transfer_multi_company">
+			<field name="name">MultiCompany Stock Transfer</field>
+			<field name="model_id" ref="model_multi_stock_transfer"/>
+			<field name="global" eval="True"/>
+			<field name="domain_force">['|',('company_id', '=', False), ('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+		<record model="ir.rule" id="stock_transfer_inward_multi_company">
+			<field name="name">MultiCompany Stock Transfer Inward</field>
+			<field name="model_id" ref="model_multi_stock_outward"/>
+			<field name="global" eval="True"/>
+			<field name="domain_force">['|',('company_id', '=', False), ('company_id', '=', user.company_id.id)]</field>
+		</record>
+	</data>	
+</openerp>
