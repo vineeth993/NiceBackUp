@@ -21,12 +21,13 @@
 			<field name="arch" type="xml">
 				<form string="Lr Doc">
 					<header>
-						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':['|',('state','=','confirm'),('state','=','validate')]}" class="oe_highlight" />
-						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':['|',('state','=','draft'),('state','=','validate')]}" class="oe_highlight" />
+						<button name="%(get_ewp_action)d" type="action" string="Create JSON" attrs="{'invisible':[('state', 'not in', ('ready','validate'))]}"/>
+						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':[('state','in',('confirm', 'validate', 'ready'))]}" class="oe_highlight" />
+						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':[('state','in',('draft', 'validate', 'ready'))]}" class="oe_highlight" />
 						<button name="mail_dispatch" type="object" string="Mail Document" attrs="{'invisible':[('state', '=', 'draft')]}"/>
  						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" />
 						<button name="print_envolope" type="object" string="Print Envelope" class="oe_highlight" />
-						<field name="state" widget="statusbar"  statusbar_visible="draft,confirm,validate"/>
+						<field name="state" widget="statusbar"  statusbar_visible="draft,confirm,ready,validate"/>
 					</header>
 					<h1>
 						<field name="name" class="oe_inline" readonly="1" />
@@ -43,6 +44,8 @@
 							<field name="company_id"/>
 						</group>
 						<group>
+							<field name="json_file" widget="binary" icon="gtk-print" height="64" filename="json_file_name" attrs="{'invisible':[('state', 'not in', ('ready', 'validate'))]}" readonly="1"/>
+							<field name="json_file_name" invisible="1"/>
 							<field name= "from_date"/>
 							<field name= "to_date"/>
 							<field name="date"/>
@@ -57,6 +60,7 @@
 								<field name="docket_date" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 								<field name="courier_name" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 								<field name="driver_name" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+								<field name="transporter_gstin" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 								<field name="contact_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 								<field name="freight_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 							</group>
@@ -81,6 +85,8 @@
 					<field name="courier_name"/>
 					<field name="total_amount"/>
 					<field name="state"/>
+					<field name="json_file" widget="binary" filename="json_file_name" class="oe_avatar"/>
+					<!-- <field name="json_file_name" invisible="1"/> -->
 				</tree>
 			</field>			
 		</record>

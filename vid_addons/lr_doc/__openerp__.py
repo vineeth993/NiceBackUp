@@ -26,6 +26,7 @@
     'data': [
         
         'report.xml',
+        'wizard/getEWP_view.xml',
         'views/lr_doc_view.xml',
         'views/report_lr_doc.xml',
         'views/account_invoice_view.xml',
@@ -34,7 +35,8 @@
         'data/lr_data.xml',
         'security/ir.model.access.csv',
         'data/lr_doc_access.xml',
-        'data/lr_doc_mail_template.xml'
+        'data/lr_doc_mail_template.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [

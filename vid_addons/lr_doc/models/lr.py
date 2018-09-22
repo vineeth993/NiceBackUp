@@ -68,7 +68,8 @@ class LrDoc(models.Model):
 	contact_no = fields.Char(string="Contact No")
 	state = fields.Selection([('draft', 'Draft'),
 		("confirm", "Confirm"),
-		("validate", "Done"),
+		("ready", "Ready To Create"),
+		("validate", "Ready To Download"),
 		], string="State", default="draft",track_visibility='onchange')
 	total_amount = fields.Float("Total Amount", compute="_compute_amount", store=True)
 	amount_in_words = fields.Char("Amount in Words", compute="_amount_in_words")
@@ -77,6 +78,9 @@ class LrDoc(models.Model):
 	company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.user.company_id, readonly=True)
 	from_date = fields.Datetime("Invoice From", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
 	to_date = fields.Datetime("Invoice To", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	json_file = fields.Binary("E-Way Bill-Json")
+	json_file_name = fields.Char("File name")
+	transporter_gstin = fields.Char("Transporter Gstin")
 
 	@api.onchange("partner_id")
 	def onchange_partner_id(self):
@@ -100,7 +104,7 @@ class LrDoc(models.Model):
 
 	@api.multi
 	def lr_doc_validate(self):
-		self.state = "validate"
+		self.state = "ready"
 		data = {}
 		
 		if self.driver_name:
