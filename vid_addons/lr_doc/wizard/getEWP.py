@@ -136,7 +136,7 @@ class GetEwp(models.TransientModel):
 					item_no += 1
 					items['itemNo'] = item_no
 					items['productName'] = 'Chemical'
-					items['productDesc'] = ''
+					items['productDesc'] = 'Chemical'
 					items['hsnCode'] = int(hsn)
 					items['quantity'] = item_list[hsn][item][5]
 					items['qtyUnit'] = 'NOS'
@@ -159,12 +159,20 @@ class GetEwp(models.TransientModel):
 			invoice_date = datetime.datetime.strptime(invoice.date_invoice, "%Y-%m-%d").strftime("%d/%m/%Y")
 			trans_date = ""
 			transporter_id = ""
+			vehicle_number = ""
+			trans_doc_no = ""
 			if self.transporter_id:
 				transporter_id = self.transporter_id
 
 			if self.trans_doc_date:
 				trans_date = datetime.datetime.strptime(self.trans_doc_date, "%Y-%m-%d").strftime("%d/%m/%Y")
-				
+			
+			if self.vehicle_number:
+				vehicle_number = re.sub('[^A-Za-z0-9]+','',self.vehicle_number)
+
+			if self.trans_doc_no:
+				trans_doc_no = self.trans_doc_no
+
 			billList = {
 					'userGstin':self.from_addr.gst_no,
 					'supplyType':self.supply_type,
@@ -197,9 +205,9 @@ class GetEwp(models.TransientModel):
 					'transDistance':self.transport_distance,
 					'transporterName':self.transporter_name,
 					'transporterId':transporter_id,
-					'transDocNo':self.trans_doc_no,
+					'transDocNo':trans_doc_no,
 					'transDocDate':trans_date,
-					'vehicleNo':re.sub('[^A-Za-z0-9]+','',self.vehicle_number),
+					'vehicleNo':vehicle_number,
 					'vehicleType':self.vehicle_type,
 					'totInvValue':invoice.amount_total,
 					'mainHsnCode':int(hsn),
@@ -208,9 +216,10 @@ class GetEwp(models.TransientModel):
 			billLists.append(billList)
 		data = {'version':"1.0.0618",'billLists':billLists}
 		
-		temp_json_file = os.path.dirname(os.path.realpath(__file__))
+		# temp_json_file = os.path.dirname(os.path.realpath(__file__))
+		# temp_json_file = temp_json_file+"\\Test.json"
 		temp_json_file = "/tmp/Test.json"
-
+		
 		# = "C:\Users\NCPL\Desktop\Passport\Test.json"
 		with open(temp_json_file, "w") as jsonFile:
 			json.dump(data, jsonFile)

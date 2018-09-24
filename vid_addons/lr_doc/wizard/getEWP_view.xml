@@ -27,8 +27,8 @@
 						</group>
 						<group string="Tranport Details">
 							<field name="transporter_name"/>
-							<field name="vehicle_number" attrs="{'required':[('transport_mode', '=', 1)]}"/>
-							<field name="transporter_id" attrs="{'required':[('vehicle_number', '=', False)]}"/>
+							<field name="vehicle_number" attrs="{'required':[('transport_mode', '=', 1), ('transporter_id', '=', False)]}"/>
+							<field name="transporter_id" attrs="{'required':[('vehicle_number', '=', False), ('transport_mode', '=', 1)]}"/>
 							<field name="transport_distance" required='1'/>
 							<field name="vehicle_type" attrs="{'required':[('transport_mode', '=', 1)]}"/>
 							<field name="trans_doc_no" attrs="{'required':[('transport_mode', '!=', 1)]}"/>
