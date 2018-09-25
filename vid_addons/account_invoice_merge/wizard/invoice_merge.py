@@ -61,6 +61,10 @@ class InvoiceMerge(models.TransientModel):
                 if d['partner_selling_type'] != invs[0]['partner_selling_type']:
                     raise UserError(
                         _('Not all invoices are of same bill type !'))
+                if d['normal_disc'] != invs[0]['normal_disc'] or d['extra_discount'] != invs[0]['extra_discount'] or d['nonread_extra_disocunt'] != invs[0]['nonread_extra_disocunt'] or d['nonread_normal_disocunt'] != invs[0]['nonread_normal_disocunt']:
+                    raise UserError(
+                        _('Discount percentage are not same'))
+
         return {}
 
     @api.model
