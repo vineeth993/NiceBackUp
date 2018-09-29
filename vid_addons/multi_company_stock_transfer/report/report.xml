@@ -8,7 +8,7 @@
 			string="DC Print"
 			report_type="qweb-pdf"
 			name="multi_company_stock_transfer.report_dc"
-			multi="True"
+			menu="False"
 			/>
 	</data>
 </openerp>

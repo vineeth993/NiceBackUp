@@ -22,8 +22,8 @@
 				<form string="Lr Doc">
 					<header>
 						<button name="%(get_ewp_action)d" type="action" string="Create JSON" attrs="{'invisible':[('state', 'not in', ('ready','validate'))]}"/>
-						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':[('state','in',('confirm', 'validate', 'ready'))]}" class="oe_highlight" />
-						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':[('state','in',('draft', 'validate', 'ready'))]}" class="oe_highlight" />
+						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':[('state','in',('confirm', 'validate', 'ready', 'uploaded'))]}" class="oe_highlight" />
+						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':[('state','in',('draft', 'validate', 'ready', 'uploaded'))]}" class="oe_highlight" />
 						<button name="mail_dispatch" type="object" string="Mail Document" attrs="{'invisible':[('state', '=', 'draft')]}"/>
  						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" />
 						<button name="print_envolope" type="object" string="Print Envelope" class="oe_highlight" />
@@ -65,6 +65,18 @@
 								<field name="freight_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 							</group>
 						</page>
+						<page string="Eway-Bill Info" attrs="{'invisible':[('state','not in',('validate', 'uploaded'))]}">
+							<group>
+								<field name="eway_bill_upload"/>
+								<button name="done" type="object" string="Upload E-way Bill Details" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'validate')]}"/>
+							</group>
+							<field name="line_id">
+								<tree editable="bottom" create="false">
+									<field name="invoice_id" domain="[('partner_id', '=', parent.partner_id),('state', 'not in',('draft', 'cancel', 'proforma', 'proforma2'))]" options="{'no_create_edit': True, 'no_create':True, 'no_open':True}" readonly="1"/>
+									<field name="eway_bill_no"  readonly="1"/>
+								</tree>
+							</field>
+						</page>	
 					</notebook>
 					<div class="oe_chatter">
 	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>

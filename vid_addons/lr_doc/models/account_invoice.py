@@ -1,6 +1,6 @@
 
-from openerp import api, models, fields
-from openerp.exceptions import ValidationError, Warning
+from openerp import api, models, fields, _
+from openerp.exceptions import ValidationError, Warning, except_orm
 import logging
 
 
@@ -17,3 +17,12 @@ class AccountInvoice(models.Model):
 	driver_name = fields.Char("Name", readonly=True)
 	contact_number = fields.Char("Contact No", readonly=True)
 	port_id = fields.Many2one("port.code", String="Port Code", readonly=True)
+	eway_bill = fields.Char("Eway Bill No", readonly=True)
+
+	@api.multi
+	def action_cancel(self):
+
+		if self.eway_bill:
+			raise except_orm(_('Error!'), _('You cannot cancel an invoice with eway bill'))
+
+		return Super(AccountInvoice, self).action_cancel()

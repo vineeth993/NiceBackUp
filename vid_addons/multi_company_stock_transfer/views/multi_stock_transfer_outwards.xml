@@ -15,12 +15,13 @@
             <field name="name">Stock Issue</field>
             <field name="model">multi.stock.outward</field>
             <field name="arch" type="xml">
-                <tree string="Issue" colors="grey:state == 'cancel';red:(expected_date and (expected_date &lt; current_date));red:state == 'error';blue:state == 'process'green:state == 'issue'">
+                <tree string="Issue" colors="grey:state == 'cancel';red:state == 'error';blue:state == 'process'green:state == 'issue'">
                     <field name="request_company_id"/>
                     <field name="name"/>
                     <field name="reference"/>
                     <field name="request_date"/>
                     <field name="expected_date"/>
+                    <field name="created_user"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -34,7 +35,9 @@
                     <header>
                         <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" states="draft"/>
                         <button name="action_view" type="object" string="Issue Stock" states="confirm,process,done,error,issue" class="oe_highlight"/>
-                        <button name="action_move" type="object" string="Move issue" states="issue" icon="gtk-truck"/>
+                        <button name="action_move" type="object" string="Move issue" states="issue" class='fa fa-truck'/>
+                        <button name="action_print_dc" type="object" string="Print DC" states="dc" class="fa fa-print"/>
+                        <button name="%(get_ewp_action_dc)d" type="action" string="Create JSON" states="dc" class="fa fa-download"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,process,done"/>
                     </header>
                     <h1>
@@ -47,10 +50,13 @@
                             <field name="reference" readonly="1"/>
                         </group>
                         <group>
+                            <field name="json_file" widget="binary" icon="gtk-print" height="64" filename="json_file_name" attrs="{'invisible':[('state', '!=', 'dc')]}" readonly="1"/>
+                            <field name="json_file_name" invisible="1"/>
                             <field name="request_date" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             <field name="expected_date" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             <field name="quant_issued_date" readonly="1"/>
                             <field name="currency_id" invisible="1" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
+                            <field name="created_user" readonly="1"/>
                         </group>
                     </group>
                     <notebook>

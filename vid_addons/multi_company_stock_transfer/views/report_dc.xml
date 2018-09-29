@@ -59,7 +59,150 @@
 		<template id="report_dc_document">
 			<t t-call="multi_company_stock_transfer.external_layout">
 				<div class="page">
-					<b>testing</b>
+					<table width="100%">
+						<tr>
+							<td width="100%" style="text-align:center;font-size:30px;padding-top:30px">
+								<b>DELIVERY CHALLAN</b>
+							</td>
+						</tr>
+						<tr style="padding-top:30px">
+							<table width="100%">
+								<tr style="border:2px solid black;text-align:center">
+									<td width="33%" style="border-right:2px solid black;padding-top:10px;padding-bottom:10px">
+										FNF 206
+									</td>
+									<td width="33%" style="border-right:2px solid black;padding-top:10px;padding-bottom:10px">
+										REVISION 0
+									</td>
+									<td width="33%" style="border-right:2px solid black;padding-top:10px;padding-bottom:10px">
+										WEF : 15/03/2001
+									</td>
+								</tr>
+							</table>
+						</tr>
+					</table>
+					<table width="100%">
+						<tr>
+							<td width="50%" style="padding-top:20px">
+								<table>
+									<tr>
+										<td width="10%">Party</td>
+										<td width="1%">:</td>
+										<td width="89%" style="padding-right:3px">
+											<span t-field="o.partner_id.name"/><br/>
+											<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+	                                        <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+	                                        <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+	                                        <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td width="50%" style="padding-top:20px">
+								<table>
+									<tr>
+										<td width="30%">D.C.No</td>
+										<td width="1%">:</td>
+										<td width="69%"><span t-field='o.name'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px">Req.No</td>
+										<td>:</td>
+										<td><span t-field='o.reference'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px">Date</td>
+										<td>:</td>
+										<td><span t-field='o.quant_issued_date'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px">GSTIN</td>
+										<td>:</td>
+										<td><span t-field='o.request_company_id.gst_no'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px; padding-bottom:20px">CIN</td>
+										<td>:</td>
+										<td><span t-field='o.request_company_id.cin'/></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+
+					<table class="table table-condensed">
+						<thead>
+							<tr style="border:1px solid black;">
+								<th style="border-right:1px solid black;">S.No</th>
+								<th style="border-right:1px solid black;">Code</th>
+								<th style="border-right:1px solid black;">HSN</th>
+								<th style="border-right:1px solid black;">Product Description</th>
+								<th style="border-right:1px solid black;">Batch No</th>
+								<th style="border-right:1px solid black;">Qty</th>
+								<th style="border-right:1px solid black;">Rate</th>
+								<th style="border-right:1px solid black;">Amount</th>
+								<th style="border-right:1px solid black;">Tax</th>
+								<th style="border-right:1px solid black;">CGST</th>
+								<th style="border-right:1px solid black;">SGST</th>
+							</tr>
+						</thead>
+						<tbody class="sale_tbody">
+							<t t-set="count" t-value="0"/>
+							<t t-set="amount" t-value="0"/>
+							<t t-set="tax" t-value="0"/>
+							<t t-set="taxTotal" t-value="0"/>
+							<tr t-foreach="o.stock_line_id" t-as="line" style="border:1px solid black;">
+								<t t-if="line.last_issued_stock">
+									<t t-set="count" t-value="count+1"/>
+									<td style="border-right:1px solid black;">
+										<span t-esc="count"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.product_id.default_code"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.product_id.hs_code_id.code"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.product_id.name"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.batch.name"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.last_issued_stock"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.unit_price"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="round((line.last_issued_stock * line.unit_price), 2)"/>
+										<t t-set="amount" t-value="amount +round((line.last_issued_stock * line.unit_price), 2)"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="sum(map(lambda x:x.amount, line.taxes_id)) * 100"/>
+										<t t-set="tax" t-value="(sum(map(lambda x:x.amount, line.taxes_id)) * 100) * line.last_issued_stock"/>
+										<t t-set="taxTotal" t-value="taxTotal + tax"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="tax / 2"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="tax / 2"/>
+									</td>
+								</t>
+							</tr>
+							<tr style="border:1px solid black;">
+								<td colspan="7" style="border-right:1px solid black;border-top:1px solid black">Total</td>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="amount"/></td>
+								<td style="border-right:1px solid black;border-top:1px solid black"/>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="taxTotal / 2"/></td>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="taxTotal / 2"/></td>
+							</tr>
+						</tbody>
+					</table><br/>
+					<p style="text-align:right">For Nice Chemicals (P) Ltd.</p><br/><br/>
+					<p style="text-align:right">Authorised Signatory</p>
 				</div>
 			</t>
 		</template>

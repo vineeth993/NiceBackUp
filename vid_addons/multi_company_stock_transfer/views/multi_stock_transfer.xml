@@ -15,13 +15,14 @@
             <field name="name">Stock Request</field>
             <field name="model">multi.stock.transfer</field>
             <field name="arch" type="xml">
-                <tree string="Inward" colors="grey:state == 'cancel';red:(expected_date and (expected_date &lt; current_date));green:state == 'issued';red:state == 'error';blue:state == 'process'">
+                <tree string="Inward" colors="grey:state == 'cancel';green:state == 'issued';red:state == 'error';blue:state == 'process'">
                     <field name="request_company_id"/>
                     <field name="name"/>
                     <field name="reference"/>
                     <field name="request_date"/>
                     <field name="expected_date"/>
                     <field name="quant_issued_date"/>
+                    <field name="issued_user"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -34,7 +35,7 @@
                 <form>
                     <header>
                         <button name="action_confirm" type="object" states="draft" string="Confirm" class="oe_highlight" />
-                        <button name="action_cancel" type="object" states="draft,confirm,process" string="Cancel" />
+                        <button name="action_cancel" type="object" states="draft,confirm,process" string="Cancel" groups="base.group_erp_manager"/>
                         <button name="action_view" type="object" string="View Doc" states="process,done,error" class="oe_highlight"/>
                         <button name="action_done" type="object" string="Done" states="issued,error" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,process,done"/>
@@ -54,13 +55,14 @@
                             <field name="currency_id" invisible="1" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
                             <field name="quant_issued_date" readonly="1"/>
                             <field name="is_issued" invisible="1"/>
+                            <field name="issued_user"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Products">
                             <field name="stock_line_id">
                                 <tree editable="bottom" colors="green:state == 'issued';red:state in ('less','excess');blue:state == 'process'"> 
-                                    <field name="product_id" context="{'default_picking':parent.picking_id, 'company_id':parent.company_id, 'default_date':parent.expected_date}" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                                    <field name="product_id" context="{'default_picking':parent.picking_id, 'company_id':parent.company_id, 'default_date':parent.expected_date}" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}" domain="['|',('company_id', '=', parent.request_company_id), ('company_id', '=', False)]"/>
                                     <field name="batch" attrs="{'readonly':[('state', '!=', 'draft')]}" domain="[('product_id', '=', product_id)]" context="{'product_id':product_id}"/>
                                     <field name="product_uom" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}" invisible='1'/>
                                     <field name="product_qty" attrs="{'readonly':[('state', '!=', 'draft')]}"/>

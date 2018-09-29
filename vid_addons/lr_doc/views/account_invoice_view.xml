@@ -8,7 +8,8 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
-				<xpath expr="//page[@string='Payments']" position="after">
+               
+                    <xpath expr="//page[@string='Payments']" position="after">
                		<page string="Transport Info">
                			<group>
                				<group>
@@ -17,6 +18,7 @@
                					<field name="driver_name" />
                					<field name="contact_number"/>
                					<field name="dispatch_type" />
+                                        <field name="eway_bill"/>
                				</group>
                				<group>
                					<field name="dispatch_id"/>

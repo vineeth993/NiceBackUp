@@ -5,6 +5,9 @@ import base64
 import math
 from openerp.tools import amount_to_text_en
 from datetime import date
+import base64
+import xlrd
+import tempfile
 
 _logger = logging.getLogger(__name__)
 
@@ -70,6 +73,7 @@ class LrDoc(models.Model):
 		("confirm", "Confirm"),
 		("ready", "Ready To Create"),
 		("validate", "Ready To Download"),
+		("uploaded", "Eway Bill Created")
 		], string="State", default="draft",track_visibility='onchange')
 	total_amount = fields.Float("Total Amount", compute="_compute_amount", store=True)
 	amount_in_words = fields.Char("Amount in Words", compute="_amount_in_words")
@@ -81,6 +85,8 @@ class LrDoc(models.Model):
 	json_file = fields.Binary("E-Way Bill-Json")
 	json_file_name = fields.Char("File name")
 	transporter_gstin = fields.Char("Transporter Gstin")
+	line_id = fields.One2many("lr.doc.line", "lr_id")
+	eway_bill_upload = fields.Binary("Eway Bill")
 
 	@api.onchange("partner_id")
 	def onchange_partner_id(self):
@@ -144,13 +150,13 @@ class LrDoc(models.Model):
 		for invoice in lr_doc.invoice_id:
 			pdf_temp = self.pool.get('report').get_pdf(cr, uid, [invoice.id], 'nice_gst.report_invoice_gst', context=context)
 			pdf_attachment = {
-			    'name': invoice.number + ".pdf",
-			    'datas_fname': invoice.number + ".pdf",
-			    'type': 'binary',
-			    'datas': base64.encodestring(pdf_temp),
-			    'res_model': 'lr.doc',
-			    'res_id': lr_doc.id,
-			    'mimetype': 'application/x-pdf'
+				'name': invoice.number + ".pdf",
+				'datas_fname': invoice.number + ".pdf",
+				'type': 'binary',
+				'datas': base64.encodestring(pdf_temp),
+				'res_model': 'lr.doc',
+				'res_id': lr_doc.id,
+				'mimetype': 'application/x-pdf'
 			}
 			pdf.append(pdf_attachment)
 
@@ -185,6 +191,31 @@ class LrDoc(models.Model):
 		}
 
 	@api.multi
+	def done(self):
+
+		file_path = tempfile.gettempdir()+'/file.xls'
+		data = self.eway_bill_upload
+		f = open(file_path,'wb')
+		f.write(data.decode('base64'))
+		f.close()
+		sheet = xlrd.open_workbook(file_path)
+		# get the first worksheet
+		sheet = sheet.sheet_by_index(0)
+		line_ids = []
+		for row_no in xrange(sheet.nrows):
+			row_value = sheet.row(row_no)
+			invoice_number = 'SAJ-'+ str(row_value[2].value)
+			invoice = self.env["account.invoice"].search([('number', '=', invoice_number)])
+			if invoice:
+				invoice.write({'eway_bill':str(int(row_value[8].value))})
+				line_id = self.env['lr.doc.line'].create({'invoice_id':invoice.id, 'eway_bill_no':str(int(row_value[8].value)), 'lr_id':self.id})
+				line_ids.append(line_id.id)
+		if line_ids:
+			self.write({'line_id':[(6, 0, line_ids)], 'state':'uploaded'})
+
+
+
+	@api.multi
 	def unlink(self):
 		for lr in self:
 			if lr.state != "draft":
@@ -206,11 +237,17 @@ class LrDoc(models.Model):
 
 	@api.multi
 	def print_envolope(self):
+
 		datas = {"doc_id":self.id}
-
 		return self.env['report'].get_action(self, "lr_doc.print_on_envolope", data=datas)
-	
 
+class lr_line(models.Model):
+
+	_name = "lr.doc.line"
+
+	invoice_id = fields.Many2one("account.invoice", string="Invoices")
+	eway_bill_no = fields.Char("E-Way No")
+	lr_id = fields.Many2one("lr.doc", string="Reference")
 
 
 

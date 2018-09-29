@@ -92,6 +92,7 @@ class MultiStockTransfer(models.Model):
 	reference = fields.Char("Reference", copy=False)
 	quant_issued_date = fields.Datetime("Issued Date")
 	is_issued = fields.Boolean(string="Issue", compute="_get_is_issued")
+	issued_user = fields.Char("Issued User" , copy=False, readonly=True)
 
 	@api.model
 	def create(self, val):
@@ -146,6 +147,7 @@ class MultiStockTransfer(models.Model):
 				'reference':self.name,
 				'expected_date':self.expected_date,
 				'picking_id': types[0].id,
+				'created_user':self.env.user.name
 				}
 		inward = inward_request.sudo().new(val)
 		inward.onchange_request_company_id()
@@ -256,12 +258,11 @@ class MultiStockTransfer(models.Model):
 				else:
 					line.write({'state':'done', 'error_issued':0})
 					line.outward_line_id.sudo().write({'state':'done', 'qty_anomaly':0})
-
 			qty_remain.append(line.quantity_remain)
 			qty_stat.append(line.state)
 
 		if pack_ids:
-			stock_picking_id.write({'pack_operation_id':[(6, 0, pack_ids)]})
+			stock_picking_id.write({'pack_operation_ids':[(6, 0, pack_ids)]})
 			stock_picking_id.do_transfer()
 
 		if any(qty_list) or 'exces' in qty_stat or 'less' in qty_stat:

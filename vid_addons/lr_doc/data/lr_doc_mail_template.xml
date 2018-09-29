@@ -12,7 +12,7 @@
 			<field name="auto_delete" eval="True"/>
 			<field name="lang">${object.partner_id.lang}</field>
 			<field name="body_html"><![CDATA[
-				<p style="font-style:Century Gothic"> Dear Sirs,<br/><br/>&nbsp;&nbsp;&nbsp;We draw your kind attention that the following invoices are generated in your favour against your valuable order. The despatch details of the consignment are given below. Details of the items, which we were not executed, will be informing you separately. Please verify the consignment with the attached invoices and inform any irregularities within 5 days from the date of receipt of the consignment.<br/><br/>
+				<p style="font-style:Century Gothic"> Dear Sirs,<br/><br/>We draw your kind attention that the following invoices are generated in your favour against your valuable order. The despatch details of the consignment are given below. Details of the items, which we were not executed, will be informing you separately. Please verify the consignment with the attached invoices and inform any irregularities within 5 days from the date of receipt of the consignment.<br/><br/>
 				Thanking you,<br/><br/>
 				Yours faithfully<br/>
 				For Nice Chemicals (P) Ltd.<br/><br/>
@@ -42,6 +42,7 @@
 				            <div style="display:table-cell; width:135px">Inv Number</div>
 				            <div style="display:table-cell; width:120px">Inv Date</div>
 				            <div style="display:table-cell; width:120px; text-align: right;">Inv Amount</div>
+				            <div style="display:table-cell; width:120px; text-align: right;">E-Way Bill</div>
 				        </div>
 				    </div>
 				    <div style="display:table-row-group;">
@@ -51,8 +52,15 @@
 					            <div style="display:table-cell;">${invoice.number.replace("SAJ-",'')}</div>
 					            <div style="display:table-cell;">${invoice.date_invoice.split('-')[2]+'-'+invoice.date_invoice.split('-')[1]+'-'+invoice.date_invoice.split('-')[0]}</div>
 					            <div style="display:table-cell;text-align: right;">${invoice.amount_total}</div>
+					            <div style="display:table-cell;text-align: right;">${(invoice.eway_bill or 'Not Created')}</div>
 					        </div>
 				        % endfor
+				        <div style="display:table-row;">
+				        	<div style="display:table-cell;text-align: center;">Total</div>
+					        <div style="display:table-cell;"></div>
+					        <div style="display:table-cell;"></div>
+					        <div style="display:table-cell;text-align: right;">${object.total_amount}</div>
+				        </div>
 				    </div>
 				</div>
 				

@@ -22,6 +22,7 @@
 
     # always loaded
     'data': [
+        'wizard/getEWP_view.xml',
         'views/multi_stock_transfer.xml',
         'views/multi_stock_transfer_outwards.xml',
         'views/stock.xml',
@@ -29,7 +30,7 @@
         'data/transfer_sequence.xml',
         'security/ir.model.access.csv',
         'report/report.xml',
-        'views/report_dc.xml'
+        'views/report_dc.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

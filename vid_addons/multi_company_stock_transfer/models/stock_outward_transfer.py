@@ -3,7 +3,7 @@ from openerp import fields, models, api
 from openerp.exceptions import ValidationError
 from datetime import date
 import datetime
-
+import base64
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -78,12 +78,18 @@ class MultiStockTransferOutward(models.Model):
 	amount_total = fields.Float("Total", compute="_compute_amount", store=True, track_visibility='always')
 	currency_id = fields.Many2one("res.currency", invisible=True)
 	reference = fields.Char(string="Reference", readonly=True)
-	quant_issued_date = fields.Datetime("Issued Date")
+	quant_issued_date = fields.Date("Issued Date")
+	count  = fields.Integer("Count", default=0)
+	ref_name = fields.Char("Ref Name")
+	json_file = fields.Binary("E-Way Bill-Json")
+	json_file_name = fields.Char("File name")
+	created_user = fields.Char("Created User")
 
 	@api.model
 	def create(self, val):
 		if val.get("name", "/") == '/':
 			val["name"] = self.env["ir.sequence"].sudo().with_context(force_company=val['company_id']).next_by_code("multi.stock.outward")
+			val["ref_name"] = val['name']
 		return super(MultiStockTransferOutward, self).create(val)
 
 
@@ -105,6 +111,25 @@ class MultiStockTransferOutward(models.Model):
 			line.action_cancel()
 
 
+	@api.multi
+	def create_attachment(self):
+		ir_attachment = self.env['ir.attachment']
+		name = self.name + ".pdf"
+		attachment = ir_attachment.search([('name', '=', name)])
+		if not attachment:
+			pdf_temp = self.env['report'].get_pdf(self, 'multi_company_stock_transfer.report_dc')
+
+			val = {
+					'name': self.name + ".pdf",
+				    'datas_fname': self.name + ".pdf",
+				    'type': 'binary',
+				    'datas': base64.encodestring(pdf_temp),
+				    'res_model': 'multi.stock.outward',
+				    'res_id': self.id,
+				    'mimetype': 'application/x-pdf'
+			}
+			ir_attachment.create(val)
+		
 	@api.multi
 	def action_confirm(self):
 		stock_picking_obj = self.env['stock.picking']
@@ -149,14 +174,27 @@ class MultiStockTransferOutward(models.Model):
 	@api.multi
 	def action_move(self):
 		inward_id = self.env['multi.stock.transfer'].sudo().search([('name', '=', self.reference)])
-		inward_id.sudo().write({'state':'issued', 'quant_issued_date':self.quant_issued_date})
+		if self.count:
+			self.name = self.ref_name + "-"+str(self.count)
+			self.count = self.count + 1
+		else:
+			self.count = 1
 		self.write({'state':'dc'})
+		inward_id.sudo().write({'state':'issued', 'quant_issued_date':self.quant_issued_date, 'reference':self.name, 'issued_user':self.env.user.name})
 		for item in self.stock_line_id:
+			item.last_issued_stock = 0
 			if item.issued_quant:
 				quant = item.issued_quant
 				pending = item.qty_remain - item.issued_quant
 				item.reference_line.sudo().write({'issued_qty':item.issued_quant, 'recieved_qty':item.issued_quant, 'state':'issued'})
-				item.update({"issued_quant": 0.0, "qty_remain":pending, "last_issued_stock":quant})
+				item.update({"issued_quant": 0.0, "qty_remain":pending, "last_issued_stock":quant, 'state':'moved'})
+			elif item.qty_remain:
+				item.update({'state':'process'})
+		self.create_attachment()
+
+	@api.multi
+	def action_print_dc(self):
+		return self.env['report'].get_action(self, 'multi_company_stock_transfer.report_dc')
 
 	def action_view(self, cr, uid, ids, context=None):
 
@@ -201,6 +239,7 @@ class MultiStockLineOutward(models.Model):
 								('less', 'Short Issued'),
 								('excess', 'Excess Issued'),
 								('issue', 'Issued'),
+								('moved', 'DC Issued'),
 								('process', 'Processing'),
 								('cancel', 'Cancel'),
 								('done', 'Done')], string="Status", default="draft", store=True)
