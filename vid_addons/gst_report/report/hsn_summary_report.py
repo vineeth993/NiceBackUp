@@ -96,7 +96,7 @@ class HsnReport(report_xls):
                                 hsn_igst_total += round((line.price_subtotal * tax.amount), 2)
                             elif tax.gst_type == "cess":
                                 hsn_cess_total += round((line.price_subtotal * tax.amount), 2)
-                        temp_prod_id = line.product_id       
+                        category = hsn_code.description       
             
                 hsn_taxed = hsn_untaxed + hsn_cgst_total + hsn_sgst_total + hsn_igst_total + hsn_cess_total
                 hsn_total_taxable += hsn_untaxed
@@ -108,10 +108,8 @@ class HsnReport(report_xls):
 
                 if hsn_qty:
                     hsn_count += 1
-                    categ = temp_prod_id.categ_id.name
-                    categ = categ.split('/')
                     ws.write(count, 0, hsn_code.code[0:4], number2d)
-                    ws.write(count, 1, categ[len(categ) - 1], normal)
+                    ws.write(count, 1, category, normal)
                     ws.write(count, 2, 'NOS-NUMBERS', normal)
                     ws.write(count, 3, hsn_qty, number2d)
                     ws.write(count, 4, hsn_taxed, number2d)
