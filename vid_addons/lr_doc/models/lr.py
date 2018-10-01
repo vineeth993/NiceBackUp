@@ -193,6 +193,9 @@ class LrDoc(models.Model):
 	@api.multi
 	def done(self):
 
+		if not self.eway_bill_upload:
+			raise ValidationError("Please Edit the Document and upload the document from E-way bill Portal")
+
 		file_path = tempfile.gettempdir()+'/file.xls'
 		data = self.eway_bill_upload
 		f = open(file_path,'wb')
@@ -212,6 +215,9 @@ class LrDoc(models.Model):
 				line_ids.append(line_id.id)
 		if line_ids:
 			self.write({'line_id':[(6, 0, line_ids)], 'state':'uploaded'})
+		else:
+			raise ValidationError("Please Upload Valid XLS Document")
+
 
 
 

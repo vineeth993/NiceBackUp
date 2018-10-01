@@ -25,4 +25,4 @@ class AccountInvoice(models.Model):
 		if self.eway_bill:
 			raise except_orm(_('Error!'), _('You cannot cancel an invoice with eway bill'))
 
-		return Super(AccountInvoice, self).action_cancel()
+		return super(AccountInvoice, self).action_cancel()
