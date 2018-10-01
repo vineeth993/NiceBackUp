@@ -27,110 +27,118 @@ from openerp import models, fields, api
 
 
 class HSCode(models.Model):
-    _name = "hs.code"
-    _description = "HS Code"
-    _order = "code"
-    _rec_name = "code"
+	_name = "hs.code"
+	_description = "HS Code"
+	_order = "code"
+	_rec_name = "code"
 
-    code = fields.Char('H.S. Code', required=True)
-    description = fields.Char('Description', required=True)
+	code = fields.Char('H.S. Code', required=True)
+	description = fields.Char('Description', required=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('code'):
-            vals['code'] = vals['code'].replace(' ', '')
-        return super(HSCode, self).create(vals)
+	@api.model
+	def create(self, vals):
+		if vals.get('code'):
+			vals['code'] = vals['code'].replace(' ', '')
+		return super(HSCode, self).create(vals)
 
-    @api.multi
-    def write(self, vals):
-        if vals.get('code'):
-            vals['code'] = vals['code'].replace(' ', '')
-        return super(HSCode, self).write(vals)
+	@api.multi
+	def write(self, vals):
+		if vals.get('code'):
+			vals['code'] = vals['code'].replace(' ', '')
+		return super(HSCode, self).write(vals)
 
+	@api.one
+	@api.constrains('code')
+	def check_hsn(self):
+		hsn_id = None
+		if self.code:
+			hsn_id = self.search([('code', '=', self.code)])
+			if len(hsn_id) > 1:
+				raise ValidationError('Hsn number already in use')
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+	_inherit = 'product.product'
 
-    hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
-    control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
-    gcode = fields.Char('Product Gcode')
-    cas_no = fields.Char(string='CAS No')
-    profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
-                                         'product_template_id', 'sale_reason_id',
-                                         string='Profiling Season')
-    default_code = fields.Char(string='Product Code', select=True)
-    uom_id_one = fields.Many2one('product.uom', 'Unit')
-    uom_id_two = fields.Many2one('product.uom', 'Unit')
-    uom_id_three = fields.Many2one('product.uom', 'Unit')
-    uom_id_pack = fields.Many2one('product.pack', 'Packed in')
-    specific_gravity = fields.Float(string="Specific Gravity")
-    schedule = fields.Many2one('product.schedule', 'Schedule')
-    grade = fields.Many2one('product.grade', string="Grade")
-    price_list = fields.Boolean("Special")
-    case_lot = fields.Float('Case Lot')
+	hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
+	control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
+	gcode = fields.Char('Product Gcode')
+	cas_no = fields.Char(string='CAS No')
+	profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
+										 'product_template_id', 'sale_reason_id',
+										 string='Profiling Season')
+	default_code = fields.Char(string='Product Code', select=True)
+	uom_id_one = fields.Many2one('product.uom', 'Unit')
+	uom_id_two = fields.Many2one('product.uom', 'Unit')
+	uom_id_three = fields.Many2one('product.uom', 'Unit')
+	uom_id_pack = fields.Many2one('product.pack', 'Packed in')
+	specific_gravity = fields.Float(string="Specific Gravity")
+	schedule = fields.Many2one('product.schedule', 'Schedule')
+	grade = fields.Many2one('product.grade', string="Grade")
+	price_list = fields.Boolean("Special")
+	case_lot = fields.Float('Case Lot')
 
-    _defaults = {
-        'type': 'product',
-    }
+	_defaults = {
+		'type': 'product',
+	}
 
-    @api.one
-    @api.constrains('default_code')
-    def _check_default_code(self):
-        if self.default_code:
-            names = self.search([('default_code', '=', self.default_code)])
-            if len(names) > 1:
-                raise Warning('A product with the same Internal Reference(Product Code) already exists')
+	@api.one
+	@api.constrains('default_code')
+	def _check_default_code(self):
+		if self.default_code:
+			names = self.search([('default_code', '=', self.default_code)])
+			if len(names) > 1:
+				raise Warning('A product with the same Internal Reference(Product Code) already exists')
 
 
 class ProductSchedule(models.Model):
-    _name = 'product.schedule'
+	_name = 'product.schedule'
 
-    name = fields.Char("Number")
-    tax_id = fields.Many2one('account.tax', string="Related Tax")
+	name = fields.Char("Number")
+	tax_id = fields.Many2one('account.tax', string="Related Tax")
 
 
 class ProductPack(models.Model):
-    _name = 'product.pack'
+	_name = 'product.pack'
 
-    name = fields.Char("Pack Type")
+	name = fields.Char("Pack Type")
 
 
 class ProductGrade(models.Model):
-    _name = 'product.grade'
+	_name = 'product.grade'
 
-    name = fields.Char("Grade Name")
-    
+	name = fields.Char("Grade Name")
+	
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+	_inherit = 'product.template'
 
-    hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
-    control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
-    gcode = fields.Char('Product Gcode')
-    cas_no = fields.Char(string='CAS No')
-    profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
-                                         'product_template_id', 'sale_reason_id',
-                                         string='Profiling Season')
-    default_code = fields.Char(related='product_variant_ids.default_code', string='Product Code')
-    uom_id_one = fields.Many2one('product.uom', 'Unit')
-    uom_id_two = fields.Many2one('product.uom', 'Unit')
-    uom_id_three = fields.Many2one('product.uom', 'Unit')
-    uom_id_pack = fields.Many2one('product.pack', 'Packed in')
-    specific_gravity = fields.Float(string="Specific Gravity")
-    certificate_of_analysis = fields.Boolean(string="Certificate of analysis")
-    schedule = fields.Many2one('product.schedule', 'Schedule')
-    grade = fields.Many2one('product.grade', string="Grade")
-    hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
-    price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
-    case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
-    
-    _defaults = {
-        'type': 'product',
-        }
+	hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
+	control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
+	gcode = fields.Char('Product Gcode')
+	cas_no = fields.Char(string='CAS No')
+	profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
+										 'product_template_id', 'sale_reason_id',
+										 string='Profiling Season')
+	default_code = fields.Char(related='product_variant_ids.default_code', string='Product Code')
+	uom_id_one = fields.Many2one('product.uom', 'Unit')
+	uom_id_two = fields.Many2one('product.uom', 'Unit')
+	uom_id_three = fields.Many2one('product.uom', 'Unit')
+	uom_id_pack = fields.Many2one('product.pack', 'Packed in')
+	specific_gravity = fields.Float(string="Specific Gravity")
+	certificate_of_analysis = fields.Boolean(string="Certificate of analysis")
+	schedule = fields.Many2one('product.schedule', 'Schedule')
+	grade = fields.Many2one('product.grade', string="Grade")
+	hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
+	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
+	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
+	
+	_defaults = {
+		'type': 'product',
+		}
 
-    @api.one
-    @api.constrains('name')
-    def _check_name(self):
-        if self.name:
-            names1 = self.search([('name', '=', self.name)])
-            if len(names1) > 1:
-                raise Warning('A product with the same Name already exists')
+	@api.one
+	@api.constrains('name')
+	def _check_name(self):
+		if self.name:
+			names1 = self.search([('name', '=', self.name)])
+			if len(names1) > 1:
+				raise Warning('A product with the same Name already exists')
