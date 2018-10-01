@@ -53,7 +53,7 @@ class GetEwpdc(models.TransientModel):
 	supply_type = fields.Selection(SUPPLY_TYPE, string="Supply Type", default='O')
 	sub_type = fields.Selection(SUB_TYPE, string="Sub Type", default=5)
 	vehicle_type = fields.Selection(VEHICLE_TYPE, string="Vehicle Type", default="R")
-	doc_type = fields.Selection(DOC_TYPE, string="Doc Type", default="INV")
+	doc_type = fields.Selection(DOC_TYPE, string="Doc Type", default="CHL")
 	transport_distance = fields.Integer('Distance')
 	transporter_name = fields.Char('Transporter Name')
 	transporter_id = fields.Char('Transporter GST')
