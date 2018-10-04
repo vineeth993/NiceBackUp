@@ -173,7 +173,7 @@ class GetEwpdc(models.TransientModel):
 					'userGstin':self.from_addr.gst_no,
 					'supplyType':self.supply_type,
 					'subSupplyType':self.sub_type,
-					'docType':'INV',
+					'docType':self.doc_type,
 					'docNo':self.name,
 					'docDate':invoice_date,
 					'fromGstin':self.from_addr.gst_no,
