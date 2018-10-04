@@ -209,7 +209,8 @@ class GetEwpdc(models.TransientModel):
 					'mainHsnCode':int(hsn),
 					'itemList':itemList
 			}
-		data = {'version':"1.0.0618",'billLists':billList}
+                billLists.append(billList)		
+                data = {'version':"1.0.0618",'billLists':billList}
 		
 		temp_json_file = tempfile.gettempdir()+'/file.json'
 		# temp_json_file = "/tmp/Test.json"
