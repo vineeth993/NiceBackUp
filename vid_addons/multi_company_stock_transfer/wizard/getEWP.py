@@ -93,21 +93,21 @@ class GetEwpdc(models.TransientModel):
 			tax_percnt = 0.0
 			if line.last_issued_stock:
 
-				hsn_total_taxablevalue += (line.unit_price * line.last_issued_stock)
+				hsn_total_taxablevalue = (line.unit_price * line.last_issued_stock)
 				inv_total += hsn_total_taxablevalue
 				for tax in line.taxes_id:
 					if tax.gst_type == "cgst":
-						hsn_cgst_total += round((line.unit_price * tax.amount), 2)
+						hsn_cgst_total += round((hsn_total_taxablevalue * tax.amount), 2)
 					elif tax.gst_type == "sgst":
 						tax_percnt = (tax.amount * 2)*100
 						val = "State"
-						hsn_sgst_total = round((line.unit_price * tax.amount), 2)
+						hsn_sgst_total = round((hsn_total_taxablevalue * tax.amount), 2)
 					elif tax.gst_type == "igst":
 						tax_percnt = (tax.amount)*100
 						val = "Inter"
-						hsn_igst_total = round((line.unit_price * tax.amount), 2)
+						hsn_igst_total = round((hsn_total_taxablevalue * tax.amount), 2)
 					elif tax.gst_type == "cess":
-						hsn_cess_total = round((line.unit_price * tax.amount), 2)
+						hsn_cess_total = round((hsn_total_taxablevalue * tax.amount), 2)
 				inv_tax += (hsn_cgst_total + hsn_sgst_total + hsn_igst_total + hsn_cess_total)
 				if not item_list.has_key(line.product_id.hs_code_id.code[0:2]):
 					item_list.update({line.product_id.hs_code_id.code[0:2]:{round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2), line.last_issued_stock, val, line.product_id.hs_code_id.description]}})
@@ -192,7 +192,7 @@ class GetEwpdc(models.TransientModel):
 					'toPincode':int(self.to_zip_code),
 					'toStateCode':int(self.to_addr.state_id.code),
 					'actualToStateCode':int(self.to_addr.state_id.code),
-					'totalValue':inv_total,
+					'totalValue':round(inv_total,2),
 					'cgstValue':round(totalCgst,2),
 					'sgstValue':round(totalSgst,2),
 					'igstValue':round(totalIgst,2),
