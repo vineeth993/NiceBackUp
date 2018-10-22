@@ -220,6 +220,7 @@ class sale_status_report(report_xls):
 		for col in cols:
 			ws.col(col).width = 4000
 		title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz centre;')
+		title1 			= xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz left;')
 		normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
 		number          = xlwt.easyxf(num_format_str='#,##0;(#,##0)')
 		number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
@@ -232,12 +233,27 @@ class sale_status_report(report_xls):
 		product_search = product_obj.search(cr, uid, [])
 		product_id = product_obj.browse(cr, uid, product_search)
 		
-		count = 0
+		count = 1
 		sheet = 1
 
 		orderLineQty = {}
 		invoiceQty = {}
 		issuedQuan = 0
+		
+		from_date = datetime.datetime.strptime(data['form']['date_from'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
+		to_date = datetime.datetime.strptime(data['form']['date_to'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
+
+		heading = "Pending Sales Order Status from "+str(from_date)+" to "+str(to_date)
+
+		ws.write(count , 0, heading, title1)
+
+		headers = {
+				0: 'Customer', 1: 'Sale Order no.', 2: 'Order Date', 3: 'Ordered Qty.', 4: 'Issued QTY.', 5: 'Pending Qty',
+				}
+		count += 2
+		for header in headers:
+			ws.write(count , header, headers[header], title2)
+		count += 1
 
 		for product in product_id:
 
@@ -251,15 +267,9 @@ class sale_status_report(report_xls):
 			if not sales:
 				continue
 			count += 1
-			ws.write(count , 3, "Pending Sale Order For "+str(product.name), title2)
-
+			ws.write(count , 0, str(product.name), title1)
 			count += 2
-			headers = {
-				0: 'Partner', 1: 'Sale Order', 2: 'date', 3: 'Total Quantity', 4: 'ISSUED QTY', 5: 'Pending Quantity',
-				}
-			for header in headers:
-				ws.write(count , header, headers[header], title2)
-			count += 1
+			# count += 2
 
 			for sale in sales:
 				date = datetime.datetime.strptime(sale.date_order, '%Y-%m-%d %H:%M:%S').date().strftime('%d-%m-%Y')
@@ -285,7 +295,8 @@ class sale_status_report(report_xls):
 						issuedQuan = 0
 
 					if issuedQuan >= 0:
-						ws.write(count, 0, order, normal)
+						name = order + " , " +str(sale.partner_id.city_id.name)
+						ws.write(count, 0, name, normal)
 						ws.write(count, 1, sale.name, normal)
 						ws.write(count, 2, date, normal)
 						ws.write(count, 3, orderLineQty[order], normal)
