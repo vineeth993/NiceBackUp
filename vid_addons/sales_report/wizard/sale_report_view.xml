@@ -16,8 +16,8 @@
                         <field name="company_id" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}"/>
                     </group>
                     <group>
-                        <field name="product" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}"/>
-                        <field name="customer" attrs="{'invisible':[('prod_or_cust', '=', 'prod')]}"/>
+                        <field name="product" attrs="{'invisible':[('prod_or_cust', 'in', ('cust', 'all'))]}"/>
+                        <field name="customer" attrs="{'invisible':[('prod_or_cust', 'in', ('prod', 'all'))]}"/>
                     </group>
                     <footer>
                         <button name="print_sales_report" string="Print" type="object" icon="gtk-print"/>

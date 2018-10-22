@@ -12,7 +12,7 @@
     'data': [
         'wizard/sale_report_view.xml',
         'report/sale_report.xml',
-        'views/sale_view.xml',
+        # 'views/sale_view.xml',
 #         'report_view.xml'
     ],
     'installable': True,

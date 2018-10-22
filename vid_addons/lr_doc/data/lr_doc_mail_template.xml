@@ -30,6 +30,21 @@
 						<td>${(object.docket_no or '')}</td>
 					</tr>
 					<tr>
+						<td>Driver Name</td>						
+						<td>:</td>
+						<td>${(object.driver_name or '')}</td>
+					</tr>
+					<tr>
+						<td>Contact No</td>						
+						<td>:</td>
+						<td>${(object.contact_no or '')}</td>
+					</tr>
+					<tr>
+						<td>Vehicle Number Plate</td>						
+						<td>:</td>
+						<td>${(object.freight_no or '')}</td>
+					</tr>
+					<tr>
 						<td>Number of Cartons</td>						
 						<td>:</td>
 						<td>${(object.articles or '')}</td>

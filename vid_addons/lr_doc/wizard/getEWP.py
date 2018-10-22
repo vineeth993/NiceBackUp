@@ -41,6 +41,8 @@ DOC_TYPE = [('INV', 'Tax Invoice'),
 			('CNT', 'Credit Note'),
 			('OTH', 'Others')]
 
+REGISTERED = [('REG', 'Registered'),
+			   ('UNREG', 'UnRegistered')]
 
 class GetEwp(models.TransientModel):
 
@@ -63,6 +65,7 @@ class GetEwp(models.TransientModel):
 	to_city = fields.Many2one("res.city", string="City", required=True)
 	invoices_id = fields.Many2many("account.invoice", "ewb_invoices_rel", "partner_id", "invoice_id", string="Invoices", readonly=True)
 	to_zip_code = fields.Char("To Zipcode", required=True)
+	check_register = fields.Selection(REGISTERED, "GST")
 
 	@api.model
 	def default_get(self, fields):
@@ -162,6 +165,12 @@ class GetEwp(models.TransientModel):
 			transporter_id = ""
 			vehicle_number = ""
 			trans_doc_no = ""
+
+			if self.check_register == 'UNREG' or self.sub_type == 2:
+				toGSt = 'URP'
+			else:
+				toGSt = self.to_addr.gst_no
+				
 			if self.transporter_id:
 				transporter_id = self.transporter_id
 
@@ -189,10 +198,10 @@ class GetEwp(models.TransientModel):
 					'fromPincode':int(self.from_addr.zip),
 					'fromStateCode':int(self.from_addr.state_id.code),
 					'actualFromStateCode':int(self.from_addr.state_id.code),
-					'toGstin':self.to_addr.gst_no,
-					'toTrdName':self.to_addr.name,
-					'toAddr1':self.to_addr.street,
-					'toAddr2':self.to_addr.street2,
+					'toGstin':toGSt,
+					'toTrdName':self.to_addr.name or '',
+					'toAddr1':self.to_addr.street or '',
+					'toAddr2':self.to_addr.street2 or '',
 					'toPlace':self.to_city.name.upper(),
 					'toPincode':int(self.to_zip_code),
 					'toStateCode':int(self.to_addr.state_id.code),
