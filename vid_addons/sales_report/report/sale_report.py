@@ -71,10 +71,16 @@ class sale_status_report(report_xls):
 		
 
 		sales = sale_obj.browse(cr, uid, sale_ids)
-		ws.write(0, 3, "Pending Sale Order For "+str(data['form']['customer'][1]), title2)
+
+		from_date = datetime.datetime.strptime(data['form']['date_from'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
+		to_date = datetime.datetime.strptime(data['form']['date_to'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
+
+		name = "Pending Sale Order status for "+str(data['form']['customer'][1]) + "from " +from_date+" to "+to_date
+
+		ws.write(0, 0, name, title2)
 
 		headers = {
-			0: 'SO DATE', 1: 'SO NUMBER', 2: 'Product', 3:'Normal Disc', 4:'Additional Disc', 5:'Extra Disc',6: 'Total Quantity', 7: 'ISSUED QTY', 8: 'Pending Quantity',
+			0: 'Sale Order Date', 1: 'Sale Order No', 2: 'Product', 3:'Normal Disc', 4:'Additional Disc', 5:'Extra Disc',6: 'Order Qty', 7: 'Issued Qty.', 8: 'Pending Qty.',
 			}
   
 		for header in headers:
@@ -161,10 +167,15 @@ class sale_status_report(report_xls):
 
 
 		sales = sale_obj.browse(cr, uid, sale_ids)
-		ws.write(0, 3, "Pending Sale Order For "+str(data['form']['product'][1]), title2)
+
+		from_date = datetime.datetime.strptime(data['form']['date_from'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
+		to_date = datetime.datetime.strptime(data['form']['date_to'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
+
+		name = "Pending Sale Order status for "+str(data['form']['product'][1]) + "from " +from_date+" to "+to_date
+		ws.write(0, 0, name, title2)
 
 		headers = {
-			0: 'Partner', 1: 'Sale Order', 2: 'date', 3: 'Total Quantity', 4: 'ISSUED QTY', 5: 'Pending Quantity',
+			0: 'Customer', 1: 'Sale Order No', 2: 'Order Date', 3: 'Order Qty.', 4: 'Issued Qty.', 5: 'Pending Qty.',
 			}
 		orderLineQty = {}
 		invoiceQty = {}
@@ -178,7 +189,7 @@ class sale_status_report(report_xls):
 				if line.product_id.id != data['form']['product'][0]:
 					continue
 				if orderLineQty.has_key(str(sale.partner_id.name)):
-					orderLineQty[sale.partner_id.name][0] += line.product_uom_qty
+					orderLineQty[sale.partner_id.name] += line.product_uom_qty
 				else:
 					orderLineQty.update({str(sale.partner_id.name):line.product_uom_qty})
 			for invoice in sale.invoice_ids:
@@ -191,16 +202,16 @@ class sale_status_report(report_xls):
 						invoiceQty.update({str(invoice.partner_id.name):line.quantity})
 			for order in orderLineQty:
 				if invoiceQty.has_key(str(order)):
-					issuedQuan = orderLineQty[order] - invoiceQty[order]
+					pendingQuant = orderLineQty[order] - invoiceQty[order]
 				else:
-					issuedQuan = 0
-				if issuedQuan >= 0:
+					pendingQuant = 0
+				if pendingQuant > 0:
 					ws.write(count, 0, order, normal)
 					ws.write(count, 1, sale.name, normal)
 					ws.write(count, 2, date, normal)
 					ws.write(count, 3, orderLineQty[order], normal)
-					ws.write(count, 4, issuedQuan, normal)
-					ws.write(count, 5, (orderLineQty[order] - issuedQuan), normal)
+					ws.write(count, 4, invoiceQty[order], normal)
+					ws.write(count, 5, pendingQuant, normal)
 					count += 1
 			
 			orderLineQty = {}
@@ -248,7 +259,7 @@ class sale_status_report(report_xls):
 		ws.write(count , 0, heading, title1)
 
 		headers = {
-				0: 'Customer', 1: 'Sale Order no.', 2: 'Order Date', 3: 'Ordered Qty.', 4: 'Issued QTY.', 5: 'Pending Qty',
+				0: 'Customer', 1: 'Sale Order no.', 2: 'Order Date', 3: 'Order Qty.', 4: 'Issued QTY.', 5: 'Pending Qty',
 				}
 		count += 2
 		for header in headers:
@@ -290,18 +301,18 @@ class sale_status_report(report_xls):
 							invoiceQty.update({str(invoice.partner_id.name):line.quantity})
 				for order in orderLineQty:
 					if invoiceQty.has_key(str(order)):
-						issuedQuan = orderLineQty[order] - invoiceQty[order]
+						pendingQuant = orderLineQty[order] - invoiceQty[order]
 					else:
 						issuedQuan = 0
 
-					if issuedQuan >= 0:
+					if pendingQuant >= 0:
 						name = order + " , " +str(sale.partner_id.city_id.name)
 						ws.write(count, 0, name, normal)
 						ws.write(count, 1, sale.name, normal)
 						ws.write(count, 2, date, normal)
 						ws.write(count, 3, orderLineQty[order], normal)
-						ws.write(count, 4, issuedQuan, normal)
-						ws.write(count, 5, (orderLineQty[order] - issuedQuan), normal)
+						ws.write(count, 4, (invoiceQty[order]), normal)
+						ws.write(count, 5, pendingQuant, normal)
 						count += 1
 				orderLineQty = {}
 				invoiceQty = {}
