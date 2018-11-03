@@ -103,12 +103,11 @@
                                 </tr>
                             </table>
                     </div>
-                </div><br/><br/>
+                </div><br/>
 
                 <p>Dear Sirs,<br/><br/>
                     Thank you very much for giving us an opportunity to quote for our range of products. Nice Chemicals Pvt.Ltd.is an <b>ISO-9001:2015 Company</b> has more than 40 years experiance in Laboratory Chemicals field. We assure you our valuable products and services at all time.<br/><br/>
-                    Please find our lowest quotation against your valuable enquiry. </p>
-
+                    Please find our lowest quotation against your valuable enquiry. <b style="text-align: right">Customer Ref.No: <span t-field="doc.client_order_ref"/></b></p>
                     <table class="table table-condensed">
                         <thead >
                             <tr>
@@ -192,9 +191,14 @@
                 <div style="font-size:15px">
                     <b>Terms and conditions</b><br/><br/>
                     <table>
+                        <tr>
+                            <td style="padding-bottom:5px" width="20%">Brand</td>
+                            <td width="3%">:</td>
+                            <td width="76%">Above quoted items are NICE brand</td>
+                        </tr>
                         <t t-if="doc.discount_stat">
                             <tr>
-                                <td style="padding-bottom:10px" width="20%">Discount</td>
+                                <td style="padding-bottom:5px" width="20%">Discount</td>
                                 <td width="3%">:</td>
                                 <td width="76%">Net Prices are reduced by discounts as applicable</td>
                             </tr>
@@ -205,31 +209,31 @@
                             <td width="76%"><t t-if="not doc.tax_stat">Net Price exclusive of GST as mentioned above</t><t t-if="doc.tax_stat">Net Price inclusive of GST as mentioned above</t></td>
                         </tr>
                         <tr>
-                            <td style="padding-top:10px">Delivery</td>
+                            <td style="padding-top:5px">Delivery</td>
                             <td>:</td>
                             <td><span t-field="doc.delivery_term"/></td>
                         </tr>
                         <tr>
-                            <td style="padding-top:10px">Payment</td>
+                            <td style="padding-top:5px">Payment</td>
                             <td>:</td>
                             <td><span t-field="doc.payment_term"/></td>
                         </tr>
                         <tr>
-                            <td style="padding-top:10px">Validity</td>
+                            <td style="padding-top:5px">Validity</td>
                             <td>:</td>
                             <td><span t-field="doc.validity_term"/></td>
                         </tr>
-                        <tr>
-                            <td style="padding-top:10px">Other</td>
-                            <td>:</td>
-                            <td><span t-field="doc.other_terms"/></td>
-                        </tr>                                         
+                        <t t-if="doc.other_terms">
+                            <tr>
+                                <td style="padding-top:5px">Other</td>
+                                <td>:</td>
+                                <td><span t-field="doc.other_terms"/></td>
+                            </tr>
+                        </t>                                         
                     </table><br/>
-                    <p>We thank you for your enquiry and assure our prompt service at all time.</p>
-                    Awaiting your valuable order.
-                    <br/><br/>
-                    Thanking you,<br/>
-                    Yours faithfully<br/><br/>
+                    <p>We thank you for your enquiry and assure our prompt service at all time. Awaiting your valuable order.</p>
+                    Thanking you,<br/><br/>
+                    Yours faithfully<br/>
                     For Nice Chemicals Pvt.Ltd.
                     <br/><br/><br/>
                      <t t-if="doc.employee_id"><span t-field="doc.employee_id.name"/><br/><span t-field="doc.employee_id.job_id.name"/></t>
