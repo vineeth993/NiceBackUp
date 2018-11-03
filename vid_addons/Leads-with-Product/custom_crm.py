@@ -41,7 +41,8 @@ class crm_make_sale(osv.osv_memory):
         'validity_terms': fields.many2one("sale.validity.term", string="Validity Terms", required=True),
         'discount_stat':fields.boolean("Discount"),
         'tax_stat':fields.boolean("Inclusive of Tax"),
-        'other_terms': fields.many2one("sale.delivery.term", string="Other Terms", required=True, domain=[('others', '=', True)]),
+        'other_terms': fields.many2one("sale.delivery.term", string="Other Terms", domain=[('others', '=', True)]),
+        'reference':fields.char('Customer Order Reference')
     }
 
 
@@ -122,7 +123,8 @@ class crm_make_sale(osv.osv_memory):
                     'partner_selling_type':partner_selling_type,
                     'discount_stat':make.discount_stat,
                     'tax_stat':make.tax_stat,
-                    'other_terms':make.other_terms.id
+                    'other_terms':make.other_terms.id,
+                    'client_order_ref':make.reference
                 }
 
 

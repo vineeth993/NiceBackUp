@@ -13,6 +13,7 @@
 							<group string="Quotation Details">
 			                    <field name="partner_id" required="1"/>
 			                    <field name="employee_id"/>
+			                    <field name="reference"/>
 			                </group>
 			                <group string="Terms and Conditions">
 			                	<field name="payment_terms"/>
