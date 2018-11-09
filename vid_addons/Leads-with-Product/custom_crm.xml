@@ -25,6 +25,9 @@
 			                	<field name="tax_stat"/>
 			                	<field name="discount_stat"/>
 			                </group>
+			                <group string="Letter Head">
+			                	<field name="on_letter_head"/>
+			                </group>
 						</group>
 						<footer>
 		                    <button name="makeOrder" string="_Create" type="object" class="oe_highlight"/>

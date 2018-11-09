@@ -21,37 +21,38 @@
         
     <template id="external_layout_header">
             <div class="header">
-                <div class="row" style="padding-top:25px">
-                    <div class="col-xs-3" style="display:inline-block;float:left;">
-                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 50px;"/>
-                    </div>
-                    <div class="col-xs-9" name="company_name" style="display:inline-block;">
-                       <!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
-                        <img src="/sale_customization/static/img/company_logo.png" style="width:50%;float:right;"/>
+                <span t-if="not doc.on_letter_head">
+                    <div class="row" style="padding-top:25px">
+                        <div class="col-xs-3" style="display:inline-block;float:left;">
+                            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 50px;"/>
+                        </div>
+                        <div class="col-xs-9" name="company_name" style="display:inline-block;">
+                           <!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
+                            <img src="/sale_customization/static/img/company_logo.png" style="width:50%;float:right;"/>
+                        </div>
+
+                        <div class="text-right" name="company_address"  style="padding-right: 12px;">
+                            <span t-field="company.street"/>,<br/> <span t-field="company.street2"/>,<br/> <span t-field="company.city"/>, <span t-field="company.state_id.name"/>, <span t-field="company.country_id"/>, <span t-field="company.zip"/><br/>
+                            <t t-if="company.phone">Phone: <span t-field="company.phone"/></t>
+                            <ul t-if="not company.custom_footer" class="list-inline">
+                                <li t-if="company.website">Website: <span t-field="company.website"/></li>
+                                <li t-if="company.email and company.website">&amp;bull;</li>
+                                <li t-if="company.email">Email: <span t-field="company.email"/></li>
+                                <li t-if="company.fax and company.email or company.website and company.fax">&amp;bull;</li>
+                                <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+                                <li t-if="company.gst_no and company.fax or company.gst_no and company.email or company.gst_no and company.website">&amp;bull;</li>
+                                <li t-if="company.gst_no">GSTN: <span t-field="company.gst_no"/></li>
+                            </ul>
+
+                        </div>
                     </div>
 
-                    <div class="text-right" name="company_address"  style="padding-right: 12px;">
-                        <span t-field="company.street"/>,<br/> <span t-field="company.street2"/>,<br/> <span t-field="company.city"/>, <span t-field="company.state_id.name"/>, <span t-field="company.country_id"/>, <span t-field="company.zip"/><br/>
-                        <t t-if="company.phone">Phone: <span t-field="company.phone"/></t>
-                        <ul t-if="not company.custom_footer" class="list-inline">
-                            <li t-if="company.website">Website: <span t-field="company.website"/></li>
-                            <li t-if="company.email and company.website">&amp;bull;</li>
-                            <li t-if="company.email">Email: <span t-field="company.email"/></li>
-                            <li t-if="company.fax and company.email or company.website and company.fax">&amp;bull;</li>
-                            <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
-                            <li t-if="company.gst_no and company.fax or company.gst_no and company.email or company.gst_no and company.website">&amp;bull;</li>
-                            <li t-if="company.gst_no">GSTN: <span t-field="company.gst_no"/></li>
-                        </ul>
-
-                    </div>
-                </div>
-
-                <div style="border-bottom: 1px solid black;"></div>
-                    <div class="col-xs-9" name="company_name" style="display:inline-block;">
-                       <!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
-                        <img src="/sale_customization/static/img/rml.png" style="width:25%;float:left;"/>
-                    </div>
-                
+                    <div style="border-bottom: 1px solid black;"></div>
+                        <div class="col-xs-9" name="company_name" style="display:inline-block;">
+                           <!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
+                            <img src="/sale_customization/static/img/rml.png" style="width:25%;float:left;"/>
+                        </div>
+                </span>
             </div>
 
     </template>
@@ -76,7 +77,6 @@
                 </p>
                 <div class="row">
                     <div class="col-xs-6">
-                        <strong >Invoicing address:</strong>
                         <table>
                                 <tr>
                                     <td width="79%"><i class='fa fa-male'/>&#160;<span t-field="doc.partner_id.name"/></td>
@@ -106,16 +106,16 @@
                 </div><br/>
 
                 <p>Dear Sirs,<br/><br/>
-                    Thank you very much for giving us an opportunity to quote for our range of products. Nice Chemicals Pvt.Ltd.is an <b>ISO-9001:2015 Company</b> has more than 40 years experiance in Laboratory Chemicals field. We assure you our valuable products and services at all time.<br/><br/>
-                    Please find our lowest quotation against your valuable enquiry. <b style="text-align: right">Customer Ref.No: <span t-field="doc.client_order_ref"/></b></p>
+                    Thank you very much for giving us an opportunity to quote for our range of products. <br/>
+                    We have pleasure to quote over best offer against your valuable enquiry. <b style="text-align: right">Ref.#: <span t-field="doc.client_order_ref"/></b></p>
                     <table class="table table-condensed">
                         <thead >
                             <tr>
                                 <th style="border-top:solid 1px">Product Description</th>
                                 <th style="border-top:solid 1px">HSN</th>
                                 <th style="border-top:solid 1px" class="text-right">Quantity</th>
-                                <th style="border-top:solid 1px" class="text-right">Gross Price</th>
-                                <th style="border-top:solid 1px" class="text-right">Net Price</th>
+                                <th style="border-top:solid 1px" class="text-right">Rate(With Tax)</th>
+                                 <t t-if="doc.tax_stat"><th style="border-top:solid 1px" class="text-right">Rate(Without Tax)</th></t>
                                 <t t-if="doc.discount_stat"><th style="border-top:solid 1px" class="text-right">Disc(%)</th></t>
                                 <th style="border-top:solid 1px" class="text-right">Tax(%)</th>
                                 <th style="border-top:solid 1px" class="text-right price_tax_included">Total Price<br/><t t-if="not doc.tax_stat"><span style="font-size:8px;">(Without Tax)</span></t><t t-if="doc.tax_stat"><span style="font-size:8px;">(With Tax)</span></t></th>
@@ -136,14 +136,14 @@
                                         <td class="text-right">
                                             <span t-field="l.price_unit" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                         </td>
-                                        <td class="text-right">
-                                            <t t-if="doc.tax_stat">
+                                        <t t-if="doc.tax_stat">
+                                            <td class="text-right">
                                                 <span t-esc="round((((l.price_subtotal * sum(map(lambda x: x.amount, l.tax_id)))+l.price_subtotal) / l.product_uom_qty), 2)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
-                                            </t>
-                                            <t t-if="not doc.tax_stat">
+<!--                                             <t t-if="not doc.tax_stat">
                                                 <span t-esc="round((l.price_subtotal / l.product_uom_qty), 2)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
-                                            </t>
-                                        </td>
+                                            </t> -->
+                                            </td>
+                                        </t>
                                         <t t-if="doc.discount_stat">
                                             <td class="text-center">
                                                 <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)))"/>
@@ -194,7 +194,7 @@
                         <tr>
                             <td style="padding-bottom:5px" width="20%">Brand</td>
                             <td width="3%">:</td>
-                            <td width="76%">Above quoted items are NICE brand</td>
+                            <td width="76%">NICE</td>
                         </tr>
                         <t t-if="doc.discount_stat">
                             <tr>
@@ -231,7 +231,7 @@
                             </tr>
                         </t>                                         
                     </table><br/>
-                    <p>We thank you for your enquiry and assure our prompt service at all time. Awaiting your valuable order.</p>
+                    <p>We hope our rates are competative and expecting your valuable order.</p>
                     Thanking you,<br/><br/>
                     Yours faithfully<br/>
                     For Nice Chemicals Pvt.Ltd.
