@@ -12,7 +12,7 @@
                         <separator string="Sales order type" colspan="2"/>
                         <group>
                             <field name="sale_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'sale')]" context="{'default_object_type': 'sale'}"/>
-                            <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" widget="many2many_tags" context="{'default_type_id': sale_type}"/>
+                            <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" context="{'default_type_id': sale_type}"/>
                             <field name="tax_exempted"/>
                         </group>
                         <group>
@@ -26,7 +26,7 @@
                             <field name="purchase_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'purchase')]" context="{'default_object_type': 'purchase'}"/>
                         </group>
                         <group>
-                            <field name="purchase_sub_type_id"  domain="[('type_id', '=', purchase_type), ('object_type', '=', 'purchase')]" widget="many2many_tags" context="{'default_type_id': purchase_type}"/>
+                            <field name="purchase_sub_type_id"  domain="[('type_id', '=', purchase_type), ('object_type', '=', 'purchase')]" context="{'default_type_id': purchase_type}"/>
                         </group>
                     </group>
                 </page>
