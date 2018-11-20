@@ -256,7 +256,8 @@ class SaleOrder(models.Model):
     other_terms = fields.Many2one("sale.delivery.term", string="Other Terms")
     tax_stat = fields.Boolean("Inclusive of Tax")
     discount_stat = fields.Boolean("Discount")
-
+    on_letter_head = fields.Boolean("Quotation Letter Head")
+    
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         res['name'] = line.product_name

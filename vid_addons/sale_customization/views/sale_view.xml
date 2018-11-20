@@ -452,6 +452,7 @@
 					<field name="other_terms"/>
 			        <field name="tax_stat"/>
 			        <field name="discount_stat"/>
+			        <field name="on_letter_head"/>
 				</field>
 				
 				<xpath expr="//page[@string='Other Information']" position="after">

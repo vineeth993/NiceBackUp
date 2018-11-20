@@ -29,7 +29,7 @@ class LrDoc(models.Model):
 
 	_name = "lr.doc"
 	_inherit = ['mail.thread']
-	_order = "name desc, id desc"
+	_order = "id desc, name desc"
 
 	@api.depends("invoice_id")
 	def _compute_amount(self):
