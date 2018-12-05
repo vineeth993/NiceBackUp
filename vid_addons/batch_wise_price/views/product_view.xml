@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="product_year_price" model="ir.ui.view">
+			<field name="name">product.year.price</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view"/>
+			<field name="arch" type="xml">
+				<page string="Information" position="after">
+					<page string="Year Wise Price">
+						<field name="price_id">
+							<tree editable="bottom">
+								<field name="pricelist"/>
+								<field name="cost"/>
+							</tree>
+						</field>
+					</page>
+				</page>
+			</field>
+		</record>
+
+		<record id="action_product_price_form" model="ir.ui.view">
+			<field name="name">product.price.form</field>
+			<field name="model">product.batch.pricelist</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="action_validate" type="object" string="Continue" states="draft" class="oe_highlight"/>
+						<button name="action_done" type="object" string="Upload" states="validate" class="oe_highlight"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,validate,done"/>
+	 				</header>
+					<group >
+						<group>
+							<label string="Price list wef : " nolabel="1"/>
+							<div class="address_format" >
+								<field name="date_effective" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+							</div>
+							<field name="description" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+						</group>
+						<group>
+							<field name="mass_upload" widget="binary"  height="64" filename="file_name" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+							<field name="file_name" invisible="1"/>
+						</group>
+						<group>
+							<field name="excel_model" widget="binary"  height="64" filename="model_file_name" readonly="1"/>
+							<field name="model_file_name" invisible="1"/>
+						</group>
+					</group>
+					<field name="price_ids" attrs="{'invisible':[('state', '=', 'draft')], 'readonly':[('state', '!=', 'validate')]}">
+						<tree editable="top">
+							<field name="product_id" string="Product" required="1"/>
+							<field name="cost" required="1"/>
+						</tree>
+					</field>
+					<div class="oe_chatter">
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_product_price_tree" model="ir.ui.view"> 
+			<field name="name">product.price.tree</field>
+			<field name="model">product.batch.pricelist</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="description"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_product_Price" model="ir.actions.act_window"> 
+			<field name="name">Price</field>
+			<field name="res_model">product.batch.pricelist</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Product Pricelist" id="menu_product_Price" action="action_product_Price" parent="base.menu_product"/>
+	</data>
+</openerp>
