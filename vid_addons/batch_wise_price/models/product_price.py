@@ -49,7 +49,7 @@ class PriceList(models.Model):
 
 	def _get_file(self):
 		# _logger.info("In deauult")
-		file = open("E:\\OdooDevelopment\\NiceBackUp\\vid_addons\\batch_wise_price\models\\test.xlsx", "rb")
+		file = open("/opt/odoo/NiceVid/vid_addons/batch_wise_price/models/test.xlsx", "rb")
 		out = file.read()
 		file.close()
 		excel_model = base64.b64encode(out)
