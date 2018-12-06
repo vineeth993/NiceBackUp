@@ -40,7 +40,11 @@ DOC_TYPE = [('INV', 'Tax Invoice'),
 			('CHL', 'Delivery Challan'),
 			('CNT', 'Credit Note'),
 			('OTH', 'Others')]
-
+			
+TRANS_TYPE = [(1, "Regular"),
+			  (2, "Bill To-Ship To"),
+			  (3, "Bill From-Dispatch From"),
+			  (4, "Combination of 2 and 3")]
 
 class GetEwpdc(models.TransientModel):
 
@@ -61,6 +65,7 @@ class GetEwpdc(models.TransientModel):
 	trans_doc_date = fields.Date('Document Date')
 	vehicle_number = fields.Char('Vehicle Number')
 	to_zip_code = fields.Char("To Zipcode", required=True)
+	trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
 
 	@api.model
 	def default_get(self, fields):
@@ -146,6 +151,7 @@ class GetEwpdc(models.TransientModel):
 					items['cgstRate'] = item / 2
 					items['igstRate'] = 0										
 				items['cessRate'] = 0
+				items['cessNonAvol'] = 0
 				totalIgst += item_list[hsn][item][1]
 				totalSgst += item_list[hsn][item][2]
 				totalCgst += item_list[hsn][item][3]
@@ -176,6 +182,7 @@ class GetEwpdc(models.TransientModel):
 					'docType':self.doc_type,
 					'docNo':self.name,
 					'docDate':invoice_date,
+					'transType':self.trans_type,
 					'fromGstin':self.from_addr.gst_no,
 					'fromTrdName':self.from_addr.name,
 					'fromAddr1':self.from_addr.street,
@@ -197,6 +204,8 @@ class GetEwpdc(models.TransientModel):
 					'sgstValue':round(totalSgst,2),
 					'igstValue':round(totalIgst,2),
 					'cessValue':round(totalCess,2),
+					'TotNonAdvolVal':0,
+					'OthValue':0,
 					'transMode':self.transport_mode,
 					'transDistance':self.transport_distance,
 					'transporterName':self.transporter_name,
@@ -210,7 +219,7 @@ class GetEwpdc(models.TransientModel):
 					'itemList':itemList
 			}
                 billLists.append(billList)		
-                data = {'version':"1.0.0618",'billLists':billLists}
+                data = {'version':"1.0.1118",'billLists':billLists}
 		
 		temp_json_file = tempfile.gettempdir()+'/file.json'
 		# temp_json_file = "/tmp/Test.json"

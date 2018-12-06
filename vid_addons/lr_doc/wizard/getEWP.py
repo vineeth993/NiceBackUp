@@ -44,6 +44,12 @@ DOC_TYPE = [('INV', 'Tax Invoice'),
 REGISTERED = [('REG', 'Registered'),
 			   ('UNREG', 'UnRegistered')]
 
+
+TRANS_TYPE = [(1, "Regular"),
+			  (2, "Bill To-Ship To"),
+			  (3, "Bill From-Dispatch From"),
+			  (4, "Combination of 2 and 3")]
+
 class GetEwp(models.TransientModel):
 
 	_name = "ewp.json"
@@ -66,7 +72,8 @@ class GetEwp(models.TransientModel):
 	invoices_id = fields.Many2many("account.invoice", "ewb_invoices_rel", "partner_id", "invoice_id", string="Invoices", readonly=True)
 	to_zip_code = fields.Char("To Zipcode", required=True)
 	check_register = fields.Selection(REGISTERED, "GST")
-
+	trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
+	
 	@api.model
 	def default_get(self, fields):
 
@@ -154,6 +161,7 @@ class GetEwp(models.TransientModel):
 						items['cgstRate'] = item / 2
 						items['igstRate'] = 0										
 					items['cessRate'] = 0
+					items['cessNonAvol'] = 0
 					totalIgst += item_list[hsn][item][1]
 					totalSgst += item_list[hsn][item][2]
 					totalCgst += item_list[hsn][item][3]
@@ -190,6 +198,7 @@ class GetEwp(models.TransientModel):
 					'docType':'INV',
 					'docNo':invoice.number.replace('SAJ-', ''),
 					'docDate':invoice_date,
+					'transType':self.trans_type,
 					'fromGstin':self.from_addr.gst_no,
 					'fromTrdName':self.from_addr.name,
 					'fromAddr1':self.from_addr.street,
@@ -211,6 +220,8 @@ class GetEwp(models.TransientModel):
 					'sgstValue':round(totalSgst,2),
 					'igstValue':round(totalIgst,2),
 					'cessValue':round(totalCess,2),
+					'TotNonAdvolVal':0,
+					'OthValue':0,
 					'transMode':self.transport_mode,
 					'transDistance':self.transport_distance,
 					'transporterName':self.transporter_name,
@@ -224,7 +235,7 @@ class GetEwp(models.TransientModel):
 					'itemList':itemList
 				}
 			billLists.append(billList)
-		data = {'version':"1.0.0618",'billLists':billLists}
+		data = {'version':"1.0.1118",'billLists':billLists}
 		
 		temp_json_file = tempfile.gettempdir()+'/file.json'
 		# temp_json_file = "/tmp/Test.json"

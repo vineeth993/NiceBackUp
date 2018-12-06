@@ -24,6 +24,7 @@
 						</group>
 						<group>
 							<field name="transport_mode"/>
+							<field name="trans_type"/>
 						</group>
 						<group string="Tranport Details">
 							<field name="transporter_name"/>
