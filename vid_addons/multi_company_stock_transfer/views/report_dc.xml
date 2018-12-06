@@ -181,14 +181,14 @@
 									</td>
 									<td style="border-right:1px solid black;">
 										<span t-esc="sum(map(lambda x:x.amount, line.taxes_id)) * 100"/>
-										<t t-set="tax" t-value="(sum(map(lambda x:x.amount, line.taxes_id)) * 100) * line.last_issued_stock"/>
+										<t t-set="tax" t-value="round(sum(map(lambda x:x.amount, line.taxes_id)) * (line.last_issued_stock * line.unit_price), 2)"/>
 										<t t-set="taxTotal" t-value="taxTotal + tax"/>
 									</td>
 									<td style="border-right:1px solid black;">
-										<span t-esc="tax / 2"/>
+										<span t-esc="round(tax / 2, 2)"/>
 									</td>
 									<td style="border-right:1px solid black;">
-										<span t-esc="tax / 2"/>
+										<span t-esc="round(tax / 2, 2)"/>
 									</td>
 								</t>
 							</tr>
@@ -196,8 +196,8 @@
 								<td colspan="7" style="border-right:1px solid black;border-top:1px solid black">Total</td>
 								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="amount"/></td>
 								<td style="border-right:1px solid black;border-top:1px solid black"/>
-								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="taxTotal / 2"/></td>
-								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="taxTotal / 2"/></td>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="round(taxTotal / 2, 2)"/></td>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="round(taxTotal / 2, 2)"/></td>
 							</tr>
 						</tbody>
 					</table><br/>
