@@ -146,7 +146,7 @@
                                         </t>
                                         <t t-if="doc.discount_stat">
                                             <td class="text-center">
-                                                <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)))"/>
+                                                <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
                                             </td>
                                         </t>
                                         <td class="text-right">
@@ -154,10 +154,10 @@
                                         </td>
                                         <td class="text-right">
                                             <t t-if="not doc.tax_stat">
-                                                <span t-esc="round(l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                                <span t-esc="round(l.price_subtotal, 2)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                             </t>
                                             <t t-if="doc.tax_stat">
-                                                <span t-esc="round((l.price_subtotal * sum(map(lambda x: x.amount, l.tax_id)))+l.price_subtotal)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                                <span t-esc="round((l.price_subtotal * sum(map(lambda x: x.amount, l.tax_id)))+l.price_subtotal, 2)" t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                             </t>
                                         </td>
                                     </tr>
@@ -171,21 +171,21 @@
                                     <tr class="border-black">
                                         <td><strong>Total Without Taxes</strong></td> 
                                         <td class="text-right">
-                                            <span t-esc="round(doc.amount_untaxed)"
+                                            <span t-esc="round(doc.amount_untaxed, 2)"
                                                 t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Taxes</strong></td> 
                                         <td class="text-right">
-                                            <span t-esc="round(doc.amount_tax)"
+                                            <span t-esc="round(doc.amount_tax, 2)"
                                                 t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                         </td>
                                     </tr>
                                     <tr class="border-black">
                                         <td><strong>Total</strong></td> 
                                         <td class="text-right">
-                                            <span t-esc="round(doc.amount_total)"
+                                            <span t-esc="round(doc.amount_total, 2)"
                                                 t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                                         </td>
                                     </tr>
