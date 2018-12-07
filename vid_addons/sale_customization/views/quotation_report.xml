@@ -114,8 +114,8 @@
                                 <th style="border-top:solid 1px">Product Description</th>
                                 <th style="border-top:solid 1px">HSN</th>
                                 <th style="border-top:solid 1px" class="text-right">Quantity</th>
-                                <th style="border-top:solid 1px" class="text-right">Rate(With Tax)</th>
-                                 <t t-if="doc.tax_stat"><th style="border-top:solid 1px" class="text-right">Rate(Without Tax)</th></t>
+                                <th style="border-top:solid 1px" class="text-right">Rate(Without Tax)</th>
+                                 <t t-if="doc.tax_stat"><th style="border-top:solid 1px" class="text-right">Rate(With Tax)</th></t>
                                 <t t-if="doc.discount_stat"><th style="border-top:solid 1px" class="text-right">Disc(%)</th></t>
                                 <th style="border-top:solid 1px" class="text-right">Tax(%)</th>
                                 <th style="border-top:solid 1px" class="text-right price_tax_included">Total Price<br/><t t-if="not doc.tax_stat"><span style="font-size:8px;">(Without Tax)</span></t><t t-if="doc.tax_stat"><span style="font-size:8px;">(With Tax)</span></t></th>
