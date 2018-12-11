@@ -109,6 +109,7 @@ class GetEwp(models.TransientModel):
 			for line in invoice.invoice_line:
 				hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total = 0, 0, 0, 0
 				hsn_total_taxablevalue = 0
+				tax_percnt = 0.0
 				val = None
 				hsn_total_taxablevalue += line.price_subtotal
 				for tax in line.invoice_line_tax_id:
