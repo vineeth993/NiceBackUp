@@ -57,15 +57,16 @@ class StockPicking(models.Model):
 					invoice_line_vals['invoice_line_tax_id'] = extra_move_tax[0, move.product_id]
 			if move.lot_ids:
 				for quant in move.quant_ids:
-					if quant.lot_id.pricelist:
-						price_list_obj = self.pool.get('product.price')
-						price_list = price_list_obj.search(cr, uid,[('pricelist', '=', quant.lot_id.pricelist.id), ('product_id', '=', invoice_line_vals['product_id'])], context=context)
-						if price_list:
-							price_list = price_list_obj.browse(cr, uid, price_list, context=context)
-							if price_list.cost:
-								invoice_line_vals.update({'price_unit':price_list.cost})
-					invoice_line_vals.update({'lot_id':quant.lot_id.id,'quantity':quant.qty})
-					move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+					if quant.qty > 0:
+						if quant.lot_id.pricelist:
+							price_list_obj = self.pool.get('product.price')
+							price_list = price_list_obj.search(cr, uid,[('pricelist', '=', quant.lot_id.pricelist.id), ('product_id', '=', invoice_line_vals['product_id'])], context=context)
+							if price_list:
+								price_list = price_list_obj.browse(cr, uid, price_list, context=context)
+								if price_list.cost:
+									invoice_line_vals.update({'price_unit':price_list.cost})
+						invoice_line_vals.update({'lot_id':quant.lot_id.id,'quantity':quant.qty})
+						move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 			else:
 				move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 			move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)

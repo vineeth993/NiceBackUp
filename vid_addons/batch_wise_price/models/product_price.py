@@ -45,11 +45,13 @@ class PriceList(models.Model):
 
 	_name = "product.batch.pricelist"
 	_inherit = ['mail.thread']
+	_description = "Batch Wise price"
 	_order = "id desc"
 
 	def _get_file(self):
 		# _logger.info("In deauult")
-		file = open("/opt/odoo/NiceVid/vid_addons/batch_wise_price/models/test.xlsx", "rb")
+		file = open("E:\\OdooDevelopment\\NiceBackUp\\vid_addons\\batch_wise_price\models\\test.xlsx", "rb")
+		# file = open("/opt/odoo/NiceVid/vid_addons/batch_wise_price/models/test.xlsx", "rb")
 		out = file.read()
 		file.close()
 		excel_model = base64.b64encode(out)
