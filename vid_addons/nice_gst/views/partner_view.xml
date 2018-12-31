@@ -74,7 +74,7 @@
                             <field name="tds_categ"/>
                         </group>
                         <group>
-                            <field name="reverse_tax"/>
+                            <field name="reverse_tax_1"/>
                             <field name="gst_credit"/>
                         </group>
                     </group>

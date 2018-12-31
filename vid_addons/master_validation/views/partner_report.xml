@@ -249,11 +249,11 @@
                                 </td>
                             </tr>
                         </t>
-                        <t t-if="doc.reverse_tax">
+                        <t t-if="doc.reverse_tax_1">
                             <tr style="border:2px solid black; padding-bottom:20px">
                                 <td width="50%" style="border-right:2px solid black; padding-left:10px; padding-top:10px"><b>Reverser Tax Applicabity</b></td>
                                 <td width="50%" style="padding-left:10px; padding-right:5px; padding-bottom:20px">
-                                    <span t-field="doc.reverse_tax.name"/>-<span t-field="doc.reverse_tax.reverse_perc"/>
+                                    <span t-field="doc.reverse_tax_1.name"/>-<span t-field="doc.reverse_tax_1.reverse_perc"/>
                                 </td>
                             </tr>
                         </t>

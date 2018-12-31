@@ -17,7 +17,7 @@ class ResPartner(models.Model):
 	], string="GST Category")
 	gst_no = fields.Char('GST No', size=64)
 	tds_categ = fields.Many2one("tds.category", string="TDS Category")
-	reverse_tax = fields.Many2one('reverse.tax')
+	reverse_tax_1 = fields.Many2one('reverse.tax')
 	gst_credit = fields.Boolean('GST Credit')
 	ssi_unit = fields.Boolean('SSI Unit')
 	ssi_no = fields.Char("MSME Number")
