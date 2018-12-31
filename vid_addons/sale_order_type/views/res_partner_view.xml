@@ -7,29 +7,19 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
 
-                <page name="sales_purchases" position="inside">
-                    <group colspan="2" col="2" attrs="{'invisible':[('customer', '=', False)]}">
-                        <separator string="Sales order type" colspan="2"/>
-                        <group>
-                            <field name="sale_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'sale')]" context="{'default_object_type': 'sale'}"/>
-                            <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" context="{'default_type_id': sale_type}"/>
-                            <field name="tax_exempted"/>
-                        </group>
-                        <group>
-                            <field name="deemed_export"/>
-                            <field name="sez"/>
-                            <field name="export"/>
-                        </group>
-                    </group>
-                    <group string="Purchase order type">
-                        <group>
-                            <field name="purchase_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'purchase')]" context="{'default_object_type': 'purchase'}"/>
-                        </group>
-                        <group>
-                            <field name="purchase_sub_type_id"  domain="[('type_id', '=', purchase_type), ('object_type', '=', 'purchase')]" context="{'default_type_id': purchase_type}"/>
-                        </group>
-                    </group>
-                </page>
+               <xpath expr="//field[@name='website']" position="after">
+                    <label for="sale_type" string="GST Type Customer" attrs="{'invisible':[('customer', '=', False)]}"/>
+                    <div attrs="{'invisible':[('customer', '=', False)]}">
+                        <field name="sale_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'sale')]" context="{'default_object_type': 'sale'}" class="oe_inline" attrs="{'required':[('customer', '=', True)]}"/>
+                        <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" context="{'default_type_id': sale_type}" class="oe_inline" attrs="{'required':[('customer', '=', True)]}"/>
+                    </div>
+                    <label for="purchase_type" string="GST Type Supplier" attrs="{'invisible':[('supplier', '=', False)]}"/>
+                    <div attrs="{'invisible':[('supplier', '=', False)]}">
+                        <field name="purchase_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'purchase')]" context="{'default_object_type': 'purchase'}"  class="oe_inline" attrs="{'required':[('supplier', '=', True)]}"/>
+                        <field name="purchase_sub_type_id"  domain="[('type_id', '=', purchase_type), ('object_type', '=', 'purchase')]"  context="{'default_type_id': purchase_type}" class="oe_inline" attrs="{'required':[('supplier', '=', True)]}" />
+                    </div>
+                    <field name="form_sale" invisible="1"/>
+                </xpath>
             </field>
         </record>
 
