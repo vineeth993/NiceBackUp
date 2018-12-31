@@ -7,9 +7,16 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
+                <field name="title" position="replace"></field>
                 <field name="category_id" position="before">
-                    <field name="customer_type"/>
+                    <field name="customer_type" placeholder="Customer Type(Distributor/Dealer/Customer)" required="1"/>
                 </field>
+                <xpath expr="//label[@for='name']" position="before">
+                    <label for="title" class="oe_edit_only"/>
+                    <field name="title" />
+                </xpath>
+                
+
                 <field name="date" position="after">
                     <field name="lead_time" attrs="{'invisible':[('supplier','=',False)]}"/>
                 </field>

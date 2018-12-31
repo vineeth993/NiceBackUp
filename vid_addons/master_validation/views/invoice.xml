@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="invoice_customer_validation" model="ir.ui.view">
+			<field name="name">invoice.customer.validation</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form"/>
+			<field name="arch" type="html">
+				<field name="partner_id" position="attributes">
+					<attribute name="domain">[("customer", "=", True),("state","=", "approve")]</attribute>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

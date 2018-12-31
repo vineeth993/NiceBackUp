@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="master_validation_template" model="email.template">
+			<field name="name">Master Validation Email</field>
+			<field name="email_form">${(user.email or '')|safe}</field>
+			<field name="subject">Customer Added/Modified to our Database</field>
+			<field name="partner_to">${object.user_id.partner_id.id}, ${object.id}</field>
+			<field name="model_id" ref="model_res_partner"/>
+			<field name="auto_delete" eval="True"/>
+			<field name="lang" >${object.lang}</field>
+			<field name="report_template" ref="email_customer_details"/>
+			<field name="report_name">${object.name}-Validation data</field>
+			<field name="body_html"><![CDATA[
+				<p style="font-family:Century Gothic">Dear Sir,<br/><br/>
+ 
+			Please find enclosed herewith details of Party Master created/modified in our ERP database.<br/>
+			 
+			Major corrections like GST Number etc. will not be entertained further.<br/>
+			So, kindly report any irregularities noticed from your side at your earliest.<br/><br/>
+			 
+			With regards<br/><br/>
+			 
+			System Administrator<br/>
+			Nice Chemicals (P) Ltd.</p>
+				]]></field>
+		</record>
+	</data>
+</openerp>

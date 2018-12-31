@@ -24,6 +24,7 @@ class ResPartner(models.Model):
     tax_desc = fields.Text("Tax Description")
     # partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'),('extra', 'Extra')],string='Partner Selling Type')
     # partner_selling_type_id = fields.Many2one('partner.selling.type',string='Partner Selling Type-Discount')
+    is_company = fields.Boolean(default=True)
     
     # def name_get(self, cr, uid, ids, context=None):
 

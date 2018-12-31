@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="master_validation_customer" model="ir.ui.view">
+			<field name="name">customer.validation</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="arch" type="xml">
+<!-- 				<xpath expr="//form" position="attributes">
+					<attribute name="readonly"></attribute>
+				</xpath> -->
+				<xpath expr="//form/*" position="before">
+					<header attrs="{'invisible':[('is_company', '=', False)]}">
+						<button name="action_confirm" type="object" states="draft" string="Confirm" class="oe_highlight" context="{'make_readonly':False}"/>
+						<button name="action_validate" type="object" states="confirm" string="Validate" class="oe_highlight" context="{'make_readonly':False}"/>
+						<button name="action_approve" type="object" states="validate" string="Approve" class="oe_highlight" context="{'make_readonly':True}" groups="account.group_account_user, account.group_account_manager"/>
+						<button name="reset_to_draft" type="object" states="confirm" string="Reset To Draft" context="{'make_readonly':False}"/>
+						<button name="admin_reset" type="object" states="approve,validate" string="Reset To Draft" class="oe_highlight" groups="base.group_erp_manager" context="{'make_readonly':False}"/>
+						<button name="action_mail" type="object" states="approve" string="Send E-mail" class="oe_highlight"  groups="account.group_account_user, account.group_account_manager"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate,approve"/>
+		 			</header>
+		 		</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

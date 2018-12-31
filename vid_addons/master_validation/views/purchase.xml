@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="purchase_validation_customer" model="ir.ui.view">
+			<field name="name">purchase.customer.validation</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form"/>
+			<field name="arch" type="xml">
+				<field name="partner_id" position="attributes">
+					<attribute name="domain">[('supplier','=',True), ('purchase_type', '=', type_id), ('purchase_sub_type_id', '=', sub_type_id), ('state', '=', 'approve')]</attribute>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

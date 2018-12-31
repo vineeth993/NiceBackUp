@@ -5,22 +5,117 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-               <xpath expr="//field[@name='website']" position="after">
-                    <field name="country_base_gst_type" widget="radio"/>
-                    <field name="gst_category" widget="radio"/>
-                    <field name="gst_reg" widget="radio"/>
-                    <field name="gst_no" attrs="{'invisible': [('gst_reg', '=', 'unregistered')], 'required': [('gst_reg', '=', 'registered')]}"/>
-               </xpath>
-               <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="p_code"/>
-                    <field name="tds"/>
-                    <field name="reverse_tax"/>
-                    <field name="gst_credit"/>
-                    <field name="ssi_unit"/>
-                    <field name="pan"/>
-               </xpath>
+
+                <field name="ref" position="replace"></field>
+                <!-- <field name="section_id" position="replace"></field> -->
+                <field name="user_id" position="replace"></field>
+                <field name="company_id" position="replace"></field>
+                
+                <xpath expr="//field[@name='website']" position="after">
+                    <field name="country_base_gst_type" widget="radio" invisible="1"/>
+                    <field name="gst_category" widget="radio"  invisible="1"/>
+                    <field name="gst_reg"/>
+                    <field name="gst_no" attrs="{'invisible': [('gst_reg', 'in', ('unregistered','ngs'))], 'required': [('gst_reg', 'in', ('registered','cs'))]}"/>
+                </xpath>
                
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="user_id" required="1"/>
+                    <field name="ref" string="Party Code"/>
+                    <!-- <field name="lang"/> -->
+                    <field name="company_id" required="1"/>
+                    <field name="pan"/>
+                    <field name="ssi_unit"/>
+                    <field name="ssi_no" attrs="{'invisible':[('ssi_unit', '=', False)], 'required':[('ssi_unit', '=', True)]}"/>
+
+                </xpath>
+
+                <field name="parent_id" position="attributes">
+                    <attribute name="placeholder">Related Companies</attribute>
+                </field>
+                    
+                <field name="city_id" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                
+                <field name="state_id" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                
+                <field name="zip" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+
+                <field name="mobile" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+
+                <field name="email" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+
+<!--                 <field name="customer_type" position="attributes">
+                    <attribute name="placeholder">Customer Type(Distributor/Dealer/Customer)</attribute>
+                </field> -->
+
+                <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                    <attribute name="string">Settings &amp; Locations</attribute>
+                </xpath>
             </field>
          </record>
+
+         <record id="view_partner_form_accounts" model="ir.ui.view">
+            <field name="name">partner.form.accounts</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='accounting']/group" position="after">
+                    <group>
+                        <group>
+                            <field name="tds_categ"/>
+                        </group>
+                        <group>
+                            <field name="reverse_tax"/>
+                            <field name="gst_credit"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//page[@name='accounting']" position="attributes">
+                    <attribute name="groups">account.group_account_user, account.group_account_manager</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                    <field name="bank_bic"/>
+                </xpath>
+            </field>
+         </record>
+
+         <record id="action_view_tds_category" model="ir.actions.act_window">
+            <field name="name">TDS Category</field>
+            <field name="res_model">tds.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+         </record>
+
+         <record id="res_partner_bank_ifsc_form" model="ir.ui.view">
+            <field name="name">partner.bank.ifsc.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bank_bic" position="replace">
+                   <field name="bank_bic" placeholder="e.g. SBIN000000" required="1"/>
+                </field>
+            </field>
+         </record>
+
+        <record id="res_partner_bank_ifsc_tree" model="ir.ui.view">
+            <field name="name">partner.bank.ifsc.tree</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_tree"/>
+            <field name="arch" type="xml">
+                <field name="bank_name" position="after">
+                   <field name="bank_bic"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

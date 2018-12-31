@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<report
+			id="email_customer_details"
+			model="res.partner"
+			string="Customer Details"
+			report_type="qweb-pdf"
+			name="master_validation.customer_details_email"
+			/>
+	</data>
+</openerp>
