@@ -23,11 +23,6 @@
                 <xpath expr="//page[@string='Sales &amp; Purchases']" position="after">
                     <page name='discount' string="Discount" attrs="{'invisible':[('customer','=',False)]}">
                     	<group string="Discount configuration">
-                    		<field name="customer_type"/>
-                    		<!-- <field name="partner_selling_type"/>
-                    		<field name="partner_selling_type_id" domain="[('partner_type','=',partner_selling_type)]"/> -->
-                    	</group>
-                        <group>
                             <group >
                                 <field name="disc"/>
                                 <!-- <field name="nedisc"/> -->
