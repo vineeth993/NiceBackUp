@@ -54,14 +54,17 @@
                     <field name="street"/>
                     <field name="state_id"/>
                 </xpath>
-                <page name="accounting" position="before">
-                    <page  string="Form Sale" col="4" name="form_sale" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
-                        <group name="Form Wise Tax Details">
-                            <field name="tax_id" widget="many2many_tags" domain="[('company_id', '=', company_id)]"/>
-                            <field name="tax_desc"/>
+                <xpath expr="//page[@name='sales_purchases']/group" position="after">
+                    <group attrs="{'invisible': [('form_sale', '=', False)]}" string="Form Sale">
+                        <group>
+                            <field name="tax_id" widget="many2many_tags" domain="[('company_id', '=', company_id)]" attrs="{'required':[('form_sale', '=', True)]}"/>
                         </group>
-                    </page>
-                </page>
+                        <group>
+                             <field name="tax_desc"/>
+                        </group>
+                    </group>
+                </xpath>
+
             </field>
          </record>
 
