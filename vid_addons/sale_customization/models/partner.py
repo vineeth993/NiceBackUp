@@ -22,24 +22,9 @@ class ResPartner(models.Model):
     lead_time = fields.Integer("Lead Time")
     tax_id = fields.Many2many("account.tax", "form_wise_tax_in_partner", "partner_id", "taxes_id", "Customer Taxes")
     tax_desc = fields.Text("Tax Description")
-    # partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'),('extra', 'Extra')],string='Partner Selling Type')
-    # partner_selling_type_id = fields.Many2one('partner.selling.type',string='Partner Selling Type-Discount')
+    disc_id = fields.One2many('partner.discount', 'partner_id', string="Reference", copy=True)
     is_company = fields.Boolean(default=True)
     
-    # def name_get(self, cr, uid, ids, context=None):
-
-    #     if not isinstance(ids, list):
-    #         ids = [ids]
-    #     res = []
-    #     if not ids:
-    #         return res
-    #     reads = self.read(cr, uid, ids, ['name', 'ref'], context)
-    #     for record in reads:
-    #         name = record['name']
-    #         res.append((record['id'], record))
-    #     _logger.info("The value sale_cust name_get = "+str(res))
-    #     return res
-
     @api.one
     @api.constrains('ref')
     def _check_reference_len(self):
@@ -58,3 +43,13 @@ class ResPartner(models.Model):
 
 
 
+class PartnerDiscount(models.Model):
+
+    _name = "partner.discount"
+    _description = "Partner Discount"
+
+    partner_id = fields.Many2one("res.partner", string="Reference")
+    category_id = fields.Many2one("product.brand", string="Product Category")
+    normal_disc = fields.Float("Normal Discount")
+    additional_disc = fields.Float("Additional Discount")
+    target_disc = fields.Float("Target Discount")

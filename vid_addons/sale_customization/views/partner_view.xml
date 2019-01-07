@@ -22,7 +22,7 @@
                 </field>
                 <xpath expr="//page[@string='Sales &amp; Purchases']" position="after">
                     <page name='discount' string="Discount" attrs="{'invisible':[('customer','=',False)]}">
-                    	<group string="Discount configuration">
+                        <group>
                             <group >
                                 <field name="disc"/>
                                 <!-- <field name="nedisc"/> -->
@@ -32,6 +32,14 @@
                                 <field name="tdisc"/>
                             </group>
                         </group>
+                        <field name="disc_id">
+                            <tree name="Discount" editable="bottom">
+                                <field name="category_id"/>
+                                <field name="normal_disc"/>
+                                <field name="additional_disc"/>
+                                <field name="target_disc"/>
+                            </tree>
+                        </field>
                     </page>
                 </xpath>
             </field>
@@ -74,5 +82,25 @@
                 </form>
             </field>
          </record>
+
+         <record id="partner_category_action" model="ir.actions.act_window">
+            <field name="name">Partner Category</field>
+            <field name="res_model">customer.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+         </record>
+
+         <record id="partner_catergory_tree" model="ir.ui.view">
+            <field name="name">Partner Category</field>
+            <field name="model">customer.type</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="customer_type"/>
+                </tree>
+            </field>
+         </record>
+
+        <menuitem id="partner_category_menu" parent="base.menu_base_config" action="partner_category_action" sequence="20"/>
+
     </data>
 </openerp>
