@@ -67,8 +67,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('name', '/') == '/'and vals.get('type_id'):
-            type = self.env['sale.order.type'].browse(vals['type_id'])
+        if vals.get('name', '/') == '/'and vals.get('partner_id'):
+            partner_id = self.env['res.partner'].browse(vals['partner_id'])
+            type = partner_id.sale_type
             if type.sequence_id:
                 sequence_obj = self.env['ir.sequence']
                 vals['name'] = sequence_obj.next_by_id(type.sequence_id.id)
