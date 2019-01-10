@@ -20,6 +20,7 @@
 				 
 				<xpath expr="//field[@name='account_id']" position="after">
 					<field name="sale_order" />
+					<field name="brand_id" readonly='1'/>
 					<field name="partner_selling_type" attrs="{'readonly':[('state', 'in', ('open','paid'))]}"/>
 					<!-- <field name="partner_selling_type_id"  /> -->
 					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'in', ('open','paid'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
@@ -35,12 +36,6 @@
 						attrs="{'invisible':[('partner_selling_type','!=','special'),('partner_selling_type','!=','extra')]}" /> -->
 				</xpath>
 				
-				<xpath
-					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='name']"
-					position="after">
-					<field name="batch_no" />
-				</xpath>
-
 				<xpath
 					expr="//field[@name='invoice_line']/tree[@string='Invoice Lines']/field[@name='discount']"
 					position="after">
