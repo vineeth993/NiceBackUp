@@ -64,6 +64,9 @@ class InvoiceMerge(models.TransientModel):
                 if d['normal_disc'] != invs[0]['normal_disc'] or d['extra_discount'] != invs[0]['extra_discount'] or d['nonread_extra_disocunt'] != invs[0]['nonread_extra_disocunt'] or d['nonread_normal_disocunt'] != invs[0]['nonread_normal_disocunt']:
                     raise UserError(
                         _('Discount percentage are not same'))
+                if d['partner_shipping_id'] != invs[0]['partner_shipping_id']:
+                    raise UserError(
+                        _('Not all invoices are for the same shipping address!'))
 
         return {}
 

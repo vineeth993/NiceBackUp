@@ -4,7 +4,7 @@ from openerp import models, fields, api, _, exceptions
 import openerp.addons.decimal_precision as dp
 from docutils.nodes import Part
 import logging
-from openerp.exceptions import ValidationError
+from openerp.exceptions import ValidationError, except_orm
 
 _logger = logging.getLogger(__name__)
 
@@ -27,9 +27,8 @@ class SaleReason(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     _order = 'order_id desc, sequence, id'
-
    
-    @api.depends('product_id')
+    @api.depends('product_id', 'order_id.partner_selling_type')
     def _get_product_values(self):
         tax_ids = []
         taxes_ids = []
@@ -88,10 +87,17 @@ class SaleOrderLine(models.Model):
                             if parter_tax.tax_categ == 'igst':
                                 taxes_ids.append(parter_tax.id)
             line.tax_id = taxes_ids
-            line.case_lot = line.product_id.case_lot            
+            line.case_lot = line.product_id.case_lot
             taxes = line.product_id.taxes_id
             taxes_id = self.env['account.fiscal.position'].map_tax(taxes)
             tax=[]
+
+            if line.partner_type != line.order_id.partner_selling_type:
+                line.partner_type = line.order_id.partner_selling_type
+                line.price_unit = line.product_id.list_price
+                if line.product_id.price_list and line.partner_type != 'special':
+                    raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type = '+str(line.product_id.name))
+
             for pro_tax in taxes_id:
                 tax.append(pro_tax.id)
             if line.partner_type != "special":
@@ -107,7 +113,7 @@ class SaleOrderLine(models.Model):
     reason = fields.Many2many('sale.reason', string="Purpose", related='product_id.profiling_seasons')
     product_uom_qty = fields.Float('Quantity', digits_compute=dp.get_precision('Product UoS'), default=0.0,
         required=True, readonly=True, states={'draft': [('readonly', False)]})
-    discount = fields.Float('Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]})
+    discount = fields.Float('Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}, store=True)
     tax_id = fields.Many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes',compute='_get_product_values' ,readonly=True, states={'draft': [('readonly', False)]}, domain=['|', ('active', '=', False), ('active', '=', True)])
     extra_discount = fields.Float('Extra Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True)
     additional_discount = fields.Float('Scheme Discount (%)', digits_compute=dp.get_precision('Discount'))
@@ -127,8 +133,7 @@ class SaleOrderLine(models.Model):
         partner_obj = self.pool.get('res.partner')
         partner_id = partner_obj.browse(cr, uid, partner_id)
 
-        res["value"]["order_partner_id"]  = partner_id
-
+        res["value"]["order_partner_id"]  = partner_id.id
         if context.get('sub_type_id', '/') != '/':
             res['value']['sale_sub_type'] = context.get('sub_type_id')
 
@@ -143,27 +148,6 @@ class SaleOrderLine(models.Model):
                 raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
 
         return res
-
-    def open_form_view(self, cr, uid, ids, context=None):
-        if not ids: return []
-        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale_customization', 'view_order_line_form')
-
-        line = self.browse(cr, uid, ids[0], context=context)
-        return {
-            'name':_("Order Line"),
-            'view_mode': 'form',
-            'view_id': view_id,
-            'view_type': 'form',
-            'res_model': 'sale.order.line',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-            'domain': '[]',
-            'res_id': line.id
-        }
-        
-    def button_save(self, cr, uid, ids, context=None):
-        return True
 
     @api.onchange('price_unit')
     def onchange_price_unit(self):
@@ -218,19 +202,38 @@ class SaleOrder(models.Model):
             return False
         return warehouse_ids[0]
     
-    @api.depends('partner_id')
+    @api.depends('brand_id', 'partner_selling_type', 'partner_id')
     def _get_extra_discount(self):
-        for line in self:
-            line.normal_disc = line.partner_id.disc
-            line.extra_discount = line.partner_id.adisc
-        
-    transaction_type = fields.Selection([('local', 'Local'), ('inter_state', 'Interstate')], 'Transaction Type')
+        for order in self:
+            if order.brand_id:
+                if not order.partner_id:
+                    order.brand_id = None
+                    raise ValidationError("Please select partner before selecting product brand")
+                if order.partner_selling_type in ('normal', 'extra'):
+                    partner_brand_id = self.env['partner.discount'].search([('partner_id', '=', self.partner_id.id), ('category_id', '=', self.brand_id.id)])
+                    if partner_brand_id and order.partner_selling_type == 'normal':
+                        order.normal_disc = partner_brand_id.normal_disc
+                        order.extra_discount = partner_brand_id.additional_disc
+                    elif partner_brand_id and order.partner_selling_type == 'extra':
+                        order.normal_disc = partner_brand_id.normal_disc
+                        order.extra_discount = 0.00
+                    else:
+                        order.normal_disc = 0.00
+                        order.extra_discount = 0.00
+                else:
+                    order.normal_disc = 0.00
+                    order.extra_discount = 0.00
+
+    
+                # if item:
+            #     raise exceptions.Warning('This product does not belong to this brand = '+str(item))
+
+    transaction_type = fields.Selection([('normal', 'Normal'), ('sample', 'Sample')], 'Bill Type', default="normal")
     normal_disc = fields.Float("Normal Discount", compute="_get_extra_discount", store=True)
-    partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string='Selling Type', default="normal")
+    partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string='Price Type', default="normal")
     extra_discount = fields.Float('Additional Discount(%)', compute='_get_extra_discount',digits_compute=dp.get_precision('Account'), store=True)
-    nonread_extra_disocunt = fields.Float('Additional Discount(%)',digits_compute=dp.get_precision('Account'),copy=False)
-    nonread_normal_disocunt = fields.Float('Normal Discount',digits_compute=dp.get_precision('Account'),copy=False)
-    transport_document_ids = fields.One2many('transport.document', 'sale_id', 'Documents')
+    nonread_extra_disocunt = fields.Float('Additional Discount(%)', digits_compute=dp.get_precision('Account'), copy=False)
+    nonread_normal_disocunt = fields.Float('Normal Discount', digits_compute=dp.get_precision('Account'), copy=False)
     state = fields.Selection([
             ('draft', 'Draft Quotation'),
             ('confirm', 'Quotation Confirmed'),
@@ -245,8 +248,7 @@ class SaleOrder(models.Model):
             ], 'Status', readonly=True, copy=False, select=True)
     order_line = fields.One2many('sale.order.line', 'order_id', 'Order Lines',
         readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True)
-    quot_line_ids = fields.One2many('sale.quotation.line', 'sale_id', 'Quotation Lines')
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', required=True, default=_get_warehouse, domain=[('type', '=', 'finished')])
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', required=True, default=_get_warehouse)
     amount_untaxed = fields.Float(string='Taxable Value', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Float(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
@@ -255,13 +257,19 @@ class SaleOrder(models.Model):
     validity_term = fields.Many2one("sale.validity.term", string="Validity Terms")
     other_terms = fields.Many2one("sale.delivery.term", string="Other Terms")
     tax_stat = fields.Boolean("Inclusive of Tax")
-    discount_stat = fields.Boolean("Discount")
     on_letter_head = fields.Boolean("Quotation Letter Head")
-    
+    discount_stat = fields.Boolean("Discount")
+    brand_id = fields.Many2one("product.brand", string="Product Type")
+
+
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         res['name'] = line.product_name
         return res
+
+    @api.multi
+    def action_ship_recreate(self):
+        self.signal_workflow('ship_recreate')
 
     @api.multi
     def onchange_partner_id(self, partner_id):
@@ -270,46 +278,9 @@ class SaleOrder(models.Model):
             partner = self.env['res.partner'].browse(partner_id)
             if not partner.email or not partner.mobile or not partner.street:
                 raise ValidationError("Please Update Customer Master With Following Data\n1. Email\n2. Mobile\n3. Address ")
-            res['value'].update({
-                'normal_disc':partner.disc,
-                'extra_discount':partner.adisc,
-            })
         return res
-    
-    @api.onchange('partner_selling_type')
-    def onchange_partner_selling_type(self):
-        for order in self:
-            if order.partner_selling_type == 'normal':
-                order.update({
-                    'normal_disc':order.partner_id.disc,
-                    'extra_discount':order.partner_id.adisc,
-                })
-            elif order.partner_selling_type == 'extra':
-                order.update({
-                    'normal_disc':order.partner_id.disc,
-                    'nonread_extra_disocunt':order.partner_id.adisc,
-                    })
-            else:
-                order.update({
-                    'nonread_normal_disocunt':0.0,
-                    'nonread_extra_disocunt':0.0,
-                    })
 
-    @api.onchange('partner_selling_type', 'normal_disc', 'extra_discount', 'nonread_extra_disocunt', 'nonread_normal_disocunt')
-    def onchange_discount(self):
-        for line in self.order_line:
-            if self.partner_selling_type == 'normal':
-                line.update({'partner_type':'normal',
-                            'discount':self.normal_disc,
-                            'extra_discount':self.extra_discount})
-            elif self.partner_selling_type == 'extra':
-                line.update({'partner_type':'extra',
-                            'discount':self.normal_disc,
-                            'extra_discount':self.nonread_extra_disocunt})
-            elif self.partner_selling_type == 'special':
-                line.update({'partner_type':'special',
-                            'discount':self.nonread_normal_disocunt,
-                            'extra_discount':self.nonread_extra_disocunt})
+
 
     @api.multi
     def action_quotation_confirm(self):
@@ -321,13 +292,6 @@ class SaleOrder(models.Model):
             seq += 1
             if line.product_uom_qty <= 0:
                 raise exceptions.Warning('Quantity cannot be less than zero')
-            self.env['sale.quotation.line'].create({
-                'product_id': line.product_id.id,
-                'name': line.name,
-                'qunatity': line.product_uom_qty,
-                'price_unit': line.price_unit,
-                'sale_id': self.id
-                })
     
     @api.multi
     def action_button_confirm(self):
@@ -354,33 +318,6 @@ class SaleOrder(models.Model):
                     }
             inv_obj.write(cr, uid, res, vals, context=context)
         return res
-
-    
-class TransportDocument(models.Model):
-    _name = 'transport.document'
-    _description = 'Transport Document'
-    
-    sale_id = fields.Many2one('sale.order', 'Sale Order')
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
-    vehicle_no = fields.Char('Vehicle Number')
-    driver_name = fields.Char('Driver')
-    contact_no = fields.Char('Contact No')
-    
-class QuotationLine(models.Model):
-    _name = 'sale.quotation.line'
-    _description = 'Sale Quotation Line'
-    _order = 'id'
-    
-    @api.one
-    def _subtotal(self):
-        self.price_subtotal = self.price_unit * self.qunatity
-
-    sale_id = fields.Many2one('sale.order', 'Sale Order')
-    product_id = fields.Many2one('product.product', 'Product')
-    price_unit = fields.Float('Unit Price')
-    price_subtotal = fields.Float('Subtotal', compute=_subtotal)
-    qunatity = fields.Float('Quantity')
-    name = fields.Char('Description')
 
 class SaleDeliveryTerm(models.Model):
 

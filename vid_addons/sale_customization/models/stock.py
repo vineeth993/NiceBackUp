@@ -37,7 +37,8 @@ class stock_picking(osv.osv):
             'nonread_normal_disocunt':move.picking_id.sale_id.nonread_normal_disocunt,
             'sale_order':move.picking_id.sale_id.name,
             'comment':move.picking_id.sale_id.note,
-            'partner_shipping_id':move.picking_id.sale_id.partner_shipping_id.id
+            'partner_shipping_id':move.picking_id.sale_id.partner_shipping_id.id,
+            'brand_id':move.picking_id.sale_id.brand_id.id
         }
 
 class stock_move(osv.osv):

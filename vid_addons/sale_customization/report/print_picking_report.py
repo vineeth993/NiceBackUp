@@ -16,7 +16,6 @@ class PrintPicking(models.AbstractModel):
 			stock_search = self.env['stock.picking'].search([('origin', '=', order.name), ('state', 'not in', ('cancel', 'done'))])
 			if stock_search:
 				doc_id.append(stock_search)
-		_logger.info("Testing Picking Report = "+str(doc_id))
 
 		docargs = {
 			"doc_ids":docids,

@@ -56,8 +56,8 @@
 						<page string="Transport Info" attrs="{'invisible':[('state','=','draft')]}">
 							<group>
 								<field name="port_id" placeholder="If Export" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
-								<field name="docket_no" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
-								<field name="docket_date" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
+								<field name="docket_no" attrs="{'invisible':[('state','=','draft')]}"/>
+								<field name="docket_date" attrs="{'invisible':[('state','=','draft')]}"/>
 								<field name="courier_name" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 								<field name="driver_name" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>
 								<field name="transporter_gstin" attrs="{'invisible':[('state','=','draft')],'readonly':[('state','=', 'validate')]}"/>

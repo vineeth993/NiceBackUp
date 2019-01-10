@@ -47,7 +47,6 @@ class AccountInvoiceLine(models.Model):
     extra_discount = fields.Float('Extra Discount (%)',compute='_get_product_values', digits_compute= dp.get_precision('Discount'), readonly=True)
     additional_discount = fields.Float('Scheme Discount (%)', digits_compute=dp.get_precision('Discount'))
     price_subtotal = fields.Float(string='Amount', digits= dp.get_precision('Account'), store=True, readonly=True, compute='_compute_price')
-    batch_no = fields.Char("Batch No")
 
     @api.model
     def move_line_get_item(self, line):
@@ -67,7 +66,6 @@ class AccountInvoiceLine(models.Model):
         
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
-    
 
     @api.depends('partner_id')
     def _get_extra_discount(self):
@@ -97,7 +95,9 @@ class AccountInvoice(models.Model):
     nonread_normal_disocunt = fields.Float('Normal Discount',digits_compute=dp.get_precision('Account'),copy=False)
     # extra_discount_amount = fields.Float(string='Extra Discount', readonly=True, compute='_compute_amount', track_visibility='always')
     sale_order = fields.Char("Sale Order", readonly=True, store=True)
-    
+    brand_id = fields.Many2one("product.brand", string="Product Type", readonly=True, store=True)
+
+
     @api.multi
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
         payment_term=False, partner_bank_id=False,

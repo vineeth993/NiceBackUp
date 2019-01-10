@@ -3,6 +3,7 @@
     <data>
         <template id="report_saleorder_customized" inherit_id="sale.report_saleorder_document">
             <xpath expr="//div[@class='row']" position="replace">
+                <span t-if="o.state in ['draft','confirm','sent']" style="color:red;font-size:12px">This not a validated order. <br/> This Printout is only for checking purpose and not for executing consignment</span>
                 <table>
                     <td width="50%">
                         <table>
@@ -66,8 +67,8 @@
 
             <xpath expr="//h2" position="replace">
 	            <h2>
-                	<span t-if="o.state not in ['draft','sent']">Order N° </span>
-                	<span t-if="o.state in ['draft','sent']">Pre-Order N° </span>
+                	<span t-if="o.state not in ['draft','confirm','sent']">Order N° </span>
+                	<span t-if="o.state in ['draft','confirm','sent']">Pre-Order N° </span>
                 	<span t-field="o.name"/>
             	    </h2>
 	    </xpath> 

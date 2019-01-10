@@ -40,6 +40,7 @@ class AccountInvoice(models.Model):
         return {
             #'origin': '%s' % (invoice.origin or '',),
             'partner_id': invoice.partner_id.id,
+            'partner_shipping_id':invoice.partner_shipping_id.id,
             'journal_id': invoice.journal_id.id,
             'user_id': invoice.user_id.id,
             'currency_id': invoice.currency_id.id,

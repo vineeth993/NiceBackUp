@@ -13,33 +13,41 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _get_order_type(self):
-        return self.env['sale.order.type'].search([('object_type', '=', 'sale')])[:1]
+    @api.depends('partner_id')
+    def _get_value(self):
+        for order in self:
+            if order.partner_id:
+                if not order.partner_id.sale_type:
+                    raise ValidationError(('Please Select Sale order type under Sales & Purchase tab'))
+                else:
+                    order.type_id = order.partner_id.sale_type.id
+                if not order.partner_id.sale_sub_type_id:
+                    raise ValidationError(('Please Select Sub type under Sales & Purchase tab'))
+                else:
+                    order.sub_type_id = order.partner_id.sale_sub_type_id[0].id
+                if order.sub_type_id.tax_categ in ('formstate', 'forminter'):
+                    if not order.partner_invoice_id.tax_id:
+                        raise ValidationError("Tax are not defined in party master under seetings tab")
 
     type_id = fields.Many2one(
-        comodel_name='sale.order.type', string='Type', default=_get_order_type)
-    sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type")
-    user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id)
-    # @api.multi
-    # def onchange_partner_id(self, part):
-    #     res = super(SaleOrder, self).onchange_partner_id(part)
-    #     if part:
-    #         partner = self.env['res.partner'].browse(part)
-    #         res['value'].update({
-    #             'type_id': partner.sale_type.id or self._get_order_type().id,
-    #         })
-    #     return res
+        comodel_name='sale.order.type', string='Type', readonly=True, compute="_get_value", store=True)
+    sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type", readonly=True, compute="_get_value", store=True)
+    user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user)
 
-    @api.onchange('partner_invoice_id')
-    def onchange_partner_invoice_id(self):
-        if not self.type_id:
-            self.partner_id = False
-            raise ValidationError(('Before choosing a customer,\n select a customer type in the sales form.'))
-        self.type_id = self.partner_id.sale_type.id
-        if self.sub_type_id:
-            if self.sub_type_id.tax_categ in ('formstate', 'forminter'):
-                if not self.partner_invoice_id.tax_id:
-                    raise Warning("Tax are not defined in partner under form sale tab")
+    # @api.onchange('partner_invoice_id')
+    # def onchange_partner_invoice_id(self):
+    #     if self.partner_id:
+    #         if not self.partner_id.sale_type:
+    #             raise ValidationError(('Please Select Sale order type under Sales & Purchase tab'))
+    #         else:
+    #             self.type_id = self.partner_id.sale_type.id
+    #         if not self.partner_id.sale_sub_type_id:
+    #             raise ValidationError(('Please Select Sub type under Sales & Purchase tab'))
+    #         else:
+    #             self.sub_type_id = self.partner_id.sale_sub_type_id[0].id
+    #         if self.sub_type_id.tax_categ in ('formstate', 'forminter'):
+    #             if not self.partner_invoice_id.tax_id:
+    #                 raise ValidationError("Tax are not defined in party master under seetings tab")
 
     @api.one
     @api.onchange('type_id')
