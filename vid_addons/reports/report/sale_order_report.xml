@@ -73,8 +73,8 @@
             	    </h2>
 	    </xpath> 
 
-            <xpath expr="//div[@id='informations']" position="replace">
-		<div class="row mt32 mb32" id="informations">
+        <xpath expr="//div[@id='informations']" position="replace">
+		    <div class="row mt32 mb32" id="informations">
                 <div t-if="o.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>
                     <p t-field="o.client_order_ref"/>
@@ -93,83 +93,81 @@
                     <p t-field="o.payment_term"/>
                 </div>
             </div>
-
 	    </xpath>
 	    
-	  <xpath expr="//table[@class='table table-condensed']//thead//tr" position="replace">
-                <tr>
-                    <th>SL</th>
-                    <th>Description</th>
-                    <th class="hidden">Source Document</th>
-                    <th class="hidden">Purpose</th>
-                    <th class="text-center">Quantity</th>
-                    <th class="text-center">Unit Price</th>
-                    <th class="text-center">Disc.(%)</th>
-                    <th class="text-center">Taxes</th>
-                    <th class="text-center">Tax Type</th>
-                    <th class="text-center">Amount</th>
-                </tr>
-            </xpath>
-            <xpath expr="//table[@class='table table-condensed']//tbody" position="replace">
-                <tbody class="sale_tbody">
-                    <tr t-foreach="o.order_line" t-as="l">
-                        <td> 
-                            <span t-field="l.sequence"/>
-                        </td>
-                        <td>
-                            <span t-field="l.name"/>
-                        </td>
-                       <!--  <td>
-                            <span t-field="l.reason.name"/>
-                        </td> -->
-                        <td class="text-center">
-                            <span t-field="l.product_uom_qty"/>
-                            <span groups="product.group_uom" t-field="l.product_uom"/>
-                        </td>
-                        <td class="text-center">
-                            <span t-field="l.price_unit"/>
-                        </td>
-                        <td class="text-center">
-                            <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
-                        </td>
-                        <td class="text-center">
-                            <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>
-                        </td>
-                        <td class="text-center">
-			  <t t-if="l.tax_id">
-                            <t t-if="l.tax_id[0].gst_type == 'igst'">
-                                INTER
-                            </t>
-                            <t t-if="l.tax_id[0].gst_type == 'cgst' or l.tax_id[0].gst_type == 'sgst'">
-                                LOCAL
-                            </t>
-			  </t>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.price_subtotal"
+	    <xpath expr="//table[@class='table table-condensed']//thead//tr" position="replace">
+            <tr>
+                <th>SL</th>
+                <th>Description</th>
+                <th class="text-center">Pack</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center">Unit Price</th>
+                <th class="text-center">Disc.(%)</th>
+                <th class="text-center">Taxes</th>
+                <th class="text-center">Tax Type</th>
+                <th class="text-center">Amount</th>
+            </tr>
+        </xpath>
+        <xpath expr="//table[@class='table table-condensed']//tbody" position="replace">
+            <tbody class="sale_tbody">
+                <tr t-foreach="o.order_line" t-as="l">
+                    <td> 
+                        <span t-field="l.sequence"/>
+                    </td>
+                    <td>
+                        <span t-esc="l.name.rsplit('-',1)[0]"/>
+                    </td>
+                     <td>
+                        <span t-esc="l.name.rsplit('-',1)[1]"/>
+                    </td>
+                    <td class="text-center">
+                        <span t-field="l.product_uom_qty"/>
+                        <span groups="product.group_uom" t-field="l.product_uom"/>
+                    </td>
+                    <td class="text-center">
+                        <span t-field="l.price_unit"/>
+                    </td>
+                    <td class="text-center">
+                        <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
+                    </td>
+                    <td class="text-center">
+                        <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>
+                    </td>
+                    <td class="text-center">
+			        <t t-if="l.tax_id">
+                        <t t-if="l.tax_id[0].gst_type == 'igst'">
+                            INTER
+                        </t>
+                        <t t-if="l.tax_id[0].gst_type == 'cgst' or l.tax_id[0].gst_type == 'sgst'">
+                            LOCAL
+                        </t>
+			        </t>
+                    </td>
+                    <td class="text-right">
+                        <span t-field="l.price_subtotal"
                                   t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
-                        </td>
-                    </tr>
-                </tbody>
-            </xpath>
-            <xpath expr="//div[@class='row'][1]" position="after">
-                <table width="100%">
-                    <tr>
-                        <td width="21%">Prepared BY</td>
-                        <td width="21%">Verified BY</td>
-                        <td width="21%">Order Picked BY</td>
-                        <td width="23%">Item Verified BY</td>
-                    </tr>
+                    </td>
+                </tr>
+            </tbody>
+        </xpath>
+        <xpath expr="//div[@class='row'][1]" position="after">
+            <table width="100%">
+                <tr>
+                    <td width="21%">Prepared BY</td>
+                    <td width="21%">Verified BY</td>
+                    <td width="21%">Order Picked BY</td>
+                    <td width="23%">Item Verified BY</td>
+                </tr>
                     
-                    <tr >
-                        <td width="21%" style="padding-top:3%"><span t-field="o.create_uid.name"/></td>
-                        <td width="21%" style="padding-top:3%"><span t-field="o.write_uid.name"/></td>
-                        <td width="21%" style="padding-top:3%"><strong>__________________</strong></td>
-                        <td width="23%" style="padding-top:3%"><strong>__________________</strong></td>
-                    </tr>
+                <tr >
+                    <td width="21%" style="padding-top:3%"><span t-field="o.create_uid.name"/></td>
+                    <td width="21%" style="padding-top:3%"><t t-if="o.validated_user"><span t-field="o.validated_user.name"/></t><t t-if="not o.validated_user">Please Validate before proceeding</t></td>
+                    <td width="21%" style="padding-top:3%"><strong>__________________</strong></td>
+                    <td width="23%" style="padding-top:3%"><strong>__________________</strong></td>
+                </tr>
 
-                </table>
-            </xpath>
+            </table>
+        </xpath>
         </template>
     </data>
 </openerp> 

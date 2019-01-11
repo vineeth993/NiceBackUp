@@ -21,9 +21,8 @@ class ResPartner(models.Model):
     customer_type = fields.Many2one('customer.type', string='Customer Type')
     lead_time = fields.Integer("Lead Time")
     tax_id = fields.Many2many("account.tax", "form_wise_tax_in_partner", "partner_id", "taxes_id", "Customer Taxes")
-    tax_desc = fields.Text("Tax Description")
+    tax_desc = fields.Text("Tax Description")  
     disc_id = fields.One2many('partner.discount', 'partner_id', string="Reference", copy=True)
-    is_company = fields.Boolean(default=True)
     
     @api.one
     @api.constrains('ref')

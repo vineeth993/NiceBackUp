@@ -93,11 +93,15 @@ class SaleOrderLine(models.Model):
             tax=[]
 
             if line.partner_type != line.order_id.partner_selling_type:
-                line.partner_type = line.order_id.partner_selling_type
-                line.price_unit = line.product_id.list_price
+                self.update({'partner_type':line.order_id.partner_selling_type})
+                # line.partner_type = line.order_id.partner_selling_type
+                # _logger.info("Partner Type = "+str(line.order_id.currency_id ))
+                # line.price_unit = line.product_id.list_price
                 if line.product_id.price_list and line.partner_type != 'special':
                     raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type = '+str(line.product_id.name))
 
+            if line.order_id.partner_selling_type == 'normal' or line.order_id.partner_selling_type == 'extra':
+                line.price_unit = line.product_id.list_price
             for pro_tax in taxes_id:
                 tax.append(pro_tax.id)
             if line.partner_type != "special":
@@ -151,8 +155,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('price_unit')
     def onchange_price_unit(self):
-        for line in self:
-            if line.partner_type != 'special':
+        for line in self: 
+            if line.order_id.partner_selling_type != 'special':
                 if line.product_id and line.price_unit != line.product_id.lst_price:
                     line.update({
                         'price_unit':line.product_id.lst_price
@@ -260,7 +264,7 @@ class SaleOrder(models.Model):
     on_letter_head = fields.Boolean("Quotation Letter Head")
     discount_stat = fields.Boolean("Discount")
     brand_id = fields.Many2one("product.brand", string="Product Type")
-
+    validated_user = fields.Many2one('res.users', string="Validated User")
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
@@ -287,6 +291,7 @@ class SaleOrder(models.Model):
         self.state = 'confirm'
         order_lines = self.env['sale.order.line'].search([('order_id', '=', self.id)], order='product_name')
         seq = 1
+        self.validated_user = self.env.user
         for line in order_lines:
             line.sequence = seq
             seq += 1
@@ -337,6 +342,4 @@ class SaleValidityTerm(models.Model):
     name = fields.Char('Validity Terms', required=True)
     note = fields.Text('Description')
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the Validity term without removing it.", default=True)
-
-
 

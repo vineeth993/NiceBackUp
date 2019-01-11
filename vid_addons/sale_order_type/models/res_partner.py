@@ -4,7 +4,9 @@
 ##############################################################################
 
 from openerp import fields, models, api
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class ResPartner(models.Model):
 	_inherit = 'res.partner'
@@ -23,3 +25,11 @@ class ResPartner(models.Model):
 	purchase_type = fields.Many2one('sale.order.type', string="Purchase order type")
 	purchase_sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type")
 	form_sale = fields.Boolean("Form Sale", compute="_get_form_sale")
+
+	@api.multi
+	@api.onchange('purchase_type', 'sale_type')
+	def on_change_type(self):
+		if self.purchase_type or self.sale_type:
+			self.is_company = True
+		else:
+			self.is_company = False

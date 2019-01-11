@@ -132,16 +132,17 @@
 				</xpath>	 -->
 				
 				<xpath expr="//field[@name='pricelist_id']" position="after">
+					<field name="validated_user"/>
 					<field name="transaction_type" />
 					<field name="brand_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
-					<field name="partner_selling_type" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
-					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', '!=', 'draft')], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
+					<field name="partner_selling_type" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}"/>
+					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'not in', ('draft', 'confirm', 'sent'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
 					<field name="extra_discount" 
-						attrs="{'readonly':['|',('partner_selling_type','==','normal'), ('state', '!=', 'draft')], 'invisible':[('partner_selling_type', 'in', ('extra', 'special'))]}" />
+						attrs="{'readonly':['|',('partner_selling_type','==','normal'), ('state', 'not in', ('draft', 'confirm', 'sent'))], 'invisible':[('partner_selling_type', 'in', ('extra', 'special'))]}" />
 					<field name="nonread_normal_disocunt"
-						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))],'readonly':[('state', '!=', 'draft')]}" />
+						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" />
 					<field name="nonread_extra_disocunt"
-						attrs="{'invisible':[('partner_selling_type', '==','normal')],'readonly':[('state', '!=', 'draft')]}" />
+						attrs="{'invisible':[('partner_selling_type', '==','normal')],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" />
 					<!-- <field name="scheme_id"/> -->
 					<field name="employee_id" readonly="1" invisible='1'/>
 				</xpath>
