@@ -18,9 +18,9 @@ class PartnerCust(models.Model):
 
 	@api.multi
 	def write(self, vals):
-		if self.state == "approve" and self.env.context.get('make_readonly') and vals.get('message_last_post', '/') == '/':
+		if self.state == "approve" and self.env.context.get('make_readonly') and vals.get('message_last_post', '/') == '/' and self.is_company:
 			raise ValidationError("Document is approved cannot be edited please contact administrator")
-		elif self.state == "approve" and self.env.context.get('make_readonly', 1) == 1  and vals.get('message_last_post', '/') == '/':
+		elif self.state == "approve" and self.env.context.get('make_readonly', 1) == 1  and vals.get('message_last_post', '/') == '/' and self.is_company:
 			raise ValidationError("Document is approved cannot be edited please contact administrator")
 		res = super(PartnerCust, self).write(vals)
 		return res
