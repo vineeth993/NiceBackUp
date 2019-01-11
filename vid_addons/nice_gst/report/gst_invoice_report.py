@@ -94,7 +94,6 @@ class ReportInvoice(models.AbstractModel):
             lines.append({
                 's_no': count,
                 'hsn': line.product_id.hs_code_id and line.product_id.hs_code_id.code or '',
-                'b_no':line.batch_no or '', 
                 'code': line.product_id.default_code,
                 'name': line.product_id.name.rsplit("-", 1)[0],
                 'volume': line.product_id.volume,

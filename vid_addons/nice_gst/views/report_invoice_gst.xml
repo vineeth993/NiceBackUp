@@ -312,7 +312,7 @@
                         <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="line['s_no']"/></td>
                         <td style="text-align:center;border-right: solid 1px black;padding: 5px 2px;"><span t-esc="line['code']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="line['hsn']"/></td>
-                        <td style="border-right: solid 1px black;text-align:left;padding: 5px 2px;"><span t-esc="line['name']"/><t t-if="line['b_no']"><br/><b>B-No:</b><sapn t-esc="line['b_no']"/></t></td>
+                        <td style="border-right: solid 1px black;text-align:left;padding: 5px 2px;"><span t-esc="line['name']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><span t-esc="int(line['qty'])"/></td>
                         <td style="border-right: solid 1px black;text-align:center;padding: 5px 2px;"><t t-if="line['volume']"><span t-esc="line['volume']"/> <span t-esc="line['volume_uom']"/></t><t t-if="line['weight']"> <span t-esc="line['weight']"/> <span t-esc="line['weight_uom']"/></t><t t-if="line['weight_net']"> <span t-esc="line['weight_net']"/> <span t-esc="line['weight_net_uom']"/></t></td>
                         <td style="border-right: solid 1px black;text-align:right;padding: 5px 2px;"><span t-esc="'%.2f'%line['price_unit']"/></td>
