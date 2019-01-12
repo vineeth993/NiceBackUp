@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
             tax=[]
 
             if line.partner_type != line.order_id.partner_selling_type:
-                self.update({'partner_type':line.order_id.partner_selling_type})
+                line.update({'partner_type':line.order_id.partner_selling_type})
                 # line.partner_type = line.order_id.partner_selling_type
                 # _logger.info("Partner Type = "+str(line.order_id.currency_id ))
                 # line.price_unit = line.product_id.list_price

@@ -132,7 +132,7 @@
 				</xpath>	 -->
 				
 				<xpath expr="//field[@name='pricelist_id']" position="after">
-					<field name="validated_user"/>
+					<field name="validated_user" invisible='1'/>
 					<field name="transaction_type" />
 					<field name="brand_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
 					<field name="partner_selling_type" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}"/>
