@@ -214,7 +214,7 @@ class SaleOrder(models.Model):
                     order.brand_id = None
                     raise ValidationError("Please select partner before selecting product brand")
                 if order.partner_selling_type in ('normal', 'extra'):
-                    partner_brand_id = self.env['partner.discount'].search([('partner_id', '=', self.partner_id.id), ('category_id', '=', self.brand_id.id)])
+                    partner_brand_id = order.env['partner.discount'].search([('partner_id', '=', order.partner_id.id), ('category_id', '=', order.brand_id.id)])
                     if partner_brand_id and order.partner_selling_type == 'normal':
                         order.normal_disc = partner_brand_id.normal_disc
                         order.extra_discount = partner_brand_id.additional_disc

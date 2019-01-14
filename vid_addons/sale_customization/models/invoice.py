@@ -67,11 +67,23 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'brand_id')
     def _get_extra_discount(self):
         for invoice in self:
-            invoice.normal_disc = invoice.partner_id.disc
-            invoice.extra_discount = invoice.partner_id.adisc
+            if invoice.partner_selling_type in ('normal', 'extra'):
+                partner_brand_id = invoice.env['partner.discount'].search([('partner_id', '=', invoice.partner_id.id), ('category_id', '=', invoice.brand_id.id)])
+                if partner_brand_id and invoice.partner_selling_type == 'normal':
+                    invoice.normal_disc = partner_brand_id.normal_disc
+                    invoice.extra_discount = partner_brand_id.additional_disc
+                elif partner_brand_id and invoice.partner_selling_type == 'extra':
+                    invoice.normal_disc = partner_brand_id.normal_disc
+                    invoice.extra_discount = 0.00
+                elif not partner_brand_id and invoice.partner_selling_type in ('normal', 'extra'):
+                    invoice.normal_disc = invoice.partner_id.disc
+                    invoice.extra_discount = invoice.partner_id.adisc
+            else:
+                invoice.normal_disc = 0.00
+                invoice.extra_discount = 0.00
 
 
     def name_get(self, cr, uid, ids, context=None):
@@ -88,9 +100,9 @@ class AccountInvoice(models.Model):
 
     partner_shipping_id = fields.Many2one("res.partner", string="Shipping Address")
     transaction_type = fields.Selection([('local', 'Local'), ('inter_state', 'Interstate')], 'Transaction Type')
-    normal_disc = fields.Float("Normal Discount (%)", compute=_get_extra_discount, digits_compute=dp.get_precision('Account'))
+    normal_disc = fields.Float("Normal Discount (%)", compute=_get_extra_discount, digits_compute=dp.get_precision('Account'),store=True)
     partner_selling_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string='Selling Type', default="normal")
-    extra_discount = fields.Float('Additional Discount(%)', compute=_get_extra_discount, digits_compute=dp.get_precision('Account'))
+    extra_discount = fields.Float('Additional Discount(%)', compute=_get_extra_discount, digits_compute=dp.get_precision('Account'),store=True)
     nonread_extra_disocunt = fields.Float('Additional Discount(%)',digits_compute=dp.get_precision('Account'),copy=False)
     nonread_normal_disocunt = fields.Float('Normal Discount',digits_compute=dp.get_precision('Account'),copy=False)
     # extra_discount_amount = fields.Float(string='Extra Discount', readonly=True, compute='_compute_amount', track_visibility='always')
