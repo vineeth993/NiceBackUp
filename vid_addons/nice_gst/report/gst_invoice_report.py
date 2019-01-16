@@ -89,6 +89,7 @@ class ReportInvoice(models.AbstractModel):
             #     name = line.product_id.name
             # _logger.info("Names = "+str(name)+","+str(len(name)))
 
+            batch_no = line.lot_id.name
             disc = line.discount
             e_disc = line.extra_discount
             lines.append({
@@ -96,6 +97,7 @@ class ReportInvoice(models.AbstractModel):
                 'hsn': line.product_id.hs_code_id and line.product_id.hs_code_id.code or '',
                 'code': line.product_id.default_code,
                 'name': line.product_id.name.rsplit("-", 1)[0],
+                'b_no':batch_no,
                 'volume': line.product_id.volume,
                 'volume_uom': line.product_id.product_tmpl_id.uom_id_one.name,
                 'weight': line.product_id.weight,
