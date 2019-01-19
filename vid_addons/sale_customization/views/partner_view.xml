@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <field name="title" position="replace"></field>
                 <field name="category_id" position="before">
-                    <field name="customer_type" placeholder="Customer Type(Distributor/Dealer/Customer)" required="1"/>
+                    <field name="customer_type" placeholder="Customer Type(Distributor/Dealer/Customer)" attrs="{'required':[('is_company', '=', True)], 'invisible':[('is_company', '=', False)]}"/>
                 </field>
                 <xpath expr="//label[@for='name']" position="before">
                     <label for="title" class="oe_edit_only"/>

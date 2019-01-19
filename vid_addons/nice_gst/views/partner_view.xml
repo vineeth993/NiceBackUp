@@ -14,17 +14,17 @@
                 <xpath expr="//field[@name='website']" position="after">
                     <field name="country_base_gst_type" widget="radio" invisible="1"/>
                     <field name="gst_category" widget="radio"  invisible="1"/>
-                    <field name="gst_reg"/>
-                    <field name="gst_no" attrs="{'invisible': [('gst_reg', 'in', ('unregistered','ngs'))], 'required': [('gst_reg', 'in', ('registered','cs'))]}"/>
+                    <field name="gst_reg" attrs='{"invisible":[("is_company", "=", False)]}'/>
+                    <field name="gst_no" attrs="{'invisible': ['|',('gst_reg', 'in', ('unregistered','ngs')),('is_company', '=', False)], 'required': [('gst_reg', 'in', ('registered','cs'))]}" />
                 </xpath>
                
                 <xpath expr="//field[@name='email']" position="after">
-                    <field name="user_id" required="1"/>
+                    <field name="user_id" required="1" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="ref" string="Party Code"/>
                     <!-- <field name="lang"/> -->
                     <field name="company_id" required="1"/>
                     <field name="pan"/>
-                    <field name="ssi_unit"/>
+                    <field name="ssi_unit" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="ssi_no" attrs="{'invisible':[('ssi_unit', '=', False)], 'required':[('ssi_unit', '=', True)]}"/>
 
                 </xpath>
@@ -59,6 +59,7 @@
 
                 <xpath expr="//page[@name='sales_purchases']" position="attributes">
                     <attribute name="string">Settings &amp; Locations</attribute>
+                    <attribute name="attrs">{'invisible':[('is_company', '=', True)]}</attribute>
                 </xpath>
             </field>
          </record>
