@@ -19,11 +19,12 @@
                 </xpath>
                
                 <xpath expr="//field[@name='email']" position="after">
+                    <field name="personal_mail" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="user_id" required="1" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="ref" string="Party Code"/>
                     <!-- <field name="lang"/> -->
                     <field name="company_id" required="1"/>
-                    <field name="pan"/>
+                    <field name="pan" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="ssi_unit" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="ssi_no" attrs="{'invisible':[('ssi_unit', '=', False)], 'required':[('ssi_unit', '=', True)]}"/>
 

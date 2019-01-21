@@ -23,6 +23,7 @@ class ResPartner(models.Model):
 	ssi_no = fields.Char("MSME Number")
 	pan = fields.Char("PAN")
 	supplier = fields.Boolean(string="Supplier", default=True)
+	personal_mail = fields.Char(string="Personal Mail")
 
 	@api.multi
 	def onchange_state(self, state_id=None):
