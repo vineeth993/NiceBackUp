@@ -30,6 +30,8 @@
 
                 </xpath>
 
+                <field name="function" position="replace"></field>
+
                 <field name="parent_id" position="attributes">
                     <attribute name="placeholder">Related Companies</attribute>
                 </field>
