@@ -100,6 +100,18 @@
             </field>
          </record>
 
+         
+        <record id="view_partners_form_crm1_cust" model="ir.ui.view">
+            <field name="name">view.res.partner.form.crm.inherited2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="crm.view_partners_form_crm1"/>
+            <field name="arch" type="xml">
+                <field name="section_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_company', '=', False)]}</attribute>
+                </field> 
+            </field>
+        </record>
+         
         <menuitem id="partner_category_menu" parent="base.menu_base_config" action="partner_category_action" sequence="20"/>
 
     </data>
