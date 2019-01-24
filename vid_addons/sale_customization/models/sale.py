@@ -28,29 +28,15 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     _order = 'order_id desc, sequence, id'
    
-    @api.depends('product_id', 'order_id.partner_selling_type')
+    @api.depends('product_id', 'order_id.partner_selling_type', 'order_id.normal_disc', 'order_id.nonread_normal_disocunt', 'order_id.nonread_extra_disocunt', 'order_id.extra_discount')
     def _get_product_values(self):
         tax_ids = []
         taxes_ids = []
-        for line in self:
-            partner = line.order_id.partner_id
-            lang = partner.lang
-            gst, igst, formstate, forminter = False, False, False, False
         for line in self:
             taxes_ids = []
             gst, igst, formstate, forminter = False, False, False, False
             sub_type_id = self.env['sale.order.sub.type'].browse(int(line.sale_sub_type))
             company = self.env['res.users'].browse(self._uid).company_id
-            company_gst = company.gst_no and company.gst_no[:2] or ''
-            partner_gst = partner.gst_no and partner.gst_no[:2] or ''
-
-            if company_gst and partner_gst:
-                if company_gst == partner_gst:
-                    gst = True
-                else:
-                    igst = True
-            else:
-                gst = True
 
             if sub_type_id:
                 if sub_type_id and sub_type_id.tax_categ == 'gst':
@@ -78,14 +64,14 @@ class SaleOrderLine(models.Model):
                             if prod_tax.tax_categ == 'igst':
                                 taxes_ids.append(prod_tax.id)
             elif formstate or forminter:
-                for parter_tax in line.order_partner_id.tax_id:
-                    if parter_tax.company_id.id == company.id:
+                for partner_tax in line.order_partner_id.tax_id:
+                    if partner_tax.company_id.id == company.id:
                         if formstate:
-                            if parter_tax.tax_categ == 'gst':
-                                taxes_ids.append(parter_tax.id)
+                            if partner_tax.tax_categ == 'gst':
+                                taxes_ids.append(partner_tax.id)
                         elif forminter:
-                            if parter_tax.tax_categ == 'igst':
-                                taxes_ids.append(parter_tax.id)
+                            if partner_tax.tax_categ == 'igst':
+                                taxes_ids.append(partner_tax.id)
             line.tax_id = taxes_ids
             line.case_lot = line.product_id.case_lot
             taxes = line.product_id.taxes_id

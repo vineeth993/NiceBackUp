@@ -24,6 +24,8 @@ class ResPartner(models.Model):
 	pan = fields.Char("PAN")
 	supplier = fields.Boolean(string="Supplier", default=True)
 	personal_mail = fields.Char(string="Personal Mail")
+	drug_lic_no = fields.Char(string="Drug Licence")
+	poison_lic_no = fields.Char(string="Poison Licence")
 
 	@api.multi
 	def onchange_state(self, state_id=None):

@@ -16,6 +16,8 @@
                     <field name="gst_category" widget="radio"  invisible="1"/>
                     <field name="gst_reg" attrs='{"invisible":[("is_company", "=", False)]}'/>
                     <field name="gst_no" attrs="{'invisible': ['|',('gst_reg', 'in', ('unregistered','ngs')),('is_company', '=', False)], 'required': [('gst_reg', 'in', ('registered','cs')), ('is_company', '=', True)]}" />
+                    <field name="drug_lic_no" attrs="{'invisible':[('is_company', '=', False)]}"/>
+                    <field name="poison_lic_no" attrs="{'invisible':[('is_company', '=', False)]}"/>
                 </xpath>
                
                 <xpath expr="//field[@name='email']" position="after">
