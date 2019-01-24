@@ -34,6 +34,7 @@ class RetirementCalculation(models.Model):
 	esic_no = fields.Char('ESIC No')
 	esic_office = fields.Char('ESIC Local Office')
 	esic_dispansary = fields.Char('ESIC Dispensary')
+	esic_emp_code = fields.Many2one("esic.emp.code", string="ESIC Employer Code")
 	tds = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='TDS', default='yes')
 	tds_perc = fields.Char("TDS %")
 	qualification = fields.Selection([('ug', 'Under Graduate'), ('g', 'graduate'), ('pg', 'Post Graduate')], string='Qualification')
@@ -63,3 +64,24 @@ class RetirementCalculation(models.Model):
 
 		if self.company_id.retirement_age:
 			self.company_retire_age = self.company_id.retirement_age
+
+class ESICEmpCode(models.Model):
+
+	_name = "esic.emp.code"
+
+	name = fields.Char("ESIC Employer Code")
+	place = fields.Char("ESIC Place")
+
+	def name_get(self, cr, uid, ids, context=None):
+		"""Overrides orm name_get method"""
+		if not isinstance(ids, list):
+			ids = [ids]
+		res = []
+		if not ids:
+			return res
+		reads = self.read(cr, uid, ids, ['name', 'place'], context)
+
+		for record in reads:
+			name = record['place']+ ':' + record['name']
+			res.append((record['id'], name))
+		return res

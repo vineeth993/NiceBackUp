@@ -41,12 +41,13 @@
 	            </xpath>
 	            <xpath expr='//group[@string="Status"]' position='before'>
 	            	<group string="Provident Fund" attrs='{"invisible":[("pf_status", "=", "no")]}'>
-						<field name="provident_fund_no"/>
+						<field name="provident_fund_no"  attrs='{"required":[("pf_status", "=", "yes")]}'/>
 					</group>
 					<group string="ESIC Details" attrs='{"invisible":[("esic_status", "=", "no")]}'>
-						<field name="esic_no"/>
-						<field name="esic_office"/>
-						<field name="esic_dispansary"/>
+						<field name="esic_no" attrs='{"required":[("esic_status", "=", "yes")]}'/>
+						<field name="esic_office" attrs='{"required":[("esic_status", "=", "yes")]}'/>
+						<field name="esic_dispansary" attrs='{"required":[("esic_status", "=", "yes")]}'/>
+						<field name="esic_emp_code" attrs='{"required":[("esic_status", "=", "yes")]}'/>
 					</group>					
 					<group string="TDS" attrs='{"invisible":[("tds", "=", "no")]}'>
 						<field name="tds_perc"/>
@@ -71,5 +72,44 @@
 			</field>
 		</record>
 
+		<record id="esic_employer_name_action" model="ir.actions.act_window">
+			<field name="name">ESIC Employer Code</field>
+			<field name="res_model">esic.emp.code</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a new Reason.
+				</p>
+			</field>
+		</record>
+
+		<record id="esic_employer_name_form" model="ir.ui.view">
+			<field name="name">ESIC Employer Code</field>
+			<field name="model">esic.emp.code</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="name"/>
+							<field name="place"/>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="esic_employer_name_tree" model="ir.ui.view">
+			<field name="name">ESIC Employer Code</field>
+			<field name="model">esic.emp.code</field>
+			<field name="arch" type="xml">
+				<tree editable="bottom">
+					<field name="name" required='1'/>
+					<field name="place" required='1'/>
+				</tree>
+			</field>
+		</record>
+
+	<menuitem id="esic_employer_name_name" name="ESIC Employer" parent="hr.menu_hr_configuration" action="esic_employer_name_action" />
 	</data>
 </openerp>
