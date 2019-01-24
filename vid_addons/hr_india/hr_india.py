@@ -6,7 +6,7 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
          
     date_of_joining = fields.Date(string='Date Of Joining',required=True)
-    date_of_conformation = fields.Date(string='Date Of Conformation')
+    date_of_conformation = fields.Date(string='Date Of Confirmation')
     date_of_resignation = fields.Date(string='Date Of Resignation')
     date_of_relieving = fields.Date(string='Date Of Relieving')
 
