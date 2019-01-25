@@ -16,8 +16,8 @@
                         <field name="company_id" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}"/>
                     </group>
                     <group>
-                        <field name="product" attrs="{'invisible':[('prod_or_cust', 'in', ('cust', 'all'))]}"/>
-                        <field name="customer" attrs="{'invisible':[('prod_or_cust', 'in', ('prod', 'all'))]}"/>
+                        <field name="product" attrs="{'invisible':[('prod_or_cust', 'in', ('cust', 'all', 'all_order'))]}"/>
+                        <field name="customer" attrs="{'invisible':[('prod_or_cust', 'in', ('prod', 'all', 'all_order'))]}"/>
                     </group>
                     <footer>
                         <button name="print_sales_report" string="Print" type="object" icon="gtk-print"/>
@@ -36,8 +36,7 @@
             <field name="target">new</field>
         </record>
         
-        <menuitem id="menu_sale_status_report" parent="base.menu_sales" 
-        		action="action_sale_status_report" sequence="20"/>
+        <menuitem id="menu_sale_status_report" parent="base.menu_sales" action="action_sale_status_report" sequence="20"/>
         
         
     </data>
