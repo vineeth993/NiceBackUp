@@ -22,6 +22,7 @@ class stock_picking(osv.osv):
             'origin': move.picking_id.name,
             'date_invoice': context.get('date_inv', False),
             'user_id': user_id,
+            'section_id':move.picking_id.sale_id.section_id.id,
             'partner_id': partner.id,
             'account_id': account_id,
             'payment_term': payment_term,

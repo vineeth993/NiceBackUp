@@ -63,6 +63,7 @@ class SaleOrderLine(models.Model):
                         elif igst:
                             if prod_tax.tax_categ == 'igst':
                                 taxes_ids.append(prod_tax.id)
+
             elif formstate or forminter:
                 for partner_tax in line.order_partner_id.tax_id:
                     if partner_tax.company_id.id == company.id:

@@ -95,7 +95,7 @@ class LeadCustom(models.Model):
     sale_type = fields.Many2one(
         comodel_name='sale.order.type', string='Sale Order Type',
         company_dependent=True)
-    sale_sub_type_id = fields.Many2many("sale.order.sub.type", "sale_order_sub_type_rel", "partner_id", "type_id", string="Sub Type")
+    sale_sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type")
     lead_state = fields.Selection([("draft", "Draft"), 
         ("approve", "Waiting For Approval"), 
         ("approved", "Approved"),
@@ -113,6 +113,7 @@ class LeadCustom(models.Model):
     customer_country = fields.Many2one('res.country', string="Country")
     customer_phone = fields.Char(string="Mobile Number")
     customer_email = fields.Char(string="E-mail")
+    customer_type = fields.Many2one('customer.type', string="Customer Type")
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
@@ -143,7 +144,9 @@ class LeadCustom(models.Model):
             vals['gst_category'] = lead.gst_category
             vals['gst_no'] = lead.gst_no
             vals['sale_type'] = lead.sale_type.id
-            vals['sale_sub_type_id'] = [(6, 0, [sale_sub_type.id for sale_sub_type in lead.sale_sub_type_id])]
+            vals['sale_sub_type_id'] = lead.sale_sub_type_id.id
+            vals['supplier'] = False
+            vals['customer_type'] = lead.customer_type.id
         partner = partner.create(cr, uid, vals, context=context)
         return partner
 

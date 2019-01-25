@@ -41,6 +41,7 @@
                 
                 <field name="partner_id" position="after">
                     <field name="partner_name" string="New Customer/Dealer" attrs="{'required':[('lead_state', '=', 'approve')]}"/>
+                    <field name="customer_type" option="{'no_create_edit':True, 'no_edit':True}"/>
                 </field>
 
                 <xpath expr="//field[@name='street']" position="attributes">
@@ -84,7 +85,7 @@
                 <xpath expr="//field[@name='categ_ids']" position="after">
                     <field name="ref" attrs="{'invisible':[('lead_state', '=', 'draft')], 'required':[('lead_state', '=', 'approve')]}"/>
                     <field name="sale_type" domain="[('company_id', '=', company_id), ('object_type', '=', 'sale')]" context="{'default_object_type': 'sale'}" attrs="{'invisible':[('lead_state', '=', 'draft')], 'required':[('lead_state', '=', 'approve')]}"/>
-                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" widget="many2many_tags" context="{'default_type_id': sale_type}" attrs="{'invisible':[('lead_state', '=', 'draft')], 'required':[('lead_state', '=', 'approve')]}"/>
+                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type), ('object_type', '=', 'sale')]" context="{'default_type_id': sale_type}" attrs="{'invisible':[('lead_state', '=', 'draft')], 'required':[('lead_state', '=', 'approve')]}"/>
                 </xpath>
 
                 <xpath expr="//page[@string='Extra Info']/group[1]/group[@string='Mailings']" position="after">
