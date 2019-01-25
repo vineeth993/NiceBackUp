@@ -21,7 +21,7 @@ class sale_status_report(osv.osv_memory):
     _columns = {
         'date_from': fields.date('From'),
         'date_to': fields.date('To'),
-        'prod_or_cust':fields.selection([('prod', 'Product'), ('cust', 'Customer'), ('all', 'All Product')], string='Product / Customer', default='cust'),
+        'prod_or_cust':fields.selection([('prod', 'Product'), ('cust', 'Customer'), ('all', 'All Product'), ('all_order', 'All Order')], string='Product / Customer', default='cust'),
         'customer':fields.many2one("res.partner", string="Customer"),
         'product':fields.many2one("product.product", string="Product"),
         'company_id':fields.many2one("res.company", string="Company")
