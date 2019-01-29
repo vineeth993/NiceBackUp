@@ -3,7 +3,7 @@
 import account_tax
 import company
 import partner
-import sale
+# import sale
 import account_invoice
 import purchase
 

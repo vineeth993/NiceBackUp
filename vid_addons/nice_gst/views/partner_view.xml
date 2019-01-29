@@ -32,6 +32,10 @@
 
                 </xpath>
 
+                <page name="internal_notes" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_company', '=', False)]}</attribute>
+                </page>
+
                 <field name="function" position="replace"></field>
 
                 <field name="parent_id" position="attributes">
@@ -74,6 +78,11 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
+                
+                <page  name="accounting" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_company', '=', False)]}</attribute>
+                </page>
+
                 <xpath expr="//page[@name='accounting']/group" position="after">
                     <group>
                         <group>
@@ -111,6 +120,28 @@
                 </field>
             </field>
          </record>
+
+         <record id="view_partner_inherit_followup_form_inherit" model="ir.ui.view">
+            <field name="name">follow.up.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_followup.view_partner_inherit_followup_form"/>
+            <field name="arch" type="xml">
+                <page name="followup_tab" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_company', '=', False)]}</attribute>
+                </page>
+            </field>
+         </record>
+
+         <record id="view_partner_warning_form_inherit" model="ir.ui.view">
+            <field name="name">follow.up.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="warning.view_partner_warning_form"/>
+            <field name="arch" type="xml">
+                <page string="Warnings" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_company', '=', False)]}</attribute>
+                </page>
+            </field>
+         </record>         
 
         <record id="res_partner_bank_ifsc_tree" model="ir.ui.view">
             <field name="name">partner.bank.ifsc.tree</field>

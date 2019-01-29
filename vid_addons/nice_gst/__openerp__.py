@@ -8,7 +8,7 @@
     'summary': 'GST enabled Customizations',
     'description': '''
   ''',
-    'depends': ['sale', 'account', 'purchase'],
+    'depends': ['sale', 'account', 'purchase', 'account_followup', 'warning'],
     'data': [
         'views/partner_view.xml',
         'views/company_view.xml',
