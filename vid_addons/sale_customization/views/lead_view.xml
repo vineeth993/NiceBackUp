@@ -33,7 +33,7 @@
                 </field>
 
                 <field name="partner_id" position="attributes">
-                    <attribute name="domain">[('section_id', '=', section_id),('state', '=', 'confirm')]</attribute>
+                    <attribute name="domain">[('section_id', '=', section_id)]</attribute>
                     <attribute name="string">Customer / Dealer</attribute>
                     <attribute name="options"> {'no_open': True, 'no_create_edit': True, 'no_create':True}</attribute>
                     <attribute name="attrs">{"required":[("lead_type", "in", (2, 4))]}</attribute>
