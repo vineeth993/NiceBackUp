@@ -93,8 +93,7 @@ class LeadCustom(models.Model):
     gst_no = fields.Char('GST No', size=64)
     ref = fields.Char(string="Reference")
     sale_type = fields.Many2one(
-        comodel_name='sale.order.type', string='Sale Order Type',
-        company_dependent=True)
+        comodel_name='sale.order.type', string='Sale Order Type')
     sale_sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type")
     lead_state = fields.Selection([("draft", "Draft"), 
         ("approve", "Waiting For Approval"), 
