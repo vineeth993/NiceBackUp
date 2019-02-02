@@ -99,7 +99,7 @@
             <tr>
                 <th>SL</th>
                 <th>Description</th>
-               <!-- <th class="text-center">Pack</th>-->
+                <th class="text-center">Pack</th>
                 <th class="text-center">Quantity</th>
                 <th class="text-center">Unit Price</th>
                 <th class="text-center">Disc.(%)</th>
@@ -115,11 +115,16 @@
                         <span t-field="l.sequence"/>
                     </td>
                     <td>
-                        <span t-field="l.name"/>
+                        <span t-esc="l.name.rsplit('-',1)[0]"/>
                     </td>
-                     <!--<td>
-                        <span t-esc="l.name.rsplit('-',1)[1]"/>
-                    </td>-->
+                    <td>
+                        <t t-if="len(l.name.rsplit('-',1)) >= 2">
+                            <span t-esc="l.name.rsplit('-',1)[1]"/>
+                        </t>
+                        <t t-if="len(l.name.rsplit('-',1)) != 2">
+                            <b>   </b>
+                        </t>
+                    </td>
                     <td class="text-center">
                         <span t-field="l.product_uom_qty"/>
                         <span groups="product.group_uom" t-field="l.product_uom"/>
