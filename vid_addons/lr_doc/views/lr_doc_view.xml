@@ -71,9 +71,9 @@
 								<button name="done" type="object" string="Upload E-way Bill Details" class="oe_highlight" attrs="{'invisible':[('state', '!=', 'validate')]}"/>
 							</group>
 							<field name="line_id">
-								<tree editable="bottom" create="false">
-									<field name="invoice_id" domain="[('partner_id', '=', parent.partner_id),('state', 'not in',('draft', 'cancel', 'proforma', 'proforma2'))]" options="{'no_create_edit': True, 'no_create':True, 'no_open':True}" readonly="1"/>
-									<field name="eway_bill_no"  readonly="1"/>
+								<tree editable="bottom">
+									<field name="invoice_id" domain="[('partner_id', '=', parent.partner_id),('state', 'not in',('draft', 'cancel', 'proforma', 'proforma2')), ('id', 'in', parent.invoice_id[0][2])]" options="{'no_create_edit': True, 'no_create':True, 'no_open':True}" required="1"/>
+									<field name="eway_bill_no"  required="1"/>
 								</tree>
 							</field>
 						</page>	

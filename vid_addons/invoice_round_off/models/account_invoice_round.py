@@ -38,6 +38,7 @@ class account_invoice_round(models.Model):
 		)
 	def _compute_residual(self):
 		self.residual = 0.0
+		partial_reconciliations_done = []
 		for line in self.sudo().move_id.line_id:
 			if line.account_id.type not in ('receivable', 'payable'):
 				continue
@@ -123,18 +124,18 @@ class account_invoice_round(models.Model):
 
 			if inv.type in ('in_invoice', 'in_refund'):
 				ref = inv.reference
+				name = "Inward Supplies"
 			else:
 				ref = inv.number
+				name = "Outward Supplies"
 
 			diff_currency = inv.currency_id != company_currency
 			# create one move line for the total and possibly adjust the other lines amount
 			total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
-
-			name = inv.supplier_invoice_number or inv.name or '/'
+			
 			totlines = []
 			ir_config = self.env["ir.values"]
 			round_off_acc = inv.company_id.round_off_account
-			_logger.info("The value on ="+str(round_off_acc))
 			if inv.payment_term:
 				totlines = inv.with_context(ctx).payment_term.compute(total, date_invoice)[0]
 			if totlines:
@@ -152,7 +153,6 @@ class account_invoice_round(models.Model):
 						amount_currency += res_amount_currency
 					if self.round_off_active and self.type == "out_invoice":
 						if not round_off_acc.id:
-							_logger.info("The value  = "+str(self.round_off_active))
 							raise ValidationError("Please Define Round off account in company master")
 						iml.append({
 							'type': 'dest',
@@ -188,7 +188,6 @@ class account_invoice_round(models.Model):
 			else:
 				if self.round_off_active and self.type == "out_invoice":
 					if not round_off_acc.id:
-						_logger.info("The value  = "+str(self.round_off_active))
 						raise ValidationError("Please Define Round off account in company master")
 					iml.append({
 						'type': 'dest',

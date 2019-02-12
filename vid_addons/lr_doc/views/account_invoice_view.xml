@@ -8,7 +8,6 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
-               
                     <xpath expr="//page[@string='Payments']" position="after">
                		<page string="Transport Info">
                			<group>
@@ -31,6 +30,17 @@
               	     </xpath>
 			</field>
 		</record>
+
+           <record id="invoice_tree_cust_1" model="ir.ui.view"> 
+               <field name="name">account.invoice.tree.cust</field>
+               <field name="model">account.invoice</field>
+               <field name="inherit_id" ref="account.invoice_tree"/>
+               <field name="arch" type="xml">
+                    <xpath expr="//tree/field[@name='number']" position="after">
+                         <field name="eway_bill"/>
+                    </xpath>
+               </field>
+           </record>
 
 	</data>
 </openerp>

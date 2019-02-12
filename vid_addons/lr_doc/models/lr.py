@@ -132,7 +132,7 @@ class LrDoc(models.Model):
 		for invoice in self.invoice_id:
 			account_obj = self.env['account.invoice'].browse(invoice.id)
 			account_obj.write(data)
-	
+
 	def mail_dispatch(self, cr, uid, ids, context=None):
 		ir_model_data = self.pool.get('ir.model.data')
 		try:
@@ -193,33 +193,35 @@ class LrDoc(models.Model):
 	@api.multi
 	def done(self):
 
-		if not self.eway_bill_upload:
-			raise ValidationError("Please Edit the Document and upload the document from E-way bill Portal")
-
-		file_path = tempfile.gettempdir()+'/file.xls'
-		data = self.eway_bill_upload
-		f = open(file_path,'wb')
-		f.write(data.decode('base64'))
-		f.close()
-		sheet = xlrd.open_workbook(file_path)
-		# get the first worksheet
-		sheet = sheet.sheet_by_index(0)
-		line_ids = []
-		for row_no in xrange(sheet.nrows):
-			row_value = sheet.row(row_no)
-			invoice_number = 'SAJ-'+ str(row_value[2].value)
-			invoice = self.env["account.invoice"].search([('number', '=', invoice_number)])
-			if invoice:
-				invoice.write({'eway_bill':str(int(row_value[8].value))})
-				line_id = self.env['lr.doc.line'].create({'invoice_id':invoice.id, 'eway_bill_no':str(int(row_value[8].value)), 'lr_id':self.id})
-				line_ids.append(line_id.id)
-		if line_ids:
-			self.write({'line_id':[(6, 0, line_ids)], 'state':'uploaded'})
+		if self.eway_bill_upload:
+			file_path = tempfile.gettempdir()+'/file.xls'
+			data = self.eway_bill_upload
+			f = open(file_path,'wb')
+			f.write(data.decode('base64'))
+			f.close()
+			sheet = xlrd.open_workbook(file_path)
+			# get the first worksheet
+			sheet = sheet.sheet_by_index(0)
+			line_ids = []
+			for row_no in xrange(sheet.nrows):
+				row_value = sheet.row(row_no)
+				invoice_number = 'SAJ-'+ str(row_value[2].value)
+				invoice = self.env["account.invoice"].search([('number', '=', invoice_number)])
+				if invoice:
+					invoice.write({'eway_bill':str(int(row_value[8].value))})
+					line_id = self.env['lr.doc.line'].create({'invoice_id':invoice.id, 'eway_bill_no':str(int(row_value[8].value)), 'lr_id':self.id})
+					line_ids.append(line_id.id)
+			if line_ids:
+				self.write({'line_id':[(6, 0, line_ids)], 'state':'uploaded'})
+			else:
+				raise ValidationError("Please Upload Valid XLS Document")
+		elif self.line_id:
+			for line in self.line_id:
+				if line.eway_bill_no:
+					line.invoice_id.write({'eway_bill':line.eway_bill_no})
+			self.write({'state':'uploaded'})
 		else:
-			raise ValidationError("Please Upload Valid XLS Document")
-
-
-
+			raise ValidationError("Please Edit the Document and upload the document from E-way bill Portal or Manually enter the Eway Bill no")
 
 	@api.multi
 	def unlink(self):
