@@ -65,6 +65,9 @@
          		<xpath expr="//field[@name='origin']" position="attributes">
          			<attribute name="invisible">1</attribute>
          		</xpath>
+               <xpath expr="//field[@name='date_invoice']" position="attributes">
+                  <attribute name="invisible">1</attribute>
+               </xpath>
          		<xpath expr="//field[@name='company_id']" position="attributes">
          			<attribute name="invisible">1</attribute>
          		</xpath>
@@ -80,9 +83,12 @@
          		<xpath expr="//field[@name='date_due']" position="attributes">
          			<attribute name="invisible">1</attribute>
          		</xpath>
-	               <xpath expr="//field[@name='amount_total']" position="after">
+	           <xpath expr="//field[@name='amount_total']" position="after">
 	                  <field name="residual"/>
-	               </xpath>
+	           </xpath>
+              <xpath expr="//field[@name='number']" position="after">
+                  <field name="date_invoice"/>
+              </xpath>
          	</field>
          </record>
         
