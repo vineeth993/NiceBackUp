@@ -44,7 +44,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="request_warehouse_to_id" attrs="{'readonly':[('state', '!=', 'draft')]}" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
+                            <field name="request_warehouse_to_id" attrs="{'readonly':[('state', '!=', 'draft')]}" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}" domain="[('company_id', '=', company_id)]"/>
                             <field name="partner_id"  attrs="{'readonly':[('state', '!=', 'draft')]}" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
                             <field name="reference" readonly="1"/>
                         </group>
@@ -105,7 +105,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_warehouse_stock_transfer" name="Stock Transfer Warehouse" parent="stock.menu_stock_root" sequence="2"/>
+        <menuitem id="menu_warehouse_stock_transfer" name="Stock Transfer" parent="stock.menu_stock_root" sequence="2"/>
         <menuitem id="multi_warehouse_stock_transfer_action" name="Stock Request" parent="menu_warehouse_stock_transfer" action="multi_warehouse_stock_transfer" sequence="1"/>
 	</data>
 </openerp>
