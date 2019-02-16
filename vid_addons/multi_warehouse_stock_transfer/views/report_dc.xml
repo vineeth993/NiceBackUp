@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<template id="external_layout">
+	        <t t-if="not o and doc">
+	            <t t-set="o" t-value="doc"/>
+	        </t>
+	        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+	        <t t-call="multi_warehouse_stock_transfer.external_layout_header" />
+	        <br/><br/>
+	        <t t-raw="0" />
+	    </template>
+
+		<template id="external_layout_header">
+			<div class="header" style="padding-top:50px;padding-left:80px">
+				<table width="100%">
+					<tr>
+						<td width="40%">
+							<table>
+								<tr>
+									<td width="43%" style="text-align:left;text-size: 1px;">
+										<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 50px;width: 150px;"/>
+				                    </td>
+				                </tr>
+							</table>
+						</td>
+						<td width="60%">
+							<table >
+								<tr>
+									<td width="43%" style="text-align:left;text-size: 1px;">
+				                            <b><span t-field="company.name"/><br/></b>
+				                            <span t-field="company.street"/><br/>
+				                            <span t-field="company.street2"/>,<span t-field="company.city"/>-<span t-field="company.zip"/><br/>
+				                            Tel:<span t-field="company.phone"/><br/>
+				                            Email:<span t-field="company.email"/><br/>
+				                            Website:<span t-field="company.website"/><br/>
+				                    </td>
+				                </tr>
+				                <tr>
+							        <td width="33%" style="text-align:left;text-size: 1px;" colspan="2">
+				                            GSTIN: <span t-field="company.gst_no"/><br/>
+				                            Poison Lic.No.: <span t-field="company.poison_lic_no"/><br/>
+				                            Drug Mfg.Lic.No: <span t-field="company.drug_mfg_lic_no"/><br/>
+				                    </td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</template>
+
+		<template id="report_dc_document">
+			<t t-call="multi_warehouse_stock_transfer.external_layout">
+				<div class="page">
+					<table width="100%">
+						<tr>
+							<td width="100%" style="text-align:center;font-size:30px;padding-top:30px">
+								<b>DELIVERY CHALLAN</b>
+							</td>
+						</tr>
+						<tr style="padding-top:30px">
+							<table width="100%">
+								<tr style="border:2px solid black;text-align:center">
+									<td width="33%" style="border-right:2px solid black;padding-top:10px;padding-bottom:10px">
+										FNF 206
+									</td>
+									<td width="33%" style="border-right:2px solid black;padding-top:10px;padding-bottom:10px">
+										REVISION 0
+									</td>
+									<td width="33%" style="border-right:2px solid black;padding-top:10px;padding-bottom:10px">
+										WEF : 15/03/2001
+									</td>
+								</tr>
+							</table>
+						</tr>
+					</table>
+					<table width="100%">
+						<tr>
+							<td width="50%" style="padding-top:20px">
+								<table>
+									<tr>
+										<td width="10%">Party</td>
+										<td width="1%">:</td>
+										<td width="89%" style="padding-right:3px">
+											<span t-field="o.partner_id.name"/><br/>
+											<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+	                                        <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+	                                        <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+	                                        <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td width="50%" style="padding-top:20px">
+								<table>
+									<tr>
+										<td width="30%">D.C.No</td>
+										<td width="1%">:</td>
+										<td width="69%"><span t-field='o.name'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px">Req.No</td>
+										<td>:</td>
+										<td><span t-field='o.reference'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px">Date</td>
+										<td>:</td>
+										<td><span t-field='o.quant_issued_date'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px">GSTIN</td>
+										<td>:</td>
+										<td><span t-field='o.request_warehouse_from_id.company_id.gst_no'/></td>
+									</tr>
+									<tr>
+										<td style="padding-top:10px; padding-bottom:20px">CIN</td>
+										<td>:</td>
+										<td><span t-field='o.request_warehouse_from_id.company_id.cin'/></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+
+					<table class="table table-condensed">
+						<thead>
+							<tr style="border:1px solid black;">
+								<th style="border-right:1px solid black;">S.No</th>
+								<th style="border-right:1px solid black;">Code</th>
+								<th style="border-right:1px solid black;">HSN</th>
+								<th style="border-right:1px solid black;">Product Description</th>
+								<th style="border-right:1px solid black;">Batch No</th>
+								<th style="border-right:1px solid black;">Qty</th>
+								<th style="border-right:1px solid black;">Rate</th>
+								<th style="border-right:1px solid black;">Amount</th>
+								<th style="border-right:1px solid black;">Tax</th>
+								<th style="border-right:1px solid black;">CGST</th>
+								<th style="border-right:1px solid black;">SGST</th>
+							</tr>
+						</thead>
+						<tbody class="sale_tbody">
+							<t t-set="count" t-value="0"/>
+							<t t-set="amount" t-value="0"/>
+							<t t-set="tax" t-value="0"/>
+							<t t-set="taxTotal" t-value="0"/>
+							<tr t-foreach="o.line_id" t-as="line" style="border:1px solid black;">
+								<t t-if="line.issued_quant">
+									<t t-set="count" t-value="count+1"/>
+									<td style="border-right:1px solid black;">
+										<span t-esc="count"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.product_id.default_code"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.product_id.hs_code_id.code"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.product_id.name"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.batch.name"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.issued_quant"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-field="line.unit_price"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="round((line.issued_quant * line.unit_price), 2)"/>
+										<t t-set="amount" t-value="amount +round((line.issued_quant * line.unit_price), 2)"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="sum(map(lambda x:x.amount, line.taxes_id)) * 100"/>
+										<t t-set="tax" t-value="round(sum(map(lambda x:x.amount, line.taxes_id)) * (line.issued_quant * line.unit_price), 2)"/>
+										<t t-set="taxTotal" t-value="taxTotal + tax"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="round(tax / 2, 2)"/>
+									</td>
+									<td style="border-right:1px solid black;">
+										<span t-esc="round(tax / 2, 2)"/>
+									</td>
+								</t>
+							</tr>
+							<tr style="border:1px solid black;">
+								<td colspan="7" style="border-right:1px solid black;border-top:1px solid black">Total</td>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="amount"/></td>
+								<td style="border-right:1px solid black;border-top:1px solid black"/>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="round(taxTotal / 2, 2)"/></td>
+								<td style="border-right:1px solid black;border-top:1px solid black"><span t-esc="round(taxTotal / 2, 2)"/></td>
+							</tr>
+						</tbody>
+					</table><br/>
+					<p style="text-align:right">For Nice Chemicals (P) Ltd.</p><br/><br/>
+					<p style="text-align:right">Authorised Signatory</p>
+				</div>
+			</t>
+		</template>
+
+		<template id="report_dc">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+        			<t t-call="multi_warehouse_stock_transfer.report_dc_document" />
+        		</t>
+			</t>
+		</template>
+	</data>
+</openerp>

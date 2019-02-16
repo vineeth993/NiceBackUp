@@ -12,14 +12,16 @@ class StockPicking(models.Model):
 	def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
 		invoice_obj = self.pool.get('account.invoice')
 		move_obj = self.pool.get('stock.move')
+		sale_obj = self.pool.get("sale.order")
 		invoices = {}
 		is_extra_move, extra_move_tax = move_obj._get_moves_taxes(cr, uid, moves, inv_type, context=context)
 		product_price_unit = {}
 		for move in moves:
 			company = move.company_id
 			origin = move.picking_id.name
+			sale = move.picking_id.origin
 			partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
-
+			sale_id = sale_obj.search(cr, uid,[('name','=', sale)], context=context)
 			key = (partner, currency_id, company.id, user_id)
 			invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
 
@@ -58,7 +60,7 @@ class StockPicking(models.Model):
 			if move.lot_ids:
 				for quant in move.quant_ids:
 					if quant.qty > 0:
-						if quant.lot_id.pricelist:
+						if quant.lot_id.pricelist and not sale_id.partner_selling_type == 'special':
 							price_list_obj = self.pool.get('product.price')
 							price_list = price_list_obj.search(cr, uid,[('pricelist', '=', quant.lot_id.pricelist.id), ('product_id', '=', invoice_line_vals['product_id'])], context=context)
 							if price_list:
@@ -66,10 +68,9 @@ class StockPicking(models.Model):
 								if price_list.cost:
 									invoice_line_vals.update({'price_unit':price_list.cost})
 						invoice_line_vals.update({'lot_id':quant.lot_id.id,'quantity':quant.qty})
-						move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+						val = move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 			else:
 				move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 			move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
-
 		invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
 		return invoices.values()

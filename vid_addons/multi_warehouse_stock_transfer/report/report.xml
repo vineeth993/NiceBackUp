@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<report
+			id="report_dc_print"
+			model="dc.warehouse"
+			string="DC Print"
+			report_type="qweb-pdf"
+			name="multi_warehouse_stock_transfer.report_dc"
+			menu="False"
+			/>
+	</data>
+</openerp>

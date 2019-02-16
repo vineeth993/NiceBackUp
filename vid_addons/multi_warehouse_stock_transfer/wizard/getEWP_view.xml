@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id='get_ewp_form_dc' model="ir.ui.view">
+			<field name="name">Get Ewp Form</field>
+			<field name="model">dcewp.json</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="name"/>
+						<group string="Address">
+							<field name="from_addr"/>
+							<field name="to_addr"/>
+							<field name="to_zip_code"/>
+						</group>
+						<group string="Invoice Details">
+							<field name="doc_type"/>
+							<field name="supply_type"/>
+							<field name="sub_type"/>
+						</group>
+						<group>
+							<field name="transport_mode"/>
+							<field name="trans_type"/>
+						</group>
+						<group string="Tranport Details">
+							<field name="transporter_name"/>
+							<field name="vehicle_number" attrs="{'required':[('transport_mode', '=', 1), ('transporter_id', '=', False)]}"/>
+							<field name="transporter_id" attrs="{'required':[('vehicle_number', '=', False), ('transport_mode', '=', 1)]}"/>
+							<field name="transport_distance" required='1'/>
+							<field name="vehicle_type" attrs="{'required':[('transport_mode', '=', 1)]}"/>
+							<field name="trans_doc_no" attrs="{'required':[('transport_mode', '!=', 1)]}"/>
+							<field name="trans_doc_date" attrs="{'required':[('transport_mode', '!=', 1)]}"/>
+						</group>
+					</group>
+					<footer>
+						<button name="get_json" type="object" string="Create JSON" class="fa fa-download"/>
+						<button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="get_ewp_action_dc" model="ir.actions.act_window"> 
+			<field name="name">Create Json</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">dcewp.json</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="get_ewp_form_dc"/>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>
