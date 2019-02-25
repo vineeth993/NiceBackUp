@@ -15,13 +15,13 @@ class PartnerEmail(models.Model):
 
 	_inherit = 'hr.employee'
 
-	email_config_id = fields.Many2one('ir.mail_server', 'Config Id')
-	password = fields.Char("Password")
+	email_config_id = fields.Many2one('ir.mail_server', 'Config Id', track_visibility='onchange')
+	password = fields.Char("Password", track_visibility='onchange')
 	smtp_encryption = fields.Selection([('none', 'None'),
 										('starttls','TLS (STARTTLS)'),
                                         ('ssl','SSL/TLS')],
-                                        string="Connection Security", default='ssl')
-	smtp_server = fields.Many2one("smtp.config", string="Server")
+                                        string="Connection Security", default='ssl', track_visibility='onchange')
+	smtp_server = fields.Many2one("smtp.config", string="Server", track_visibility='onchange')
 
 	@api.model
 	def create(self, value, context=None):

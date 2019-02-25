@@ -35,13 +35,20 @@
 	            </xpath>
 	            <xpath expr="//field[@name='passport_id']" position='before'>
 	            	<field name="blood_group"/>
+	            	<field name="is_a_donor"/>
 	            	<field name="qualification"/>
 	            	<field name="religion"/>
 	            	<field name="category"/>
 	            </xpath>
+	            
+	            <field name="marital" position="after">
+	            	<field name="anniversary"/>
+	            </field>
+
 	            <xpath expr='//group[@string="Status"]' position='before'>
 	            	<group string="Provident Fund" attrs='{"invisible":[("pf_status", "=", "no")]}'>
 						<field name="provident_fund_no"  attrs='{"required":[("pf_status", "=", "yes")]}'/>
+						<field name="pf_ac_no" />
 					</group>
 					<group string="ESIC Details" attrs='{"invisible":[("esic_status", "=", "no")]}'>
 						<field name="esic_no" attrs='{"required":[("esic_status", "=", "yes")]}'/>
@@ -110,6 +117,17 @@
 			</field>
 		</record>
 
-	<menuitem id="esic_employer_name_name" name="ESIC Employer" parent="hr.menu_hr_configuration" action="esic_employer_name_action" />
+		<record model="ir.ui.view" id="edit_holiday_new_cust">
+			<field name="name">Leave Request</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+			<field name="arch" type="xml">
+				<button name="refuse" position="replace">
+                    <button string="Refuse/Cancel" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
+				</button>
+			</field>
+		</record>
+
+		<menuitem id="esic_employer_name_name" name="ESIC Employer" parent="hr.menu_hr_configuration" action="esic_employer_name_action" />
 	</data>
 </openerp>
