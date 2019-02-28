@@ -31,7 +31,7 @@ class RetirementCalculation(models.Model):
 	is_a_donor = fields.Boolean('Blood Donor', default=True)
 	pf_status = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='Provident Fund', default='yes')
 	provident_fund_no = fields.Char(string="Provident Fund No (UAN)", track_visibility='onchange')
-	pf_ac_no = fields.Char("Pf Account No", track_visibility='onchange')
+	pf_ac_no = fields.Char("PF Pension No", track_visibility='onchange')
 	esic_status = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='ESIC', default='yes')
 	esic_no = fields.Char('ESIC No', track_visibility='onchange')
 	esic_office = fields.Char('ESIC Local Office', track_visibility='onchange')
