@@ -237,9 +237,9 @@
 					<field name="delivery_term"/>
 					<field name="validity_term"/>
 					<field name="other_terms"/>
-			        <field name="tax_stat" invisible="1"/>
-			        <field name="on_letter_head" invisible="1"/>
-			        <field name="discount_stat" invisible="1"/>
+			        <field name="tax_stat"/>
+			        <field name="on_letter_head"/>
+			        <field name="discount_stat"/>
 				</field>
 			</field>
 		</record>

@@ -81,7 +81,7 @@ class LeadCustom(models.Model):
     enq_date = fields.Date("Enquiry Date", default=date.today().strftime('%Y-%m-%d'))
     enq_end_date = fields.Date("Enquiry End Date", default=get_end_date)
     contact_date = fields.Date("Contact Before Date")
-    product_ids = fields.One2many("crm.products", "crm_lead_id", "Product")
+    product_ids = fields.One2many("crm.products", "crm_lead_id", "Product", copy=True)
     planned_revenue = fields.Float(string="Expected Revenue", compute='calculate_revenue', store=True)
     planned_cost = fields.Float(string="Planned Costs", compute='calculate_costs', store=True)
     margin = fields.Float(string="Margin", required=False, compute='calculate_margin', store=True)

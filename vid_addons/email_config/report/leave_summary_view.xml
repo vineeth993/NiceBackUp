@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<record id="leave_summary_report_view" model="ir.actions.report.xml">
+			<field name="name">Leave Summary</field>
+			<field name="model">leave.report</field>
+			<field name="type">ir.actions.report.xml</field>
+			<field name="report_name">leave.summary_report</field>
+			<field name="report_type">xls</field>
+			<field name="auto" eval="False"/>
+		</record>
+		
+	</data>
+</openerp>

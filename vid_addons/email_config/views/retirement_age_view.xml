@@ -125,6 +125,10 @@
 				<button name="refuse" position="replace">
                     <button string="Refuse/Cancel" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
 				</button>
+				<field name="holiday_type" position="before">
+					<field name="doc_created" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))]}"/>
+					<field name="approved_date" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))], 'invisible':[('state', 'in', ('draft', 'confirm', 'cancel'))]}"/> 
+				</field>
 			</field>
 		</record>
 

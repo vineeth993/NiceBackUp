@@ -20,13 +20,15 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','base_setup', 'hr', 'hr_holidays'],
+    'depends': ['base','base_setup', 'hr', 'hr_holidays', 'report_xls'],
 
     # always loaded
     'data': [
         'views/partner_email_config.xml',
         'views/smtp_config_views.xml',
-        'views/retirement_age_view.xml'
+        'views/retirement_age_view.xml',
+        'wizard/leave_report_views.xml',
+        'report/leave_summary_view.xml'
         
     ],
     # only loaded in demonstration mode
