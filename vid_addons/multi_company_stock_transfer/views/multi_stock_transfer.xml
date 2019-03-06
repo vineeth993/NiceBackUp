@@ -106,7 +106,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_stock_trnasfer" name="Stock Transfer" parent="stock.menu_stock_root" sequence="2"/>
+        <menuitem id="menu_stock_trnasfer" name="Transfer" parent="stock.menu_stock_root" sequence="2"/>
         <menuitem id="multi_stock_transfer_action" name="Stock Request" parent="menu_stock_trnasfer" action="multi_stock_transfer" sequence="1"/>
 	</data>
 </openerp>

@@ -18,9 +18,9 @@ class PartnerCust(models.Model):
 
 	@api.multi
 	def write(self, vals):
-		if self.state == "approve" and self.env.context.get('make_readonly') and vals.get('message_last_post', '/') == '/' and self.is_company and vals.get('credit', '/') == '==':
+		if self.state == "approve" and self.env.context.get('make_readonly') and vals.get('message_last_post', '/') == '/' and self.is_company and vals.get('credit', '/') == '/':
 			raise ValidationError("Document is approved cannot be edited please contact administrator")
-		elif self.state == "approve" and self.env.context.get('make_readonly', 1) == 1  and vals.get('message_last_post', '/') == '/' and self.is_company  and vals.get('credit', '/') == '==':
+		elif self.state == "approve" and self.env.context.get('make_readonly', 1) == 1  and vals.get('message_last_post', '/') == '/' and self.is_company  and vals.get('credit', '/') == '/':
 			raise ValidationError("Document is approved cannot be edited please contact administrator")
 		res = super(PartnerCust, self).write(vals)
 		return res
@@ -35,8 +35,8 @@ class PartnerCust(models.Model):
 
 	@api.multi
 	def action_validate(self):
-		# if self.env.user == self.confirmed_user:
-		# 	raise ValidationError("User who confirmed doesn't have permission to validate this document")
+		if self.env.user == self.confirmed_user:
+		 	raise ValidationError("User who confirmed doesn't have permission to validate this document")
 		self.update({'state':'validate'})
 
 	@api.multi
