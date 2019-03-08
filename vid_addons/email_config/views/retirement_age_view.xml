@@ -135,9 +135,29 @@
 	                </header>			
                 </header>
 				
+                <field name="name" position="replace"/>
+                <field name="holiday_status_id" position="replace"/>
+
+                <xpath expr="//label[@string='Duration']" position="before">
+                	<field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+                	<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required': [('type', '=', 'add')]}"/>
+                </xpath>
+
 				<field name="holiday_type" position="before">
 					<field name="doc_created" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))]}"/>
 					<field name="approved_date" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))], 'invisible':[('state', 'in', ('draft', 'confirm', 'cancel'))]}"/> 
+				</field>
+
+			</field>
+		</record>
+
+		<record id="edit_holiday_status_form_cust" model="ir.ui.view">
+			<field name="name">hr.holidays.status</field>
+			<field name="model">hr.holidays.status</field>
+			<field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+			<field name="arch" type="xml">
+				<field name="categ_id" position="after">
+					<field name="description" />
 				</field>
 			</field>
 		</record>

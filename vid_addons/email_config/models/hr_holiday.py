@@ -24,3 +24,14 @@ class HrHoliday(models.Model):
 		res = super(HrHoliday, self).holidays_validate(cr, uid, ids, context=context)
 		self.write(cr, uid, ids, {'approved_date':date.today()})
 		return res
+
+	@api.onchange("holiday_status_id")
+	def onchange_status(self):
+		if self.holiday_status_id.description:
+			self.name = self.holiday_status_id.description
+
+class hrHolidayStatus(models.Model):
+
+	_inherit = "hr.holidays.status"
+
+	description = fields.Char(string="Description")

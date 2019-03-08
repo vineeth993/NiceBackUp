@@ -1,6 +1,6 @@
 
 from openerp import fields, api, models, _
-
+from openerp.exceptions import ValidationError
 import logging
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as OE_DFORMAT
@@ -67,6 +67,14 @@ class RetirementCalculation(models.Model):
 		if self.company_id.retirement_age:
 			self.company_retire_age = self.company_id.retirement_age
 
+	@api.one
+	@api.constrains("employee_id")
+	def check_employee_id(self):
+		if self.employee_id:
+			id = self.search([('employee_id', '=', self.employee_id)])
+			if len(id) > 1:
+				raise ValidationError("Employee Id already in use")
+
 class ESICEmpCode(models.Model):
 
 	_name = "esic.emp.code"
@@ -87,3 +95,4 @@ class ESICEmpCode(models.Model):
 			name = record['place']+ ':' + record['name']
 			res.append((record['id'], name))
 		return res
+
