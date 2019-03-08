@@ -122,9 +122,19 @@
 			<field name="model">hr.holidays</field>
 			<field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
 			<field name="arch" type="xml">
-				<button name="refuse" position="replace">
-                    <button string="Refuse/Cancel" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
-				</button>
+
+				<header position="replace">
+					<header>
+	                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+	                    <button string="Sanction" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+	                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+	                    <button string="Refuse/Cancel" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
+	                    <button string="Reset to Draft" name="reset" type="workflow"
+	                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+	                </header>			
+                </header>
+				
 				<field name="holiday_type" position="before">
 					<field name="doc_created" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))]}"/>
 					<field name="approved_date" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))], 'invisible':[('state', 'in', ('draft', 'confirm', 'cancel'))]}"/> 
