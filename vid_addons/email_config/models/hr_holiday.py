@@ -17,7 +17,7 @@ class HrHoliday(models.Model):
             help='The status is set to \'To Submit\', when a holiday request is created.\
             \nThe status is \'To Approve\', when holiday request is confirmed by user.\
             \nThe status is \'Refused\', when holiday request is refused by manager.\
-            \nThe status is \'Approved\', when holiday request is approved by manager.')
+            \nThe status is \'Approved\', when holiday request is approved by manager.', default="draft")
 
 	def holidays_validate(self, cr, uid, ids, context=None):
 
