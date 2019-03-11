@@ -17,7 +17,8 @@
 							<field name="category"/>
 						</group>
 						<group>
-							<field name="employee_id" attrs="{'invisible':[('category', '!=', 'employee')]}"/>
+							<field name="employee_id" attrs="{'invisible':[('category', '!=', 'employee')], 'required':[('category', '=', 'employee')]}"/>
+							<field name="department_id" attrs="{'invisible':[('category', '!=', 'department')], 'required':[('category', '=', 'department')]}"/>
 							<field name="leave_id" widget="many2many_tags" required="1"/>
 						</group>
 						<group>
@@ -41,6 +42,6 @@
 			<field name="target">new</field>
 		</record>
 		
-		<menuitem id="menu_leave_report_hrm" name="Leave Report" action="action_leave_report_hrm" parent="hr_holidays.menu_open_ask_holidays"/>
+		<menuitem id="menu_leave_report_hrm" name="Leave Book" action="action_leave_report_hrm" parent="hr_holidays.menu_open_ask_holidays"/>
 	</data>
 </openerp>

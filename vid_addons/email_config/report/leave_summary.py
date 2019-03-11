@@ -9,6 +9,8 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+LEAVE_TYPE = {'refuse':'Refused', 'validate1':'Validated', 'validate1':'Validated', 'validate':'Approved', 'confirm':'Sanctioned'}
+
 class leave_summary_report(report_sxw.rml_parse):
 
 	def __init__(self, cr, uid, name, context):
@@ -44,12 +46,17 @@ class LeaveSummary(report_xls):
 		name = "Leave Status Report as on "+str(data['form'][0]['to_date'])
 		ws.write(0, 0 ,"Nice Chemicals (P) Limited", self.title2)
 		ws.write(1, 0 , name, self.title2)
-	
+
 		leave_obj = self.pool.get("hr.holidays")
-		leave_ids = leave_obj.search(cr, uid, [('state', '=', 'validate'), ("doc_created", ">=", data['form'][0]["from_date"]), ("doc_created", "<=", data['form'][0]['to_date'])], order="id asc")		
 
+		if data['form'][0]["category"] == "all":
+			leave_ids = leave_obj.search(cr, uid, [('state', 'not in', ("cancel", "draft", "refuse")), ("doc_created", ">=", data['form'][0]["from_date"]), ("doc_created", "<=", data['form'][0]['to_date'])], order="id asc")		
+		elif data['form'][0]["category"] == "employee":
+			leave_ids = leave_obj.search(cr, uid, [('state', 'not in', ("cancel", "draft", "refuse")), ("doc_created", ">=", data['form'][0]["from_date"]), ("doc_created", "<=", data['form'][0]['to_date']), ('employee_id', '=', data['form'][0]['employee_id'][0])], order="id asc")
+		elif data['form'][0]["category"] == "department":
+			leave_ids = leave_obj.search(cr, uid, [('state', 'not in', ("cancel", "draft", "refuse")), ("doc_created", ">=", data['form'][0]["from_date"]), ("doc_created", "<=", data['form'][0]['to_date']), ('department_id', '=', data['form'][0]['department_id'][0])], order="id asc")
+		
 		status_obj = self.pool.get("hr.holiday.status")
-
 		leaves = leave_obj.browse(cr, uid, leave_ids)
 
 		leave_status_obj = self.pool.get("hr.holidays.status")
@@ -60,9 +67,12 @@ class LeaveSummary(report_xls):
 			leave_det.append(status.name)
 
 		leave_details = {}
+		employer_leave = {}
+
 		for leave in leaves:
 			if leave.holiday_status_id.name in leave_det:
-				_logger.info("The Value = "+str(leave.date_to))
+				if not employer_leave.has_key(leave.employee_id.name):
+					employer_leave[leave.employee_id.name] = 0.0
 				doc_created = dt.strptime(leave.doc_created, '%Y-%m-%d').date().strftime('%d-%m-%Y')
 				if leave.date_to:
 					date_to = dt.strptime(leave.date_to, '%Y-%m-%d %H:%M:%S').date().strftime('%d-%m-%Y')
@@ -78,14 +88,16 @@ class LeaveSummary(report_xls):
 				if leave.type == "remove":
 					val.append("Leave Request")
 					val.append(0)
+					employer_leave[leave.employee_id.name] = employer_leave[leave.employee_id.name] - leave.number_of_days_temp
 					val.append(leave.number_of_days_temp)
 				elif leave.type == "add":
 					val.append("Allocation Request")
+					employer_leave[leave.employee_id.name] = employer_leave[leave.employee_id.name] + leave.number_of_days_temp
 					val.append(leave.number_of_days_temp)
 					val.append(0)
-				leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [leave.holiday_status_id.id], leave.employee_id.id, context=None)[leave.holiday_status_id.id]
-				val.append(leave_days['virtual_remaining_leaves'])
-				val.append(leave.state)
+
+				val.append(employer_leave[leave.employee_id.name])
+				val.append(LEAVE_TYPE[leave.state])
 				
 				if leave_details.has_key(leave.holiday_status_id.name): 
 					leave_details[leave.holiday_status_id.name].append(val)

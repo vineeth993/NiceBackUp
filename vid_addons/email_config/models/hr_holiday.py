@@ -12,7 +12,7 @@ class HrHoliday(models.Model):
 
 	doc_created = fields.Date("Doc Created", default=lambda x:date.today())
 	approved_date = fields.Date("Approved Date")
-	state = fields.Selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'Sanctioned'), ('refuse', 'Refused'), ('validate1', 'Validated'), ('validate', 'Approved')],
+	state = fields.Selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'Confirm'), ('refuse', 'Refused'), ('validate1', 'Sanctioned'), ('validate', 'Approved')],
             'Status', readonly=True, track_visibility='onchange', copy=False,
             help='The status is set to \'To Submit\', when a holiday request is created.\
             \nThe status is \'To Approve\', when holiday request is confirmed by user.\
