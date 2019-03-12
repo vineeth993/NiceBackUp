@@ -13,7 +13,7 @@ class LeaveReport(models.TransientModel):
 	category = fields.Selection([('employee', 'Employee'),
 								  ('department', 'Department'),
 								  ('all', 'All')], string="Category", default="employee")
-	employee_id = fields.Many2one('hr.employee', string="Employee")
+	employee_id = fields.Many2one('hr.employee', string="Employee", default=lambda self:self.env.user.id)
 	leave_id = fields.Many2many('hr.holidays.status', "leave_employee_rel", "leave_id", "employee_id", string="Leave")
 	description = fields.Boolean('Description')
 	department_id = fields.Many2one("hr.department", string="Department")

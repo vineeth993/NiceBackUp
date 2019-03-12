@@ -14,11 +14,11 @@
 							<field name="to_date"  required="1"/>
 						</group>
 						<group>
-							<field name="category"/>
+							<field name="category" groups="base.group_hr_manager"/>
 						</group>
 						<group>
-							<field name="employee_id" attrs="{'invisible':[('category', '!=', 'employee')], 'required':[('category', '=', 'employee')]}"/>
-							<field name="department_id" attrs="{'invisible':[('category', '!=', 'department')], 'required':[('category', '=', 'department')]}"/>
+							<field name="employee_id" attrs="{'invisible':[('category', '!=', 'employee')], 'required':[('category', '=', 'employee')]}" groups="base.group_hr_manager"/>
+							<field name="department_id" attrs="{'invisible':[('category', '!=', 'department')], 'required':[('category', '=', 'department')]}" groups="base.group_hr_manager"/>
 							<field name="leave_id" widget="many2many_tags" required="1"/>
 						</group>
 						<group>
