@@ -19,7 +19,7 @@
 					<field name="smtp_server"/>
 					<field name="smtp_encryption"/>
 					<field name="email_config_id"  invisible='1'/>
-					<button name="smtp_test" type="object" string="Test Connection" icon="gtk-network"/>
+					<button name="smtp_test" type="object" string="Test Connection" icon="gtk-network" groups="base.group_hr_user"/>
 				</group>
 			</xpath>
 		</field>

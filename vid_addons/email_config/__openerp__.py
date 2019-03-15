@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','base_setup', 'hr', 'hr_holidays', 'report_xls'],
+    'depends': ['base','base_setup', 'hr', 'hr_holidays', 'report_xls', 'hr_gamification'],
 
     # always loaded
     'data': [

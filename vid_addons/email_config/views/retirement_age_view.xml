@@ -45,6 +45,10 @@
 	            	<field name="anniversary"/>
 	            </field>
 
+	            <page string="Personal Information" position="attributes">
+	            	<attribute name="groups">base.group_user</attribute>
+	            </page>
+
 	            <xpath expr='//group[@string="Status"]' position='before'>
 	            	<group string="Provident Fund" attrs='{"invisible":[("pf_status", "=", "no")]}'>
 						<field name="provident_fund_no"  attrs='{"required":[("pf_status", "=", "yes")]}'/>
@@ -78,6 +82,17 @@
 				</xpath>
 			</field>
 		</record>
+
+		<record id="hr_hr_employee_view_form_cust" model="ir.ui.view">
+			<field name="name">hr.hr.employee.view.cust</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr_gamification.hr_hr_employee_view_form"/>
+			<field name="arch" type="xml">
+				<button string="Grant a Badge" position="attributes">
+					<attribute name="groups">base.group_hr_user</attribute>
+				</button>
+			</field>
+		</record> 
 
 		<record id="esic_employer_name_action" model="ir.actions.act_window">
 			<field name="name">ESIC Employer Code</field>
