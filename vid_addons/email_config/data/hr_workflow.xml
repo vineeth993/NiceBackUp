@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+	
+		<record model="workflow.transition" id="hr_holidays.holiday_validate2refuse">
+	        <field name="act_from" ref="hr_holidays.act_validate" />
+	        <field name="act_to" ref="hr_holidays.act_refuse" />
+	        <field name="signal">refuse</field>
+	        <field name="condition">True</field>
+	        <field name="group_id" ref="base.group_user"/>
+	    </record>
+
+		<record model="workflow.transition" id="hr_holidays.holiday_validate2refuse">
+	        <field name="act_from" ref="hr_holidays.act_validate" />
+	        <field name="act_to" ref="hr_holidays.act_refuse" />
+	        <field name="signal">refuse</field>
+	        <field name="condition">True</field>
+	        <field name="group_id" ref="base.group_user"/>
+	    </record>
+
+		<record model="workflow.transition" id="hr_holidays.holiday_confirm2validate"> 
+			<field name="act_from" ref="hr_holidays.act_confirm" />
+			<field name="act_to" ref="hr_holidays.act_validate" />
+			<field name="signal">validate</field>
+			<field name="condition">not double_validation</field>
+			<field name="group_id" ref="base.group_user"/>
+		</record>
+
+		<record model="workflow.transition" id="hr_holidays.holiday_confirm2validate1">
+	        <field name="act_from" ref="hr_holidays.act_confirm" />
+	        <field name="act_to" ref="hr_holidays.act_validate1" />
+	        <field name="signal">validate</field>
+	        <field name="condition">double_validation</field>
+	        <field name="group_id" ref="base.group_user"/>
+	    </record>
+
+	</data>
+</openerp>

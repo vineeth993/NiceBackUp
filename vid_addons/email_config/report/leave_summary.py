@@ -37,9 +37,9 @@ class LeaveSummary(report_xls):
 
 
 		cr, uid = self.cr, self.uid
-		self.title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz centre;')
+		self.title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz left;')
 		self.normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
-		self.number          = xlwt.easyxf(num_format_str='#,##0;(#,##0)')
+		self.number          = xlwt.easyxf(num_format_str='#,##0.00')
 		self.number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
 		self.number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
 
@@ -71,9 +71,14 @@ class LeaveSummary(report_xls):
 
 		for leave in leaves:
 			if leave.holiday_status_id.name in leave_det:
+
 				if not employer_leave.has_key(leave.employee_id.name):
-					employer_leave[leave.employee_id.name] = 0.0
+					employer_leave.update({leave.employee_id.name:{leave.holiday_status_id.name:0.0}})
+				elif not employer_leave[leave.employee_id.name].has_key(leave.holiday_status_id.name):
+					employer_leave[leave.employee_id.name].update({leave.holiday_status_id.name:0.0})
+
 				doc_created = dt.strptime(leave.doc_created, '%Y-%m-%d').date().strftime('%d-%m-%Y')
+
 				if leave.date_to:
 					date_to = dt.strptime(leave.date_to, '%Y-%m-%d %H:%M:%S').date().strftime('%d-%m-%Y')
 				else:
@@ -88,15 +93,15 @@ class LeaveSummary(report_xls):
 				if leave.type == "remove":
 					val.append("Leave Request")
 					val.append(0)
-					employer_leave[leave.employee_id.name] = employer_leave[leave.employee_id.name] - leave.number_of_days_temp
+					employer_leave[leave.employee_id.name][leave.holiday_status_id.name] = employer_leave[leave.employee_id.name][leave.holiday_status_id.name] - leave.number_of_days_temp
 					val.append(leave.number_of_days_temp)
 				elif leave.type == "add":
 					val.append("Allocation Request")
-					employer_leave[leave.employee_id.name] = employer_leave[leave.employee_id.name] + leave.number_of_days_temp
+					employer_leave[leave.employee_id.name][leave.holiday_status_id.name] = employer_leave[leave.employee_id.name][leave.holiday_status_id.name] + leave.number_of_days_temp
 					val.append(leave.number_of_days_temp)
 					val.append(0)
 
-				val.append(employer_leave[leave.employee_id.name])
+				val.append(employer_leave[leave.employee_id.name][leave.holiday_status_id.name])
 				val.append(LEAVE_TYPE[leave.state])
 				
 				if leave_details.has_key(leave.holiday_status_id.name): 
@@ -104,6 +109,7 @@ class LeaveSummary(report_xls):
 				else:
 					leave_details[leave.holiday_status_id.name] = []
 					leave_details[leave.holiday_status_id.name].append(val)
+
 
 		headers = {0:'Employee', 1:'Request/Txn. Type', 2:'Request/Txn. Date', 3:'Description', 4:'Start Date', 5:'End Date', 6:'Leave Addn.', 7:'Leave Dedn.', 8:'Balance', 9:'Status'}
 		count = 2
@@ -124,9 +130,9 @@ class LeaveSummary(report_xls):
 				ws.write(count, 3, leave[2], self.normal)
 				ws.write(count, 4, leave[3], self.normal)
 				ws.write(count, 5, leave[4], self.normal)
-				ws.write(count, 6, leave[6], self.normal)
-				ws.write(count, 7, leave[7], self.normal)
-				ws.write(count, 8, leave[8], self.normal)
+				ws.write(count, 6, leave[6], self.number)
+				ws.write(count, 7, leave[7], self.number)
+				ws.write(count, 8, leave[8], self.number)
 				ws.write(count, 9, leave[9], self.normal)
 				count += 1
 
