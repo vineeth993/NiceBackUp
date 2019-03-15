@@ -28,7 +28,8 @@
         'views/smtp_config_views.xml',
         'views/retirement_age_view.xml',
         'wizard/leave_report_views.xml',
-        'report/leave_summary_view.xml'
+        'report/leave_summary_view.xml',
+        'data/hr_workflow.xml'
         
     ],
     # only loaded in demonstration mode
