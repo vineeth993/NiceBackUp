@@ -13,10 +13,10 @@
 				</button>
 				
 				<field name="origin" position="after">
-					<field name="issue_id"/>
-					<field name="request_id"/>
-					<field name="warehouse_dc_id"/>
-					<field name="is_dc"/>
+					<field name="issue_id" invisible="1"/>
+					<field name="request_id" invisible="1"/>
+					<field name="warehouse_dc_id" invisible="1"/>
+					<field name="is_dc" invisible="1"/>
 				</field>
 			</field>
 		</record>

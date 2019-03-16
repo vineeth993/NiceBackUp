@@ -48,7 +48,7 @@ TRANS_TYPE = [(1, "Regular"),
 
 class GetEwpdc(models.TransientModel):
 
-	_name = "dcewp.json"
+	_name = "dc.ewp.json"
 
 	name = fields.Char('Doc Id', readonly=True)
 	from_addr = fields.Many2one('res.partner', string="From Partner", readonly=True)
