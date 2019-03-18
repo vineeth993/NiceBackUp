@@ -24,7 +24,7 @@ class StockPicking(models.Model):
 			sale_id = sale_obj.search(cr, uid,[('name','=', sale)], context=context)
 			key = (partner, currency_id, company.id, user_id)
 			invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
-
+			sale_id = sale_obj.browse(cr, uid, sale_id)
 			if key not in invoices:
 				# Get account and payment terms
 				invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
