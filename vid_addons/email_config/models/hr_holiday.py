@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 class HrHoliday(models.Model):
 
 	_inherit = "hr.holidays"
+	_order = "doc_created asc"
 
 	doc_created = fields.Date("Applied Date", default=lambda x:date.today())
 	approved_date = fields.Date("Approved Date")
@@ -16,9 +17,10 @@ class HrHoliday(models.Model):
 	state = fields.Selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'Confirm'), ('refuse', 'Refused'), ('validate1', 'Sanctioned'), ('validate', 'Approved')],
 			'Status', readonly=True, track_visibility='onchange', copy=False,
 			help='The status is set to \'To Submit\', when a holiday request is created.\
-			\nThe status is \'To Approve\', when holiday request is confirmed by user.\
+			\nThe status is \'To Confirm\', when holiday request is confirmed by creater.\
+			\nThe status is \'Sanctioned\', when holiday request is sanctiones by the department manager.\
 			\nThe status is \'Refused\', when holiday request is refused by manager.\
-			\nThe status is \'Approved\', when holiday request is approved by manager.', default="draft")
+			\nThe status is \'Approved\', when holiday request is approved by HR Department.', default="draft")
 
 	def write(self, cr, uid, ids, vals, context=None):
 		employee_id = vals.get('employee_id', False)
