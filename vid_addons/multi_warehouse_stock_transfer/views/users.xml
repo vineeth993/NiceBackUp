@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="view_users_form_cust" model="ir.ui.view">
+			<field name="name">users</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="related_warehouse_id" domain="[('company_id', '=', company_id)]" widget="many2many_tags"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

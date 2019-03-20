@@ -10,6 +10,24 @@
 				<field name="lot_id" position="attributes">
 					<attribute name="string">Batch Number</attribute>
 				</field>
+				<field name="destinationloc_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				<field name="result_package_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				<field name="product_uom_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				<field name="package_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				<field name="sourceloc_id" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+				<field name="lot_id" position="after">
+					<field name="pricelist_id" domain="[('price_ids.product_id', '=', product_id)]"/>
+				</field>
 			</field>
 		</record>
 	</data>

@@ -29,7 +29,10 @@
         'views/stockIssue_view.xml',
         'views/stock_view.xml',
         'views/dc_view.xml',
-        'views/report_dc.xml'
+        'views/report_dc.xml',
+        'views/users.xml',
+        'data/transfer_multi_warehouse.xml',
+        'security/ir.model.access.csv'
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -108,7 +108,7 @@ class AccountInvoice(models.Model):
     # extra_discount_amount = fields.Float(string='Extra Discount', readonly=True, compute='_compute_amount', track_visibility='always')
     sale_order = fields.Char("Sale Order", readonly=True, store=True)
     brand_id = fields.Many2one("product.brand", string="Product Type", readonly=True, store=True)
-
+    count = fields.Integer("Count")
 
     @api.multi
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
@@ -155,6 +155,36 @@ class AccountInvoice(models.Model):
                     'nonread_normal_disocunt':0.0,
                     'nonread_extra_disocunt':0.0,
                     })
+
+    @api.multi
+    def action_create_grn(self):
+        stock_picking_obj = self.env['stock.picking']
+        stock_move_obj = self.env['stock.move']
+        types = self.env["stock.picking.type"].sudo().search([("code", "=", "incoming"), ('warehouse_id.type', '=', 'finished'),('warehouse_id.company_id', '=', self.partner_id.parent_id.company_id.id)])
+
+        if types:
+            val = {
+                    'move_type':'direct',
+                    'invoice_state':'none',
+                    'picking_type_id':types[0].id,
+                    'origin':self.name,
+                    'company_id':self.partner_id.parent_id.company_id.id
+                }
+            stock_id = stock_picking_obj.sudo().create(val)
+            for value in self.invoice_line:
+                val = {
+                        'name':value.product_id.name,
+                        'product_id':value.product_id.id,
+                        'product_uom': value.uos_id.id,
+                        'product_uom_qty':value.quantity,
+                        'picking_id':stock_id.id,
+                        'location_id':types[0].default_location_src_id.id,
+                        'location_dest_id':types[0].default_location_dest_id.id,
+                        'company_id':self.partner_id.parent_id.company_id.id
+                    }
+                stock_move_obj.sudo().create(val)
+            stock_id.sudo().action_confirm()
+            self.count = 1
 
 class AccountInvoiceTax(models.Model):
 
