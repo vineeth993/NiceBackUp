@@ -37,6 +37,7 @@
                <field name="inherit_id" ref="account.invoice_tree"/>
                <field name="arch" type="xml">
                     <xpath expr="//tree/field[@name='number']" position="after">
+                         <field name="dispatch_id"/>
                          <field name="eway_bill"/>
                     </xpath>
                </field>

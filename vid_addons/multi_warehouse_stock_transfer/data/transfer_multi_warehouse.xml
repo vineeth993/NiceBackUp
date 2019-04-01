@@ -6,21 +6,21 @@
 			<field name="name">Multi Warehouse Request</field>
 			<field name="model_id" ref="model_warehouse_stock_request"/>
 			<field name="global" eval="True"/>
-			<field name="domain_force">['|',('warehouse_id', '=', False), ('warehouse_id', 'in', [warehouse.id for warehouse in user.related_warehouse_id])</field>
+			<field name="domain_force">['|',('warehouse_id', '=', False), ('warehouse_id', 'in', [warehouse.id for warehouse in user.related_warehouse_id])]</field>
 		</record>
 
 		<record id="multi_warehouse_issue" model="ir.rule">
 			<field name="name">Multi Warehouse Issue</field>
 			<field name="model_id" ref="model_warehouse_stock_issue"/>
 			<field name="global" eval="True"/>
-			<field name="domain_force">['|',('warehouse_id', '=', False), ('warehouse_id', 'in', [warehouse.id for warehouse in user.related_warehouse_id])</field>
+			<field name="domain_force">['|',('warehouse_id', '=', False), ('warehouse_id', 'in', [warehouse.id for warehouse in user.related_warehouse_id])]</field>
 		</record>
 
 		<record id="multi_warehouse_dc" model="ir.rule">
 			<field name="name">Multi Warehouse DC</field>
 			<field name="model_id" ref="model_dc_warehouse"/>
 			<field name="global" eval="True"/>
-			<field name="domain_force">['|',('warehouse_id', '=', False), ('warehouse_id', 'in', [warehouse.id for warehouse in user.related_warehouse_id])</field>
+			<field name="domain_force">['|',('warehouse_id', '=', False), ('warehouse_id', 'in', [warehouse.id for warehouse in user.related_warehouse_id])]</field>
 		</record>		
 
 	</data>

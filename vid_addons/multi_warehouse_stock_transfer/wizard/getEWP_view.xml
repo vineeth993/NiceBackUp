@@ -4,7 +4,7 @@
 	<data>
 		<record id='get_ewp_form_dc' model="ir.ui.view">
 			<field name="name">Get Ewp Form</field>
-			<field name="model">dcewp.json</field>
+			<field name="model">dc.ewp.json</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form>
@@ -15,7 +15,7 @@
 							<field name="to_addr"/>
 							<field name="to_zip_code"/>
 						</group>
-						<group string="Invoice Details">
+						<group string="DC Details">
 							<field name="doc_type"/>
 							<field name="supply_type"/>
 							<field name="sub_type"/>
@@ -45,7 +45,7 @@
 		<record id="get_ewp_action_dc" model="ir.actions.act_window"> 
 			<field name="name">Create Json</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">dcewp.json</field>
+			<field name="res_model">dc.ewp.json</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="view_id" ref="get_ewp_form_dc"/>

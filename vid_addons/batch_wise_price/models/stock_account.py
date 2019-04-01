@@ -43,7 +43,7 @@ class StockPicking(models.Model):
 			invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=dict(context, fp_id=invoice_vals.get('fiscal_position', False)))
 			invoice_line_vals['invoice_id'] = invoices[key]
 			invoice_line_vals['origin'] = origin
-			# _logger.info("invoice line vals = "+str(invoice_line))
+
 			if not is_extra_move[move.id]:
 				product_price_unit[invoice_line_vals['product_id'], invoice_line_vals['uos_id']] = invoice_line_vals['price_unit']
 			if is_extra_move[move.id] and (invoice_line_vals['product_id'], invoice_line_vals['uos_id']) in product_price_unit:
