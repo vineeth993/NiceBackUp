@@ -19,14 +19,15 @@ class ProductPrice(models.Model):
 	cost = fields.Float("List Price")
 	product_id = fields.Many2one("product.product", string="Reference")
 
-	@api.one
-	@api.constrains('pricelist')
-	def check_year(self):
-		hsn_id = None
-		if self.pricelist:
-			hsn_id = self.search([('pricelist', '=', self.pricelist.id), ('product_id', '=', self.product_id.id)])
-			if len(hsn_id) > 1:
-				raise ValidationError('Single pricelist for a year')
+	# @api.one
+	# @api.constrains('pricelist')
+	# def check_year(self):
+	# 	price_list = None
+	# 	if self.pricelist:
+	# 		price_list = self.search([('pricelist', '=', self.pricelist.id), ('product_id', '=', self.product_id.id)])
+	# 		_logger.info("The price_list = "+str(price_list))
+	# 		if len(price_list) > 0:
+	# 			raise ValidationError('Single pricelist for a year')
 
 class ProductTemplate(models.Model):
 
@@ -106,8 +107,9 @@ class PriceList(models.Model):
 
 			for row_no in xrange(sheet.nrows):
 				row_value = sheet.row(row_no)
-				product_id = self.env["product.product"].search([('default_code', '=', row_value[0].value)])
+				product_id = self.env["product.product"].search([('default_code', '=', row_value[0].value.strip())])
 				if product_id and row_value[3].value:
+					product_id.write({'list_price':row_value[3].value}) 
 					val = {
 						'pricelist':self.id,
 						'product_id':product_id.id,

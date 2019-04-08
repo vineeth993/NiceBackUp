@@ -10,7 +10,7 @@ class LotSerial(models.Model):
 	_inherit = "stock.production.lot"
 
 	name = fields.Char('Batch Number', required=True, help="Unique Serial Number")
-	pricelist = fields.Many2one('product.batch.pricelist', string="Pricelist", required=True)
+	pricelist = fields.Many2one('product.batch.pricelist', string="Pricelist")
 
 	@api.onchange('product_id')
 	def on_change_product(self):
