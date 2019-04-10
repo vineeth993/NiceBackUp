@@ -1,6 +1,6 @@
 from openerp import fields, models, api
 from openerp.exceptions import ValidationError
-from datetime import date
+from datetime import datetime as date
 import datetime
 
 import logging
@@ -15,7 +15,7 @@ class StockWarehouseRequest(models.Model):
 	_description = "Multi Stock Transfer Request"
 
 	def get_expected_date(self):
-		today = date.today()
+		today = date.now()
 		expected_date = today + datetime.timedelta(days=4)
 		return expected_date.strftime('%Y-%m-%d')
 
@@ -88,7 +88,7 @@ class StockWarehouseRequest(models.Model):
 								('error', 'Error Rcvd'),
 								('cancel', 'Cancel'),
 								('done', 'Done')], string="Status", default="draft", track_visibility='onchange')
-	request_date = fields.Datetime("Requested Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	request_date = fields.Datetime("Requested Date", required=True, select=True, readonly=True, default=lambda x: date.now(), states={"draft":[('readonly', False)]})
 	expected_date = fields.Datetime("Expected Date", required=True, default=get_expected_date)
 	picking_id = fields.Many2one("stock.picking.type", string="Picking",default=_get_picking_type, required=True)
 	amount_untaxed = fields.Float("Taxable Value", compute="_compute_amount", store=True, track_visibility='always', copy=True)
@@ -246,7 +246,18 @@ class StockWarehouseRequest(models.Model):
 		outward_ref_id.write({'state':state})
 		self.write({'state':state})
 
+	@api.multi
+	def action_cancel(self):
+		picks = self.env['stock.picking'].search([('request_id', '=', self.id), ('state', '!=', 'done')])
+		if picks:
+			for pick in picks:
+				pick.action_cancel()
 
+		if self.state in ('draft', 'confirm', 'process'):
+			self.reference.action_cancel()
+			self.write({'state':'cancel'})
+			for line in self.stock_line_id:
+				line.action_cancel()
 
 	@api.onchange("request_warehouse_to_id")
 	def onchange_request_warehouse_id(self):

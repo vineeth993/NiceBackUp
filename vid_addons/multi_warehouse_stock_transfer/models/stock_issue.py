@@ -1,6 +1,6 @@
 from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError
-from datetime import date
+from datetime import datetime as date
 import datetime
 import base64
 
@@ -16,7 +16,7 @@ class StockWarehouseIssue(models.Model):
 	_order = "id desc"
 
 	def get_expected_date(self):
-		today = date.today()
+		today = date.now()
 		expected_date = today + datetime.timedelta(days=20)
 		return expected_date.strftime('%Y-%m-%d')
 
@@ -77,7 +77,7 @@ class StockWarehouseIssue(models.Model):
 								('error', 'Qty Mismatch'),
 								('cancel', 'Cancel'),
 								('done', 'Done')], string="Status", default="draft", track_visibility='onchange')
-	request_date = fields.Datetime("Requested Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	request_date = fields.Datetime("Requested Date", required=True, select=True, readonly=True, default=lambda x: date.now(), states={"draft":[('readonly', False)]})
 	expected_date = fields.Datetime("Expected Date", required=True, default=get_expected_date)
 	picking_id = fields.Many2one("stock.picking.type", string="Picking",default=_get_picking_type, required=True)
 	amount_untaxed = fields.Float("Taxable Value", compute="_compute_amount", store=True, track_visibility='always')
@@ -151,19 +151,27 @@ class StockWarehouseIssue(models.Model):
 	@api.multi
 	def action_move(self):
 	
-		self.reference.write({'state':'issued', 'quant_issued_date':date.today()})
+		self.reference.write({'state':'issued', 'quant_issued_date':date.now()})
 		for item in self.stock_line_id:
 			item.last_issued_stock = 0
 			if item.issued_quant:
 				quant = item.issued_quant
 				pending = item.qty_remain - item.issued_quant
 				issued_quant = item.reference_line.issued_qty + item.issued_quant
-				_logger.info("The value in reference issue = "+str(item.reference_line.issued_qty))
-				_logger.info("The value in issued_quant = "+str(issued_quant))
 				item.reference_line.write({'issued_qty':issued_quant, 'recieved_qty':issued_quant, 'state':'issued'})
 				item.update({"issued_quant": 0.0, "qty_remain":pending, 'state':'moved'})
 			elif item.qty_remain:
 				item.update({'state':'process'})
+
+	@api.multi
+	def action_cancel(self):
+		picks = self.env['stock.picking'].search([('issue_id', '=', self.id), ('state', '!=', 'done')])
+		if picks:
+			for pick in picks:
+				pick.action_cancel()
+		self.write({'state':'cancel'})
+		for line in self.stock_line_id:
+			line.action_cancel()
 
 	@api.multi
 	def action_view_dc(self):

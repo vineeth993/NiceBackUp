@@ -2,7 +2,7 @@
 from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError
 
-from datetime import date
+from datetime import datetime as date
 import datetime
 import base64
 
@@ -59,8 +59,8 @@ class WarehouseDc(models.Model):
 	state = fields.Selection([('draft', 'Draft'),
 								('dc', 'Can Move'),
 								('done', 'Done'),
-								('cancel', 'Cancel')], string="Status", default="draft", track_visibility='onchange')
-	request_date = fields.Datetime("Requested Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+								('cancel', 'Cancel')], string="Status", default="draft", track_visibility='onchange', copy=False)
+	request_date = fields.Datetime("Requested Date", required=True, select=True, readonly=True, default=lambda x: date.now(), states={"draft":[('readonly', False)]})
 	amount_untaxed = fields.Float("Taxable Value", compute="_compute_amount", store=True, track_visibility='always')
 	amount_tax = fields.Float("Taxes", compute="_compute_amount", store=True, track_visibility='always')
 	amount_total = fields.Float("Total", compute="_compute_amount", store=True, track_visibility='always')
@@ -70,7 +70,7 @@ class WarehouseDc(models.Model):
 	quant_issued_date = fields.Date("Issued Date")
 	json_file = fields.Binary("E-Way Bill-Json")
 	json_file_name = fields.Char("File name")
-	line_id = fields.One2many("dc.warehouse.line", "ref_id", string="Reference")
+	line_id = fields.One2many("dc.warehouse.line", "ref_id", string="Reference", copy=True)
 
 	@api.multi
 	def action_validate(self):
@@ -84,7 +84,7 @@ class WarehouseDc(models.Model):
 		for line in self.line_id:
 			line.write({'state':'done'})
 
-		date_today = date.today()
+		date_today = date.now()
 		self.create_request_grn()
 		self.issue_refernce.write({'dc_ids':[(4, self.id)]})
 		self.issue_refernce.action_move()
@@ -118,6 +118,12 @@ class WarehouseDc(models.Model):
 	@api.multi
 	def action_print_dc(self):
 		return self.env['report'].get_action(self, 'multi_warehouse_stock_transfer.report_dc')
+
+	@api.multi
+	def action_cancel(self):
+		self.write({'name':"", 'state':'cancel'})
+		for line in self.line_id:
+			line.write({'state':'cancel'})
 
 
 class WarehouseDcLine(models.Model):
