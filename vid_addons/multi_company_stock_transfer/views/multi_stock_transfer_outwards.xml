@@ -106,6 +106,6 @@
             </field>
         </record>
 
-        <menuitem id="multi_stock_transfer_outward_action_issue" name="Stock Issue" parent="menu_stock_trnasfer" action="multi_stock_transfer_outward_progress" sequence="4"/>
+        <menuitem id="multi_stock_transfer_outward_action_issue" name="Stock Issue" parent="menu_stock_trnasfer" action="multi_stock_transfer_outward_progress" sequence="4" groups="base.group_erp_manager"/>
 	</data>
 </openerp>
