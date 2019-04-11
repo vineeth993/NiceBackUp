@@ -75,7 +75,7 @@ class GetEwpdc(models.TransientModel):
 		lr_id = self.env["dc.warehouse"].browse(self._context.get('active_ids', []))
 		if lr_id:
 			res['name'] = lr_id.name
-			res['from_addr'] = lr_id.company_id.partner_id.id
+			res['from_addr'] = lr_id.warehouse_id.partner_id.id
 			res['to_addr'] = lr_id.partner_id.id
 			res['to_zip_code'] = lr_id.partner_id.zip
 		return res

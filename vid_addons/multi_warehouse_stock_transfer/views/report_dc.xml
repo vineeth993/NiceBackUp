@@ -34,19 +34,19 @@
 							<table >
 								<tr>
 									<td width="43%" style="text-align:left;text-size: 1px;">
-				                            <b><span t-field="company.name"/><br/></b>
-				                            <span t-field="company.street"/><br/>
-				                            <span t-field="company.street2"/>,<span t-field="company.city"/>-<span t-field="company.zip"/><br/>
-				                            Tel:<span t-field="company.phone"/><br/>
-				                            Email:<span t-field="company.email"/><br/>
-				                            Website:<span t-field="company.website"/><br/>
+				                            <b><span t-field="o.warehouse_id.partner_id.name"/><br/></b>
+				                            <span t-field="o.warehouse_id.partner_id.street"/><br/>
+				                            <span t-field="o.warehouse_id.partner_id.street2"/>,<span t-field="o.warehouse_id.partner_id.city"/>-<span t-field="o.warehouse_id.partner_id.zip"/><br/>
+				                            Tel:<span t-field="o.warehouse_id.partner_id.phone"/><br/>
+				                            Email:<span t-field="o.warehouse_id.partner_id.email"/><br/>
+				                            Website:<span t-field="o.warehouse_id.partner_id.website"/><br/>
 				                    </td>
 				                </tr>
 				                <tr>
 							        <td width="33%" style="text-align:left;text-size: 1px;" colspan="2">
-				                            GSTIN: <span t-field="company.gst_no"/><br/>
-				                            Poison Lic.No.: <span t-field="company.poison_lic_no"/><br/>
-				                            Drug Mfg.Lic.No: <span t-field="company.drug_mfg_lic_no"/><br/>
+				                            GSTIN: <span t-field="o.warehouse_id.partner_id.gst_no"/><br/>
+				                            Poison Lic.No.: <br/>
+				                            Drug Mfg.Lic.No: <br/>
 				                    </td>
 								</tr>
 							</table>
@@ -61,7 +61,7 @@
 				<div class="page">
 					<table width="100%">
 						<tr>
-							<td width="100%" style="text-align:center;font-size:30px;padding-top:30px">
+							<td width="100%" style="text-align:center;font-size:30px;padding-top:50px">
 								<b>DELIVERY CHALLAN</b>
 							</td>
 						</tr>
