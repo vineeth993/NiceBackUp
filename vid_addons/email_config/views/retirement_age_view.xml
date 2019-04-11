@@ -229,6 +229,7 @@
 
 		<record id="hr_holidays.menu_request_approve_allocation" model="ir.ui.menu">
 			<field name="sequence">13</field>
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])]"/>
 		</record>
 
 		<record model="ir.actions.act_window.view" id="action_open_leave_sanction_tree">
