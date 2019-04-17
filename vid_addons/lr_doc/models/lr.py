@@ -4,7 +4,7 @@ import logging
 import base64
 import math
 from openerp.tools import amount_to_text_en
-from datetime import date
+from datetime import datetime as date
 import base64
 import xlrd
 import tempfile
@@ -58,7 +58,7 @@ class LrDoc(models.Model):
 	name = fields.Char("Name", track_visibility='onchange')
 	partner_id = fields.Many2one("res.partner", string="Customer", required=True, readonly=True, domain=[("customer", "=", True)], states={"draft":[('readonly',False)]}, track_visibility='onchange')
 	invoice_id = fields.Many2many("account.invoice", "partner_invoices_rel", "partner_id", "invoice_id", string="Invoices", required=True, readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]}, track_visibility='onchange')
-	date = fields.Datetime("Document Date", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	date = fields.Datetime("Document Date", required=True, select=True, readonly=True, default=lambda x: date.now(), states={"draft":[('readonly', False)]})
 	docket_no = fields.Char(string="Docket No")
 	docket_date = fields.Datetime("Docket Date", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]})
 	freight_payment_type = fields.Selection(PAYMENT_MODE, string="Mode Of Dispatch", readonly=True, states={"draft":[('readonly',False)], "confirm":[('readonly',False)]}, default="dd")
@@ -80,8 +80,8 @@ class LrDoc(models.Model):
 	port_id = fields.Many2one("port.code" ,string="Port Code" )
 	city_id = fields.Many2one("res.city", string="City")
 	company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.user.company_id, readonly=True)
-	from_date = fields.Datetime("Invoice From", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
-	to_date = fields.Datetime("Invoice To", required=True, select=True, readonly=True, default=lambda x: date.today(), states={"draft":[('readonly', False)]})
+	from_date = fields.Datetime("Invoice From", required=True, select=True, readonly=True, default=lambda x: date.now(), states={"draft":[('readonly', False)]})
+	to_date = fields.Datetime("Invoice To", required=True, select=True, readonly=True, default=lambda x: date.now(), states={"draft":[('readonly', False)]})
 	json_file = fields.Binary("E-Way Bill-Json")
 	json_file_name = fields.Char("File name")
 	transporter_gstin = fields.Char("Transporter Gstin")

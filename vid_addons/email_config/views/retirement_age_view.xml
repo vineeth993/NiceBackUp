@@ -219,6 +219,14 @@
 			<field name="view_id" ref="hr_holidays.edit_holiday_new"/>
 		</record>
 
+		<record id="allocation_sanction_holidays" model="ir.actions.act_window">
+			<field name="name">Allocation To Sanction</field>
+			<field name="res_model">hr.holidays</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('type', '=', 'add'),('state', '=', 'confirm')]</field>
+			<field name="view_id" ref="hr_holidays.edit_holiday_new"/>
+		</record>
+
 		<record id="hr_holidays.menu_request_approve_holidays" model="ir.ui.menu">
 			<field name="sequence">11</field>
 		</record>
@@ -228,7 +236,7 @@
 		</record>
 
 		<record id="hr_holidays.menu_request_approve_allocation" model="ir.ui.menu">
-			<field name="sequence">13</field>
+			<field name="sequence">14</field>
 			<field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])]"/>
 		</record>
 
@@ -239,7 +247,15 @@
 			<field name="act_window_id" ref="request_sanction_holidays"/>
 		</record>
 
+		<record model="ir.actions.act_window.view" id="action_open_allocation_sanction_tree">
+			<field name="sequence" eval="2"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="hr_holidays.view_holiday"/>
+			<field name="act_window_id" ref="allocation_sanction_holidays"/>
+		</record>
+
 		<menuitem id="leave_manager_approval" name="Leaves To Sanction" parent="hr_holidays.menu_open_ask_holidays" action="request_sanction_holidays" sequence="10"/>
+		<menuitem id="allocation_manager_approval" name="Allocation To Sanction" parent="hr_holidays.menu_open_ask_holidays" action="allocation_sanction_holidays" sequence="13"/>
 		<menuitem id="esic_employer_name_name" name="ESIC Employer" parent="hr.menu_hr_configuration" action="esic_employer_name_action" />
 	</data>
 </openerp>
