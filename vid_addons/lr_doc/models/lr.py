@@ -257,6 +257,12 @@ class lr_line(models.Model):
 	eway_bill_no = fields.Char("E-Way No")
 	lr_id = fields.Many2one("lr.doc", string="Reference")
 
+	@api.multi
+	def unlink(self):
+		self.invoice_id.eway_bill = None
+		return super(lr_line, self).unlink()
+
+
 
 
 
