@@ -143,9 +143,10 @@
 	                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
 	                    <button string="Sanction" name="validate" type="workflow" class="oe_highlight" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
 	                    <button string="Approve" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-	                    <button string="Refuse/Cancel" name="refuse" states="confirm,validate,validate1" type="workflow" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
+	                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
 	                    <button string="Reset to Draft" name="reset" type="workflow"
-	                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+	                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse', 'cancel'])]}"/>
+	                    <button string="Cancel" type="object" name="action_cancel" states="confirm,validate1,validate" groups="base.group_hr_user"/>
 	                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
 	                </header>			
                 </header>
@@ -197,6 +198,14 @@
 				<field name="categ_id" position="after">
 					<field name="description" />
 				</field>
+
+				<group name="second" position="after">
+					<group name="limit" string="Limit">
+						<field name="leave_limit"/>
+						<field name="leave_days_limit"/>
+					</group>
+				</group>
+				
 			</field>
 		</record>
 
