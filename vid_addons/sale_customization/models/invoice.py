@@ -199,7 +199,7 @@ class AccountInvoice(models.Model):
                     }
                 stock_move_obj.sudo().create(val)
             stock_id.sudo().action_confirm()
-            self.write{'state':'grn'}
+            self.write({'state':'grn'})
 
 class AccountInvoiceTax(models.Model):
 
