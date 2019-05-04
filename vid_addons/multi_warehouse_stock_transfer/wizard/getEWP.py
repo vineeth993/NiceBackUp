@@ -214,7 +214,7 @@ class GetEwpdc(models.TransientModel):
 					'transDocDate':trans_date,
 					'vehicleNo':vehicle_number,
 					'vehicleType':self.vehicle_type,
-					'totInvValue':(inv_total + inv_tax),
+					'totInvValue':round((inv_total + inv_tax), 2),
 					'mainHsnCode':int(hsn),
 					'itemList':itemList
 			}
