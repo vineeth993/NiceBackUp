@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_portal_sale,access_portal_sale,model_portal_sale,base.group_portal,1,1,1,1
+access_portal_sale_line,access_portal_sale_line,model_portal_sale_line,base.group_portal,1,1,1,1
+access_portal_sale_employee,access_portal_sale_employee,model_portal_sale,base.group_user,1,1,,
+access_portal_sale_line_employee,access_portal_sale_line_employee,model_portal_sale_line,base.group_user,1,1,,

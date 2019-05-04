@@ -8,7 +8,7 @@
     'description': '''
 CRM/Sales Customization
   ''',
-    'depends': ['base', 'crm', 'report', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'stock', 'procurement', 'crm_lead_lost_reason', 'sales_team'],
+    'depends': ['base', 'crm', 'report', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'stock', 'procurement', 'crm_lead_lost_reason', 'sales_team', 'customer_portal_management'],
     'data': [
         'report.xml',
         'views/lead_view.xml',
@@ -22,7 +22,7 @@ CRM/Sales Customization
         'wizard/stock_transfer_details_custom.xml',
         'views/base_view.xml',
         'views/quotation_report.xml',
-        'views/reporting.xml'
+        'views/reporting.xml',
     ],
     'installable': True,
     'auto_install': False

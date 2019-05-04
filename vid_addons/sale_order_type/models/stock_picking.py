@@ -29,4 +29,4 @@ class StockPicking(models.Model):
 class StockPickingType(models.Model):
     _inherit = "stock.picking.type"
 
-    store_type = fields.Selection([('row_material', 'Row Material'), ('finish_goods', 'Finished Goods')], string="Picking Type")
+    store_type = fields.Selection([('row_material', 'Raw Material'), ('finish_goods', 'Finished Goods')], string="Picking Type")

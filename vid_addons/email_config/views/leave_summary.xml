@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record model="ir.actions.act_window" id="hr_holidays.open_company_allocation">
+			<field name="domain">[('holiday_type','=','employee'), ('state', 'not in', ('refuse', 'cancel'))]</field>
+		</record>
+	</data>
+</openerp>
