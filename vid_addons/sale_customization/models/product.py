@@ -149,10 +149,30 @@ class ProductTemplate(models.Model):
         'type': 'product',
         }
 
-	@api.one
-	@api.constrains('name')
-	def _check_name(self):
-		if self.name:
-			names1 = self.search([('name', '=', self.name)])
-			if len(names1) > 1:
-				raise Warning('A product with the same Name already exists')
+    @api.one
+    @api.constrains('name')
+    def _check_name(self):
+        if self.name:
+            names1 = self.search([('name', '=', self.name)])
+            if len(names1) > 1:
+                raise Warning('A product with the same Name already exists')
+
+    # @api.onchange('product_group_id')
+    # def on_change_group_id(self):
+    #     for product in self:
+    #         if product.product_group_id:
+    #             product.product_brand_id = product.product_group_id.product_brand_id
+    #             product.sale_ok = product.product_group_id.sale_ok
+    #             product.purchase_ok = product.product_group_id.purchase_ok
+    #             product.type = product.product_group_id.type
+    #             product.uom_id = product.product_group_id.uom_id
+    #             product.certificate_of_analysis = product.product_group_id.certificate_of_analysis
+    #             product.hs_code_id = product.product_group_id.hs_code_id
+    #             product.input_tax_credit = product.product_group_id.input_tax_credit
+    #             product.categ_id = product.product_group_id.categ_id
+    #             product.company_id = product.product_group_id.company_id
+    #             product.valuation = product.product_group_id.valuation
+    #             product.property_stock_account_input = product.product_group_id.property_stock_account_input
+    #             product.property_stock_account_output = product.product_group_id.property_stock_account_output
+    #             product.taxes_id = product.product_group_id.taxes_id
+    #             product.supplier_taxes_id = product.product_group_id.supplier_taxes_id
