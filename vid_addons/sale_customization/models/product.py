@@ -111,7 +111,7 @@ class ProductGrade(models.Model):
 	name = fields.Char("Grade Name")
 	
 class ProductTemplate(models.Model):
-	_inherit = 'product.template'
+    _inherit = 'product.template'
 
     @api.depends("taxes_id")
     def _get_tax(self):
