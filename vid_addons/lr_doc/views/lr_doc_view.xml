@@ -21,12 +21,12 @@
 			<field name="arch" type="xml">
 				<form string="Lr Doc">
 					<header>
-						<button name="%(get_ewp_action)d" type="action" string="Create JSON" attrs="{'invisible':[('state', 'not in', ('ready','validate'))]}" groups="base.group_user" />
-						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':[('state','in',('confirm', 'validate', 'ready', 'uploaded'))]}" class="oe_highlight" groups="base.group_user" />
-						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':[('state','in',('draft', 'validate', 'ready', 'uploaded'))]}" class="oe_highlight" groups="base.group_user" />
-						<button name="mail_dispatch" type="object" string="Mail Document" attrs="{'invisible':[('state', '=', 'draft')]}" groups="base.group_user"/>
- 						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" groups="base.group_user" />
-						<button name="print_envolope" type="object" string="Print Envelope" class="oe_highlight" groups="base.group_user"/>
+						<button name="%(get_ewp_action)d" type="action" string="Create JSON" attrs="{'invisible':[('state', 'not in', ('ready','validate'))]}"/>
+						<button name="lr_doc_confirm" type="object" string="Confirm" attrs="{'invisible':[('state','in',('confirm', 'validate', 'ready', 'uploaded'))]}" class="oe_highlight" />
+						<button name="lr_doc_validate" type="object" string="Validate" attrs="{'invisible':[('state','in',('draft', 'validate', 'ready', 'uploaded'))]}" class="oe_highlight" />
+						<button name="mail_dispatch" type="object" string="Mail Document" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+ 						<button name="lr_doc_print" type="object" string="Print" class="oe_highlight" />
+						<button name="print_envolope" type="object" string="Print Envelope" class="oe_highlight" />
 						<field name="state" widget="statusbar"  statusbar_visible="draft,confirm,ready,validate"/>
 					</header>
 					<h1>
@@ -34,22 +34,22 @@
 					</h1>
 					<group>
 						<group>
-							<field name="partner_id" options="{'no_create_edit': True,'no_create': True}" domain="[('company_id', '=', company_id)]" groups="base.group_user"/>
+							<field name="partner_id" options="{'no_create_edit': True,'no_create': True}" domain="[('company_id', '=', company_id)]"/>
 							<field name="invoice_id" widget="many2many_tags" domain="[('partner_id', '=', partner_id),('dispatch_id','=', False),('state', 'not in',('draft', 'cancel', 'proforma', 'proforma2')),('date_invoice', '&gt;=',from_date),('date_invoice', '&lt;=',to_date)]" options="{'no_create_edit': True, 'no_create':True}"/>
 							<field name="freight_payment_type"/>
 							<field name="dispatch_mode" />
 							<field name="freight_amount" attrs="{'readonly':[('state','=', 'validate')]}"/>
 							<field name="total_amount"/>
 							<field name="articles" attrs="{'readonly':[('state', '=', 'validate')]}"/>
-							<field name="company_id" groups="base.group_user"/>
+							<field name="company_id"/>
 						</group>
 						<group>
-							<field name="json_file" widget="binary" icon="gtk-print" height="64" filename="json_file_name" attrs="{'invisible':[('state', 'not in', ('ready', 'validate'))]}" readonly="1" groups="base.group_user"/>
-							<field name="json_file_name" invisible="1" groups="base.group_user"/>
-							<field name= "from_date" groups="base.group_user"/>
-							<field name= "to_date" groups="base.group_user"/>
+							<field name="json_file" widget="binary" icon="gtk-print" height="64" filename="json_file_name" attrs="{'invisible':[('state', 'not in', ('ready', 'validate'))]}" readonly="1"/>
+							<field name="json_file_name" invisible="1"/>
+							<field name= "from_date"/>
+							<field name= "to_date"/>
 							<field name="date"/>
-							<field name="city_id" attrs="{'readonly':[('state', '=', 'validate')]}" groups="base.group_user"/>
+							<field name="city_id" attrs="{'readonly':[('state', '=', 'validate')]}"/>
 						</group>
 					</group>
 					<notebook>

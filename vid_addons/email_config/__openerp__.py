@@ -27,7 +27,6 @@
         'views/partner_email_config.xml',
         'views/smtp_config_views.xml',
         'views/retirement_age_view.xml',
-        'views/leave_summary.xml',
         'wizard/leave_report_views.xml',
         'report/leave_summary_view.xml',
         'data/hr_workflow.xml'

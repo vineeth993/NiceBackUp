@@ -22,8 +22,7 @@ CRM/Sales Customization
         'wizard/stock_transfer_details_custom.xml',
         'views/base_view.xml',
         'views/quotation_report.xml',
-        'views/reporting.xml',
-        'views/stock.xml',
+        'views/reporting.xml'
     ],
     'installable': True,
     'auto_install': False

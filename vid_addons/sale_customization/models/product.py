@@ -112,18 +112,10 @@ class ProductTemplate(models.Model):
 
 	_inherit = 'product.template'
 
-	@api.depends("taxes_id")
-	def _get_tax(self):
-		for line in self:
-			for tax in line.taxes_id:
-				if tax.gst_type == "igst":
-					line.product_tax = tax.amount * 100
-					return 
-
 	hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
 	control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
 	gcode = fields.Char('Product Gcode')
-	cas_no = fields.Char(related='product_variant_ids.cas_no', string='CAS No')
+	cas_no = fields.Char(string='CAS No')
 	profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
 										 'product_template_id', 'sale_reason_id',
 										 string='Profiling Season')
@@ -132,18 +124,14 @@ class ProductTemplate(models.Model):
 	uom_id_two = fields.Many2one('product.uom', 'Unit')
 	uom_id_three = fields.Many2one('product.uom', 'Unit')
 	uom_id_pack = fields.Many2one('product.pack', 'Packed in')
+	specific_gravity = fields.Float(string="Specific Gravity")
 	certificate_of_analysis = fields.Boolean(string="Certificate of analysis")
+	schedule = fields.Many2one('product.schedule', 'Schedule')
 	grade = fields.Many2one('product.grade', string="Grade")
 	hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
-	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Non Pricelist Item")
+	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
 	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
-	input_tax_credit = fields.Boolean(related='product_variant_ids.input_tax_credit', string='Input Tax Credit')
-	expected_loss = fields.Float(related='product_variant_ids.expected_loss', string='Expected Loss %')
-
-	product_group_id = fields.Many2one("product.product", string="Product Group", domain=[('product_group', '=', True)])
-	product_group = fields.Boolean(related='product_variant_ids.product_group', string="Grouping Product")
-	product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
-
+	
 	_defaults = {
 		'type': 'product',
 		}
