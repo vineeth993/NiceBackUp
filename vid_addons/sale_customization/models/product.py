@@ -111,68 +111,69 @@ class ProductGrade(models.Model):
 	name = fields.Char("Grade Name")
 	
 class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+	
+	_inherit = 'product.template'
 
-   # @api.depends("taxes_id")
-   # def _get_tax(self):
-   #     for line in self:
-   #         for tax in line.taxes_id:
-   #             if tax.gst_type == "igst":
-   #                 line.product_tax = tax.amount * 100
-   #                 return 
+	@api.depends("taxes_id")
+	def _get_tax(self):
+		for line in self:
+			for tax in line.taxes_id:
+				if tax.gst_type == "igst":
+					line.product_tax = tax.amount * 100
+					return 
 
-    hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
-    control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
-    gcode = fields.Char('Product Gcode')
-    cas_no = fields.Char(related='product_variant_ids.cas_no', string='CAS No')
-    profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
-                                         'product_template_id', 'sale_reason_id',
-                                         string='Profiling Season')
-    default_code = fields.Char(related='product_variant_ids.default_code', string='Product Code')
-    uom_id_one = fields.Many2one('product.uom', 'Unit')
-    uom_id_two = fields.Many2one('product.uom', 'Unit')
-    uom_id_three = fields.Many2one('product.uom', 'Unit')
-    uom_id_pack = fields.Many2one('product.pack', 'Packed in')
-    certificate_of_analysis = fields.Boolean(string="Certificate of analysis")
-    grade = fields.Many2one('product.grade', string="Grade")
-    hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
-    price_list = fields.Boolean(related='product_variant_ids.price_list', string="Non Pricelist Item")
-    case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
-    input_tax_credit = fields.Boolean(related='product_variant_ids.input_tax_credit', string='Input Tax Credit')
-    expected_loss = fields.Float(related='product_variant_ids.expected_loss', string='Expected Loss %')
+	hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
+	control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
+	gcode = fields.Char('Product Gcode')
+	cas_no = fields.Char(related='product_variant_ids.cas_no', string='CAS No')
+	profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
+										 'product_template_id', 'sale_reason_id',
+										 string='Profiling Season')
+	default_code = fields.Char(related='product_variant_ids.default_code', string='Product Code')
+	uom_id_one = fields.Many2one('product.uom', 'Unit')
+	uom_id_two = fields.Many2one('product.uom', 'Unit')
+	uom_id_three = fields.Many2one('product.uom', 'Unit')
+	uom_id_pack = fields.Many2one('product.pack', 'Packed in')
+	certificate_of_analysis = fields.Boolean(string="Certificate of analysis")
+	grade = fields.Many2one('product.grade', string="Grade")
+	hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
+	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Non Pricelist Item")
+	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
+	input_tax_credit = fields.Boolean(related='product_variant_ids.input_tax_credit', string='Input Tax Credit')
+	expected_loss = fields.Float(related='product_variant_ids.expected_loss', string='Expected Loss %')
 
-    product_group_id = fields.Many2one("product.product", string="Product Group", domain=[('product_group', '=', True)])
-    product_group = fields.Boolean(related='product_variant_ids.product_group', string="Grouping Product")
- #   product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
+	product_group_id = fields.Many2one("product.product", string="Product Group", domain=[('product_group', '=', True)])
+	product_group = fields.Boolean(related='product_variant_ids.product_group', string="Grouping Product")
+	product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
 
-    _defaults = {
-        'type': 'product',
-        }
+	_defaults = {
+		'type': 'product',
+		}
 
-    # @api.one
-    # @api.constrains('name')
-    # def _check_name(self):
-    #     if self.name:
-    #         names1 = self.search([('name', '=', self.name)])
-    #         if len(names1) > 1:
-    #             raise Warning('A product with the same Name already exists')
+	@api.one
+	@api.constrains('name')
+	def _check_name(self):
+		if self.name:
+			names1 = self.search([('name', '=', self.name)])
+			if len(names1) > 1:
+				raise Warning('A product with the same Name already exists')
 
-    # @api.onchange('product_group_id')
-    # def on_change_group_id(self):
-    #     for product in self:
-    #         if product.product_group_id:
-    #             product.product_brand_id = product.product_group_id.product_brand_id
-    #             product.sale_ok = product.product_group_id.sale_ok
-    #             product.purchase_ok = product.product_group_id.purchase_ok
-    #             product.type = product.product_group_id.type
-    #             product.uom_id = product.product_group_id.uom_id
-    #             product.certificate_of_analysis = product.product_group_id.certificate_of_analysis
-    #             product.hs_code_id = product.product_group_id.hs_code_id
-    #             product.input_tax_credit = product.product_group_id.input_tax_credit
-    #             product.categ_id = product.product_group_id.categ_id
-    #             product.company_id = product.product_group_id.company_id
-    #             product.valuation = product.product_group_id.valuation
-    #             product.property_stock_account_input = product.product_group_id.property_stock_account_input
-    #             product.property_stock_account_output = product.product_group_id.property_stock_account_output
-    #             product.taxes_id = product.product_group_id.taxes_id
-    #             product.supplier_taxes_id = product.product_group_id.supplier_taxes_id
+	# @api.onchange('product_group_id')
+	# def on_change_group_id(self):
+	#     for product in self:
+	#         if product.product_group_id:
+	#             product.product_brand_id = product.product_group_id.product_brand_id
+	#             product.sale_ok = product.product_group_id.sale_ok
+	#             product.purchase_ok = product.product_group_id.purchase_ok
+	#             product.type = product.product_group_id.type
+	#             product.uom_id = product.product_group_id.uom_id
+	#             product.certificate_of_analysis = product.product_group_id.certificate_of_analysis
+	#             product.hs_code_id = product.product_group_id.hs_code_id
+	#             product.input_tax_credit = product.product_group_id.input_tax_credit
+	#             product.categ_id = product.product_group_id.categ_id
+	#             product.company_id = product.product_group_id.company_id
+	#             product.valuation = product.product_group_id.valuation
+	#             product.property_stock_account_input = product.product_group_id.property_stock_account_input
+	#             product.property_stock_account_output = product.product_group_id.property_stock_account_output
+	#             product.taxes_id = product.product_group_id.taxes_id
+	#             product.supplier_taxes_id = product.product_group_id.supplier_taxes_id
