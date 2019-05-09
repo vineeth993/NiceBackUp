@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<record id="portal.portal_orders" model="ir.ui.menu">
+			<field name="name">Orders &amp; Invoices</field>
+		</record>
+
+		<record id="portal_sale.portal_quotations" model="ir.ui.menu">
+			<field name="name">Accepted Orders</field>
+		</record>
+
+		<record id="portal_sale.portal_sales_orders" model="ir.ui.menu">
+			<field name="name">Orders In Process</field>
+		</record>
+
+	</data>
+</openerp>
