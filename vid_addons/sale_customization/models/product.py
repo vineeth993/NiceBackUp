@@ -112,6 +112,14 @@ class ProductTemplate(models.Model):
 
 	_inherit = 'product.template'
 
+	@api.depends("taxes_id")
+	def _get_tax(self):
+		for line in self:
+			for tax in line.taxes_id:
+				if tax.gst_type == "igst":
+					line.product_tax = tax.amount * 100
+					return 
+
 	hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
 	control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
 	gcode = fields.Char('Product Gcode')
@@ -131,6 +139,7 @@ class ProductTemplate(models.Model):
 	hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
 	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
 	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
+	product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
 	
 	_defaults = {
 		'type': 'product',
