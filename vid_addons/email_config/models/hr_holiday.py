@@ -1,5 +1,5 @@
 
-from openerp import fields, models, api, exceptions, _
+from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError
 from datetime import date
 import logging

@@ -8,7 +8,7 @@
     'description': '''
 CRM/Sales Customization
   ''',
-    'depends': ['base', 'crm', 'report', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'procurement', 'crm_lead_lost_reason', 'sales_team'],
+    'depends': ['base', 'crm', 'report', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'stock', 'procurement', 'crm_lead_lost_reason', 'sales_team'],
     'data': [
         'report.xml',
         'views/lead_view.xml',
@@ -23,7 +23,7 @@ CRM/Sales Customization
         'views/base_view.xml',
         'views/quotation_report.xml',
         'views/reporting.xml',
-        # 'views/stock.xml',
+        'views/stock.xml',
     ],
     'installable': True,
     'auto_install': False
