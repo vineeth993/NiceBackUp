@@ -20,13 +20,12 @@
 				<xpath expr="//sheet/h1" postion="before">
                     <div class="oe_right oe_button_box">
                         <button class="oe_inline oe_stat_button" string="Create GRN" type="object"
-                                name="action_create_grn" icon="fa-truck" states="open" attrs="{'invisible':[('count', '>', 0)]}"/>
+                                name="action_create_grn" icon="fa-truck" states="open"/>
                     </div>
                 </xpath>   
 				
                 <xpath expr="//field[@name='account_id']" position="after">
 					<field name="sale_order" />
-                    <field name="count" readonly="1"/>
 					<field name="brand_id" readonly='1'/>
 					<field name="partner_selling_type" attrs="{'readonly':[('state', 'in', ('open','paid'))]}"/>
 					<!-- <field name="partner_selling_type_id"  /> -->
