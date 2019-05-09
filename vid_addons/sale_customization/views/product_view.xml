@@ -77,8 +77,6 @@
                 </field>
 
                  <field name="list_price" position="after">
-                    <field name="specific_gravity"/>
-                    <field name="schedule"/>
                     <field name="grade"/>
                      <field name="certificate_of_analysis"/>
                      <field name="hs_code_id"/>
@@ -145,6 +143,18 @@
       <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="product_price_list_tree_cust" model="ir.ui.view">
+        <field name="name">product.price.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="customer_portal_management.product_price_list_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="hs_code_id"/>
+                <field name="cas_no"/>
+                <field name="product_tax"/>
+            </field>
+        </field>
+    </record>
     <menuitem id="menu_hs_code" action="action_hs_code"
         parent="product.prod_config_main" sequence="60"/>
         
