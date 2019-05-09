@@ -149,13 +149,13 @@ class ProductTemplate(models.Model):
         'type': 'product',
         }
 
-    @api.one
-    @api.constrains('name')
-    def _check_name(self):
-        if self.name:
-            names1 = self.search([('name', '=', self.name)])
-            if len(names1) > 1:
-                raise Warning('A product with the same Name already exists')
+    # @api.one
+    # @api.constrains('name')
+    # def _check_name(self):
+    #     if self.name:
+    #         names1 = self.search([('name', '=', self.name)])
+    #         if len(names1) > 1:
+    #             raise Warning('A product with the same Name already exists')
 
     # @api.onchange('product_group_id')
     # def on_change_group_id(self):
