@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<record id="portal_dispatch_action" model="ir.actions.act_window">
+			<field name="name">Dispatch Details</field>
+			<field name="res_model">lr.doc</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="dispatch_tree_view" model="ir.ui.view">
+			<field name="name">lr.doc.tree</field>
+			<field name="model">lr.doc</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="date"/>
+					<field name="courier_name"/>
+					<field name="total_amount"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<menuitem id="menu_dispatch_portal" name="Dispatch" action="portal_dispatch_action" parent="portal.portal_orders" sequence="30"/>
+
+	</data>
+</openerp>

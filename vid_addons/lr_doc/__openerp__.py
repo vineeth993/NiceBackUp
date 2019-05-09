@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','account','nice_gst'],
+    'depends': ['base','account','nice_gst', 'portal'],
 
     # always loaded
     'data': [
@@ -32,6 +32,7 @@
         'views/account_invoice_view.xml',
         'views/print_on_envolope.xml',
         'views/port_code_views.xml',
+        'views/portal_management.xml',
         'data/lr_data.xml',
         'security/ir.model.access.csv',
         'data/lr_doc_access.xml',
