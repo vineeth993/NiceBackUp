@@ -113,13 +113,13 @@ class ProductGrade(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    @api.depends("taxes_id")
-    def _get_tax(self):
-        for line in self:
-            for tax in line.taxes_id:
-                if tax.gst_type == "igst":
-                    line.product_tax = tax.amount * 100
-                    return 
+   # @api.depends("taxes_id")
+   # def _get_tax(self):
+   #     for line in self:
+   #         for tax in line.taxes_id:
+   #             if tax.gst_type == "igst":
+   #                 line.product_tax = tax.amount * 100
+   #                 return 
 
     hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
     control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
@@ -143,7 +143,7 @@ class ProductTemplate(models.Model):
 
     product_group_id = fields.Many2one("product.product", string="Product Group", domain=[('product_group', '=', True)])
     product_group = fields.Boolean(related='product_variant_ids.product_group', string="Grouping Product")
-    product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
+ #   product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
 
     _defaults = {
         'type': 'product',

@@ -153,10 +153,11 @@
             <field name="name" position="after">
                 <field name="hs_code_id"/>
                 <field name="cas_no"/>
-                <field name="product_tax"/>
+                <!-- <field name="product_tax"/> -->
             </field>
         </field>
     </record>
+   
     <menuitem id="menu_hs_code" action="action_hs_code"
         parent="product.prod_config_main" sequence="60"/>
         
