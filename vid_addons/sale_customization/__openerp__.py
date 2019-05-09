@@ -23,7 +23,7 @@ CRM/Sales Customization
         'views/base_view.xml',
         'views/quotation_report.xml',
         'views/reporting.xml',
-		# 'views/stock.xml',
+        'views/stock.xml',
     ],
     'installable': True,
     'auto_install': False
