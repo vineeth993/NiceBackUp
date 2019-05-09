@@ -11,4 +11,3 @@ class SmtpConfig(models.Model):
 	name = fields.Char(string="Mail", required=True)
 	smtp_server = fields.Char(string="SMTP Server", required=True)
 	smtp_port = fields.Integer(string="SMTP Port", size=5, required=True)
-
