@@ -163,6 +163,7 @@
 					<field name="doc_created" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))]}"/>
 					<field name="approved_date" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))], 'invisible':[('state', 'in', ('draft', 'confirm', 'cancel'))]}"/> 
 					<field name="is_manager" invisible="1"/>
+					<field name="is_encashment" attrs="{'readonly':[('type', '!=', 'remove')]}"/>
 				</field>
 
 			</field>

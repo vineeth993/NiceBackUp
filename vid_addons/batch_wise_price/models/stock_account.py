@@ -64,6 +64,8 @@ class StockPicking(models.Model):
 							price_list_obj = self.pool.get('product.price')
 							price_list = price_list_obj.search(cr, uid,[('pricelist', '=', quant.lot_id.pricelist.id), ('product_id', '=', invoice_line_vals['product_id'])], context=context)
 							if price_list:
+								if len(price_list) > 1:
+									price_list = price_list[0]
 								price_list = price_list_obj.browse(cr, uid, price_list, context=context)
 								if price_list.cost:
 									invoice_line_vals.update({'price_unit':price_list.cost})

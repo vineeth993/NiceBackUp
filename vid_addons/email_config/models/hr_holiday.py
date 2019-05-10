@@ -1,7 +1,7 @@
 
-from openerp import fields, models, api, _
+from openerp import fields, models, api, exceptions, _
 from openerp.exceptions import ValidationError
-from datetime import date
+from datetime import date, datetime
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -21,18 +21,21 @@ class HrHoliday(models.Model):
 			\nThe status is \'Sanctioned\', when holiday request is sanctiones by the department manager.\
 			\nThe status is \'Refused\', when holiday request is refused by manager.\
 			\nThe status is \'Approved\', when holiday request is approved by HR Department.', default="draft")
+	is_encashment = fields.Boolean("Encashment", default=False)
 
 	def create(self, cr, uid, values, context=None):
 
 		hr_holiday_id = super(HrHoliday, self).create(cr, uid, values, context=context)
-		period_id = self.pool.get('account.fiscalyear').find(cr, uid, values['date_from'], context=context)
-		get_period_id = self.pool.get('account.fiscalyear').browse(cr, uid, period_id, context=context)
-		employee_id = self.pool['hr.employee'].browse(cr, uid, values['employee_id'], context=context) 
+		# period_id = self.pool.get('account.fiscalyear').find(cr, uid, values['date_from'], context=context)
+		# get_period_id = self.pool.get('account.fiscalyear').browse(cr, uid, period_id, context=context)
+		# employee_id = self.pool['hr.employee'].browse(cr, uid, values['employee_id'], context=context) 
 
 		holiday_status_id = self.pool['hr.holidays.status'].browse(cr, uid, values['holiday_status_id'], context=context)
-
+		start_date = datetime.now().replace(month=1, day=1).date().strftime('%Y-%m-%d')
+		end_date = datetime.now().replace(month=12, day=31).date().strftime('%Y-%m-%d')
+		
 		if holiday_status_id.leave_limit:
-			get_leaves = self.pool['hr.holidays'].search(cr, uid, [('employee_id', '=', values['employee_id']), ('holiday_status_id', '=', holiday_status_id.id),('date_from', '>=', get_period_id.date_start),('date_from', '<=', get_period_id.date_stop)], context=context)
+			get_leaves = self.pool['hr.holidays'].search(cr, uid, [('employee_id', '=', values['employee_id']), ('holiday_status_id', '=', values["holiday_status_id"]), ('date_from', '>=', start_date),('date_from', '<=', end_date), ('type', '=', 'remove'), ('is_encashment', '=', False)], context=context)
 			if len(get_leaves) >= holiday_status_id.leave_limit:
 				raise ValidationError("Your %s Leave limit has reached ,You cannot apply for %s for this financial year" %(holiday_status_id.name, holiday_status_id.name))
 

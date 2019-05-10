@@ -194,6 +194,8 @@ class StockWarehouseRequest(models.Model):
 
 	@api.multi
 	def action_done(self):
+		
+		packing_obj = self.env['stock.pack.operation']
 		outward_ref_id = self.reference
 		stock_picking_id = self.env['stock.picking'].search([('request_id', '=', self.id),('state','not in', ('draft', 'cancel', 'done'))])
 		pack_ids = []
@@ -202,6 +204,20 @@ class StockWarehouseRequest(models.Model):
 		qty_stat = []
 		for line in self.stock_line_id:
 			if line.issued_qty or line.recieved_qty:
+				if line.issued_qty:
+					existing_package_ids = packing_obj.search([("picking_id", "=", stock_picking_id.id)]).unlink()
+					val = {
+						'picking_id':stock_picking_id.id,
+						'product_uom_id':line.product_uom.id,
+						'product_id':line.product_id.id,
+						'product_qty':line.issued_qty,
+						'location_dest_id':line.destination_location.id,
+						'location_id':line.source_location.id,
+						'lot_id':line.batch.id
+					}
+					pack_id = packing_obj.create(val)
+					pack_ids.append(pack_id.id)
+
 				qty = line.recieved_qty - line.issued_qty
 				line.quantity_remain = line.quantity_remain - line.issued_qty
 				line.issued_qty = 0
@@ -234,7 +250,8 @@ class StockWarehouseRequest(models.Model):
 			qty_remain.append(line.quantity_remain)
 			qty_stat.append(line.state)
 
-		if stock_picking_id.pack_operation_ids:
+		if pack_ids:
+			stock_picking_id.write({'pack_operation_ids':[(6, 0, pack_ids)]})
 			stock_picking_id.do_transfer()
 
 		if any(qty_list) or 'exces' in qty_stat or 'less' in qty_stat:
