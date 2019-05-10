@@ -12,6 +12,10 @@
 					<button name="action_create_dc" type="object" string="Create DC" attrs="{'invisible':['|', '|', ('is_dc', '&lt;&gt;', True), ('state', '&lt;&gt;', 'done'), ('warehouse_dc_id', '!=', False)]}" class="oe_highlight"/>
 				</button>
 				
+				<xpath expr="//button[@name='force_assign']" position="attributes">
+					<attribute name="attrs">{invisible:[('is_dc','=', False)]}</attribute>
+				</xpath>
+
 				<field name="origin" position="after">
 					<field name="issue_id" invisible="1"/>
 					<field name="request_id" invisible="1"/>
