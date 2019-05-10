@@ -13,7 +13,7 @@
 				</button>
 				
 				<xpath expr="//button[@name='force_assign']" position="attributes">
-					<attribute name="attrs">{invisible:[('is_dc','=', False)]}</attribute>
+					<attribute name="attrs">{'invisible':[('is_dc','=', False)]}</attribute>
 				</xpath>
 
 				<field name="origin" position="after">
