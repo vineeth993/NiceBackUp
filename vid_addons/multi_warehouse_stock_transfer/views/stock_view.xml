@@ -13,8 +13,7 @@
 				</button>
 				
 				<xpath expr="//button[@name='force_assign']" position="replace">
-<!-- 					<attribute name="attrs">{'invisible':[('is_dc','=', False), ('state', 'in', ('confirmed','waiting','partially_available')]}</attribute> -->
-					<button name="force_assign" string="Force Availability" type="object" groups="base.group_user" attrs="{'invisible':[('is_dc','=', False), ('state', 'in', ('confirmed','waiting','partially_available'))]}"/>
+					<button name="force_assign" string="Force Availability" type="object" groups="base.group_user" attrs="{'invisible':[('is_dc','=', False), ('state', 'not in', ('confirmed','waiting','partially_available'))]}"/>
 				</xpath>
 
 				<field name="origin" position="after">
