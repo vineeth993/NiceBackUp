@@ -99,6 +99,12 @@ class StockWarehouseRequest(models.Model):
 	quant_issued_date = fields.Datetime("Issued Date")
 	is_issued = fields.Boolean(string="Issue", compute="_get_is_issued")
 
+	@api.onchange("request_warehouse_to_id")
+	def onchange_warehouse_id(self):
+		if self.request_warehouse_to_id:
+			if self.request_warehouse_to_id == self.warehouse_id:
+				raise ValidationError("Cannot request to same warehouse")
+
 	@api.model
 	def create(self, val):
 		if val.get("name", "/") == '/' and val.get('warehouse_id'):

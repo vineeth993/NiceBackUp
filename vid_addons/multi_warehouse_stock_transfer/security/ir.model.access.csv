@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_multi_warehouse_request,access_multi_warehouse_request,model_warehouse_stock_request,,1,1,1,1
 access_multi_warehouse_request_line,access_multi_warehouse_request_line,model_warehouse_stock_request_line,,1,1,1,1
-access_multi_warehouse_issue,access_multi_warehouse_issue,model_warehouse_stock_issue,,1,1,0,0
-access_multi_warehouse_issue_line,access_multi_warehouse_issue_line,model_warehouse_stock_issue_line,,1,1,0,0
-access_multi_warehoue_dc,access_multi_warehoue_dc,model_dc_warehouse,,1,1,0,0
-access_multi_warehoue_dc_line,access_multi_warehoue_dc_line,model_dc_warehouse_line,,1,1,0,0
+access_multi_warehouse_issue,access_multi_warehouse_issue,model_warehouse_stock_issue,,1,1,1,0
+access_multi_warehouse_issue_line,access_multi_warehouse_issue_line,model_warehouse_stock_issue_line,,1,1,1,0
+access_multi_warehoue_dc,access_multi_warehoue_dc,model_dc_warehouse,,1,1,1,0
+access_multi_warehoue_dc_line,access_multi_warehoue_dc_line,model_dc_warehouse_line,,1,1,1,0
