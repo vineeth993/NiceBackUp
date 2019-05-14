@@ -211,7 +211,9 @@ class StockWarehouseRequest(models.Model):
 		for line in self.stock_line_id:
 			if line.issued_qty or line.recieved_qty:
 				if line.issued_qty:
-					# existing_package_ids = packing_obj.search([("picking_id", "=", stock_picking_id.id)]).unlink()
+					existing_package_ids = packing_obj.search([("picking_id", "=", stock_picking_id.id)])
+					if existing_package_ids:
+						existing_package_ids.unlink()
 					val = {
 						'picking_id':stock_picking_id.id,
 						'product_uom_id':line.product_uom.id,
