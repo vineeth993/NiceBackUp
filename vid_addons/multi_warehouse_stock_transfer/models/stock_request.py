@@ -127,7 +127,7 @@ class StockWarehouseRequest(models.Model):
 	def action_confirm(self):
 		outward_issue = self.env["warehouse.stock.issue"]
 		outward_issue_line = self.env["warehouse.stock.issue.line"]
-		types = self.env["stock.picking.type"].search([("code", "=", "outgoing"), ('warehouse_id.type', '=', 'finished'),('warehouse_id', '=', self.request_warehouse_to_id.id)])
+		types = self.env["stock.picking.type"].search([("code", "=", "outgoing"), ('warehouse_id.type', 'in', ('finished','semi-finished')),('warehouse_id', '=', self.request_warehouse_to_id.id)])
 
 		if not self.stock_line_id:
 			raise ValidationError("Please Specify the product")
