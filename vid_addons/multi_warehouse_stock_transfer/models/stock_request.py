@@ -211,8 +211,6 @@ class StockWarehouseRequest(models.Model):
 
 		for line in self.stock_line_id:
 			if line.issued_qty or line.recieved_qty:
-				if line.issued_qty:
-
 				qty = line.recieved_qty - line.issued_qty
 				line.quantity_remain = line.quantity_remain - line.issued_qty
 				line.issued_qty = 0
