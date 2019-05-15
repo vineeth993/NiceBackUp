@@ -94,9 +94,13 @@ class WarehouseDc(models.Model):
 		
 		packing_obj = self.env['stock.pack.operation']
 		stock_picking_id = self.env['stock.picking'].search([('request_id', '=', self.reference.id),('state','not in', ('draft', 'cancel', 'done'))])
-		location_dest_id = self.reference.picking_id.default_location_src_id
-		location_id = self.reference.picking_id.default_location_dest_id
+		location_id = self.reference.picking_id.default_location_src_id
+		location_dest_id = self.reference.picking_id.default_location_dest_id
 		pack_ids = []
+		existing_package_ids = packing_obj.search([("picking_id", "=", stock_picking_id.id)])
+		
+		if existing_package_ids:
+			existing_package_ids.unlink()
 
 		for line in self.line_id:
 			val = {
