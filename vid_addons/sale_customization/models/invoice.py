@@ -197,7 +197,21 @@ class AccountInvoice(models.Model):
                         'location_dest_id':types[0].default_location_dest_id.id,
                         'company_id':self.partner_id.parent_id.company_id.id
                     }
+
+                pack_val = {
+                            'picking_id':stock_id.id,
+                            'product_uom_id':value.uos_id.id,
+                            'product_id':value.product_id.id,
+                            'product_qty':value.quantity,
+                            'location_dest_id':types[0].default_location_dest_id.id,
+                            'location_id':types[0].default_location_src_id.id,
+                            'lot_id':value.lot_id.id
+                        }
+
                 stock_move_obj.sudo().create(val)
+                pack_id = pack_obj.sudo().create(pack_val) 
+                stock_id.sudo().write({'pack_operation_ids':[(4, pack_id.id)]})
+
             stock_id.sudo().action_confirm()
             self.write({'state':'grn'})
 
