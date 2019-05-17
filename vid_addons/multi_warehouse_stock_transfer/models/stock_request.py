@@ -116,7 +116,7 @@ class StockWarehouseRequest(models.Model):
 				raise ValidationError("Please create a request sequence for %s"%(warehouse_id.name))
 		return super(StockWarehouseRequest, self).create(val)
 	
-	@api.model
+	@api.multi
 	def unlink(self):
 		for line in self:
 			if line.state != "draft":
@@ -264,7 +264,8 @@ class StockWarehouseRequest(models.Model):
 				pick.action_cancel()
 
 		if self.state in ('draft', 'confirm', 'process'):
-			self.reference.action_cancel()
+			if self.reference:
+				self.reference.action_cancel()
 			self.write({'state':'cancel'})
 			for line in self.stock_line_id:
 				line.action_cancel()
