@@ -175,6 +175,8 @@ class AccountInvoice(models.Model):
         stock_picking_obj = self.env['stock.picking']
         stock_move_obj = self.env['stock.move']
         types = self.env["stock.picking.type"].sudo().search([("code", "=", "incoming"), ('warehouse_id.type', '=', 'finished'),('warehouse_id.company_id', '=', self.partner_id.parent_id.company_id.id)])
+        pack_obj = self.env["stock.pack.operation"]
+        pack_ids = []
 
         if types:
             val = {
