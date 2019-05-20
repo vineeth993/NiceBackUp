@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 class StockWarehouseIssue(models.Model):
 
 	_name = "warehouse.stock.issue"
-	_inherit = ["mail.thread"]
+	_inherit = ["mail.thread", "ir.needaction_mixin"]
 	_description = "Stock Tranfer Outwards"
 	_order = "id desc"
 
@@ -87,6 +87,10 @@ class StockWarehouseIssue(models.Model):
 	reference = fields.Many2one("warehouse.stock.request", string="Reference", readonly=True)
 	dc_ids = fields.Many2many("dc.warehouse", "issue_dc_relation", "issue_id", "dc_id", string="DC's")
 	dc_exists = fields.Boolean("DC", compute="_get_dc", default=False)
+
+	@api.model
+	def _needaction_domain_get(self):
+		return [('state', '=', 'draft')]
 
 	@api.multi
 	def create(self, val):

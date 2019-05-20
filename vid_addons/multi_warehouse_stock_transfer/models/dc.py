@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class WarehouseDc(models.Model):
 
 	_name = "dc.warehouse"
-	_inherit = ["mail.thread"]
+	_inherit = ["mail.thread", "ir.needaction_mixin"]
 	_description = "Warehouse DC"
 	_order = "id desc"
 
@@ -118,6 +118,10 @@ class WarehouseDc(models.Model):
 		# if pack_ids:
 			stock_picking_id.write({'pack_operation_ids':[(4, pack_id.id)]})
 			# stock_picking_id.do_transfer()
+
+	@api.model
+	def _needaction_domain_get(self):
+		return [('state', '=', 'draft')]
 
 	@api.multi
 	def action_print_dc(self):

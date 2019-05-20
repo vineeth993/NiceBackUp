@@ -11,7 +11,7 @@ class StockWarehouseRequest(models.Model):
 
 	_name = "warehouse.stock.request"
 	_order = "id desc"
-	_inherit = ["mail.thread"]
+	_inherit = ["mail.thread", "ir.needaction_mixin"]
 	_description = "Multi Stock Transfer Request"
 
 	def get_expected_date(self):
@@ -98,6 +98,11 @@ class StockWarehouseRequest(models.Model):
 	reference = fields.Many2one("warehouse.stock.issue", string="Reference", copy=False)
 	quant_issued_date = fields.Datetime("Issued Date")
 	is_issued = fields.Boolean(string="Issue", compute="_get_is_issued")
+	# get_user_warehouse = field.Many2many("")
+
+	@api.model
+	def _needaction_domain_get(self):
+		return [('state', '=', 'issued')]
 
 	@api.onchange("request_warehouse_to_id")
 	def onchange_warehouse_id(self):
