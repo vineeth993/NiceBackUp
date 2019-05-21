@@ -28,14 +28,14 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     _order = 'order_id desc, sequence, id'
    
-    @api.depends('product_id', 'order_id.partner_selling_type', 'order_id.normal_disc', 'order_id.nonread_normal_disocunt', 'order_id.nonread_extra_disocunt', 'order_id.extra_discount')
+    @api.depends('product_id', 'order_id.partner_id', 'order_id.partner_selling_type', 'order_id.normal_disc', 'order_id.nonread_normal_disocunt', 'order_id.nonread_extra_disocunt', 'order_id.extra_discount')
     def _get_product_values(self):
         tax_ids = []
         taxes_ids = []
         for line in self:
             taxes_ids = []
             gst, igst, formstate, forminter = False, False, False, False
-            sub_type_id = self.env['sale.order.sub.type'].browse(int(line.sale_sub_type))
+            sub_type_id = line.order_id.sub_type_id
             company = self.env['res.users'].browse(self._uid).company_id
 
             if sub_type_id:
