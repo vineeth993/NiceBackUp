@@ -67,7 +67,7 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.depends('partner_id', 'brand_id')
+    @api.depends('partner_id', 'brand_id', 'partner_selling_type')
     def _get_extra_discount(self):
         for invoice in self:
             if invoice.partner_selling_type in ('normal', 'extra'):
@@ -124,51 +124,51 @@ class AccountInvoice(models.Model):
              " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
              " * The 'Cancelled' status is used when user cancel invoice.")
 
-    @api.multi
-    def onchange_partner_id(self, type, partner_id, date_invoice=False,
-        payment_term=False, partner_bank_id=False,
-        company_id=False):
-        res = super(AccountInvoice, self).onchange_partner_id(type, partner_id, date_invoice=False,
-        payment_term=False, partner_bank_id=False,
-        company_id=False)
-        for invoice in self:
-            if partner_id:
-                partner = self.env['res.partner'].browse(partner_id)
-                if invoice.move_id.picking_id.order_id.partner_selling_type == 'special' or invoice.move_id.picking_id.order_id.partner_selling_type == 'extra':
-                    extra_discount = invoice.nonread_extra_discount
-                else:
-                    extra_discount = invoice.extra_discount
-                if invoice.move_id.picking_id.order_id.partner_selling_type != "special":
-                    normal_discount = invoice.normal_disc
-                else:
-                    normal_discount = invoice.nonread_normal_disocunt
+    # @api.multi
+    # def onchange_partner_id(self, type, partner_id, date_invoice=False,
+    #     payment_term=False, partner_bank_id=False,
+    #     company_id=False):
+    #     res = super(AccountInvoice, self).onchange_partner_id(type, partner_id, date_invoice=False,
+    #     payment_term=False, partner_bank_id=False,
+    #     company_id=False)
+    #     for invoice in self:
+    #         if partner_id:
+    #             partner = self.env['res.partner'].browse(partner_id)
+    #             if invoice.move_id.picking_id.order_id.partner_selling_type == 'special' or invoice.move_id.picking_id.order_id.partner_selling_type == 'extra':
+    #                 extra_discount = invoice.nonread_extra_discount
+    #             else:
+    #                 extra_discount = invoice.extra_discount
+    #             if invoice.move_id.picking_id.order_id.partner_selling_type != "special":
+    #                 normal_discount = invoice.normal_disc
+    #             else:
+    #                 normal_discount = invoice.nonread_normal_disocunt
                     
-                res['value'].update({
-                    'normal_disc': partner.disc,
-                    'partner_selling_type': invoice.so_id.partner_selling_type,
-                    'extra_discount':partner.adisc,
-                })
-                users = self.env['res.users'].browse(self._uid)
-        return res
+    #             res['value'].update({
+    #                 'normal_disc': partner.disc,
+    #                 'partner_selling_type': invoice.so_id.partner_selling_type,
+    #                 'extra_discount':partner.adisc,
+    #             })
+    #             users = self.env['res.users'].browse(self._uid)
+    #     return res
     
-    @api.onchange('partner_selling_type')
-    def onchange_partner_selling_type(self):
-        for invoice in self:
-            if invoice.partner_selling_type == 'normal':
-                invoice.update({
-                    'normal_disc':invoice.partner_id.disc,
-                    'extra_discount':invoice.partner_id.adisc,
-                })
-            elif invoice.partner_selling_type == 'extra':
-                invoice.update({
-                    'normal_disc':invoice.partner_id.disc,
-                    'nonread_extra_disocunt':invoice.partner_id.adisc,
-                    })
-            else:
-                invoice.update({
-                    'nonread_normal_disocunt':0.0,
-                    'nonread_extra_disocunt':0.0,
-                    })
+    # @api.onchange('partner_selling_type')
+    # def onchange_partner_selling_type(self):
+    #     for invoice in self:
+    #         if invoice.partner_selling_type == 'normal':
+    #             invoice.update({
+    #                 'normal_disc':invoice.partner_id.disc,
+    #                 'extra_discount':invoice.partner_id.adisc,
+    #             })
+    #         elif invoice.partner_selling_type == 'extra':
+    #             invoice.update({
+    #                 'normal_disc':invoice.partner_id.disc,
+    #                 'nonread_extra_disocunt':invoice.partner_id.adisc,
+    #                 })
+    #         else:
+    #             invoice.update({
+    #                 'nonread_normal_disocunt':0.0,
+    #                 'nonread_extra_disocunt':0.0,
+    #                 })
 
     @api.multi
     def action_create_grn(self):

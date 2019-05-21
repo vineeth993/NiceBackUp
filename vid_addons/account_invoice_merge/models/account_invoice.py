@@ -47,6 +47,7 @@ class AccountInvoice(models.Model):
             'company_id': invoice.company_id.id,
             'type': invoice.type,
             'account_id': invoice.account_id.id,
+            'brand_id':invoice.brand_id.id,
             'state': 'draft',
             'reference': '%s' % (invoice.reference or '',),
             'name': '%s' % (invoice.name or '',),
