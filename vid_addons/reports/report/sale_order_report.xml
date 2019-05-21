@@ -106,11 +106,11 @@
                     <th class="text-center">Disc.(%)</th>
                     <th class="text-center" >Taxes</th>
                     <th class="text-center">Tax Type</th>
-                    <th class="text-center">Amount</th>
                 </t>
                 <t t-if="o.state not in ['draft','confirm','sent','cancel']">
                     <th class="text-center">Stock as on <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /> </th>
                 </t>
+                <th class="text-center">Amount</th>
             </tr>
         </xpath>
         <xpath expr="//table[@class='table table-condensed']//tbody" position="replace">
@@ -154,47 +154,45 @@
                             </t>
     			        </t>
                         </td>
-                        <td class="text-right">
-                            <span t-field="l.price_subtotal"
-                                      t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
-                        </td>
                     </t>
                     <t t-if="o.state not in ['draft','confirm','sent','cancel']">
                         <td class="text-center" t-esc="l.get_product_qty(l.product_id, o.warehouse_id)"/>
                     </t>
+                    <td class="text-right">
+                        <span t-field="l.price_subtotal"
+                            t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                    </td>
                 </tr>
             </tbody>
         </xpath>
         <xpath expr="//div[@class='row'][1]" position="replace">
-            <t t-if="o.state in ['draft','confirm','sent','cancel']">
-                <div class="row">
-                    <div class="col-xs-4 pull-right">
-                        <table class="table table-condensed">
-                            <tr class="border-black">
-                                <td><strong>Total Without Taxes</strong></td>
-                                <td class="text-right">
-                                    <span t-field="o.amount_untaxed"
+            <div class="row">
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+                        <tr class="border-black">
+                            <td><strong>Total Without Taxes</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_untaxed"
                                         t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Taxes</td>
-                                <td class="text-right">
-                                    <span t-field="o.amount_tax"
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Taxes</td>
+                            <td class="text-right">
+                                <span t-field="o.amount_tax"
                                         t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
-                                </td>
-                            </tr>
-                            <tr class="border-black">
-                                <td><strong>Total</strong></td>
-                                <td class="text-right">
-                                    <span t-field="o.amount_total"
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_total"
                                         t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </t>
+            </div>
 
             <table width="100%">
                 <tr>
