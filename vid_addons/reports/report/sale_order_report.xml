@@ -101,8 +101,8 @@
                 <th>Description</th>
                 <th class="text-center">Pack</th>
                 <th class="text-center">Quantity</th>
-                <th class="text-center">Unit Price</th>
                 <t t-if="o.state in ['draft','confirm','sent','cancel']">
+                    <th class="text-center">Unit Price</th>
                     <th class="text-center">Disc.(%)</th>
                     <th class="text-center" >Taxes</th>
                     <th class="text-center">Tax Type</th>
@@ -134,10 +134,10 @@
                         <span t-field="l.product_uom_qty"/>
                         <span groups="product.group_uom" t-field="l.product_uom"/>
                     </td>
-                    <td class="text-center">
-                        <span t-field="l.price_unit"/>
-                    </td>
                     <t t-if="o.state in ['draft','confirm','sent','cancel']">
+                        <td class="text-center">
+                            <span t-field="l.price_unit"/>
+                        </td>
                         <td class="text-center">
                             <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
                         </td>
