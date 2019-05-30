@@ -102,7 +102,7 @@
             <field name="name">dc.line.product.tree</field>
             <field name="model">dc.warehouse.line</field>
             <field name="arch" type="xml">
-                <tree string="DC Warehouse Lines" create="false" default_order="quant_issued_date desc">
+                <tree string="DC Warehouse Lines" create="false">
                     <field name="ref_id"/>
                     <field name="quant_issued_date"/>
                     <field name="issued_quant"/>
