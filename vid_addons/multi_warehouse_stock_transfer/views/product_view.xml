@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	
+	<data>
+		<record id="dc_product_tree_view" model="ir.ui.view">
+			<field name="name">dc.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_only_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//div[@name='buttons']" position="inside">
+					<button class="oe_inline oe_stat_button" name="action_view_dc" string="DC's" type="object" icon="fa fa-truck"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+
+</openerp>

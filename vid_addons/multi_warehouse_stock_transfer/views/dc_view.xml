@@ -98,6 +98,27 @@
 
         </record>
 
+        <record id="dc_line_product_tree" model="ir.ui.view">
+            <field name="name">dc.line.product.tree</field>
+            <field name="model">dc.warehouse.line</field>
+            <field name="arch" type="xml">
+                <tree string="DC Warehouse Lines" create="false" default_order="quant_issued_date desc">
+                    <field name="ref_id"/>
+                    <field name="quant_issued_date"/>
+                    <field name="issued_quant"/>
+                    <field name="req_ref"/> 
+                    <field name="subtotal"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dc_line_product_view" model="ir.actions.act_window">
+            <field name="name">DC</field>
+            <field name="res_model">dc.warehouse.line</field>
+            <field name="view_id" ref="dc_line_product_tree"/>
+        </record>
+
         <menuitem id="multi_warehouse_stock_transfer_dc_action" name="Delivery Challan" parent="menu_warehouse_stock_transfer" action="warehouse_dc_actions" sequence="5"/>
 
 	</data>

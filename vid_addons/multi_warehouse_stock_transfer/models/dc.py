@@ -65,7 +65,7 @@ class WarehouseDc(models.Model):
 	amount_tax = fields.Float("Taxes", compute="_compute_amount", store=True, track_visibility='always')
 	amount_total = fields.Float("Total", compute="_compute_amount", store=True, track_visibility='always')
 	currency_id = fields.Many2one("res.currency", invisible=True)
-	reference = fields.Many2one("warehouse.stock.request", string="Reference", readonly=True)
+	reference = fields.Many2one("warehouse.stock.request", string="Request Reference", readonly=True)
 	issue_refernce = fields.Many2one("warehouse.stock.issue", string="Issue Reference", readonly=True)
 	quant_issued_date = fields.Date("Issued Date")
 	json_file = fields.Binary("E-Way Bill-Json")
@@ -133,6 +133,12 @@ class WarehouseDc(models.Model):
 		for line in self.line_id:
 			line.write({'state':'cancel'})
 
+	@api.multi
+	def action_done(self):
+		self.write({'state':'done'})
+		for line in self.line_id:
+			line.write({'state':'done'})
+
 
 class WarehouseDcLine(models.Model):
 
@@ -155,6 +161,8 @@ class WarehouseDcLine(models.Model):
 	issued_quant = fields.Float(string='Issue Qty')
 	batch = fields.Many2one("stock.production.lot", string="Batch")
 	ref_id = fields.Many2one("dc.warehouse", string="Reference")
+	quant_issued_date = fields.Date(related="ref_id.quant_issued_date")
+	req_ref = fields.Many2one("warehouse.stock.request", related="ref_id.reference")
 
 	@api.onchange("product_id")
 	def onchange_product_id(self):

@@ -5,3 +5,4 @@ import stock_issue
 import stock
 import dc
 import user
+import product

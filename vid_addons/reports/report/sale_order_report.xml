@@ -100,7 +100,7 @@
                 <th>SL</th>
                 <th>Description</th>
                 <th class="text-center">Pack</th>
-                <th class="text-center">Quantity</th>
+                <th class="text-center">Quantity(Unit)</th>
                 <t t-if="o.state in ['draft','confirm','sent','cancel']">
                     <th class="text-center">Unit Price</th>
                     <th class="text-center">Disc.(%)</th>
@@ -108,7 +108,8 @@
                     <th class="text-center">Tax Type</th>
                 </t>
                 <t t-if="o.state not in ['draft','confirm','sent','cancel']">
-                    <th class="text-center">Stock as on <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /> </th>
+                    <th class="text-center">Stock as on <br/><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /> </th>
+                    <th class="text-center">Unit Price</th>
                 </t>
                 <th class="text-center">Amount</th>
             </tr>
@@ -132,7 +133,6 @@
                     </td>
                     <td class="text-center">
                         <span t-field="l.product_uom_qty"/>
-                        <span groups="product.group_uom" t-field="l.product_uom"/>
                     </td>
                     <t t-if="o.state in ['draft','confirm','sent','cancel']">
                         <td class="text-center">
@@ -157,6 +157,9 @@
                     </t>
                     <t t-if="o.state not in ['draft','confirm','sent','cancel']">
                         <td class="text-center" t-esc="l.get_product_qty(l.product_id, o.warehouse_id)"/>
+                        <td class="text-center">
+                            <span t-field="l.price_unit"/>
+                        </td>
                     </t>
                     <td class="text-right">
                         <span t-field="l.price_subtotal"

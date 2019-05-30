@@ -18,7 +18,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','report'],
+    'depends': ['base','stock','report','product'],
 
     # always loaded
     'data': [
@@ -31,6 +31,7 @@
         'views/dc_view.xml',
         'views/report_dc.xml',
         'views/users.xml',
+        'views/product_view.xml',
         'data/transfer_multi_warehouse.xml',
         'security/ir.model.access.csv'
     ],

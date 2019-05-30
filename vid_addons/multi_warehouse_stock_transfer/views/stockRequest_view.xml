@@ -61,7 +61,7 @@
                             <field name="stock_line_id">
                                 <tree editable="bottom" colors="green:state == 'issued';red:state in ('less','excess');blue:state == 'process'" attrs="{'create':[('state', '=', 'draft')]}"> 
                                     <field name="product_id" context="{'default_picking':parent.picking_id, 'company_id':parent.company_id, 'default_date':parent.expected_date}" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}" domain="['|',('company_id', '=', parent.company_id), ('company_id', '=', False)]"/>
-                                    <field name="batch" attrs="{'readonly':[('state', '!=', 'draft')]}" domain="[('product_id', '=', product_id)]" context="{'product_id':product_id}"/>
+                                    <field name="batch" attrs="{'readonly':[('state', '!=', 'draft')]}" domain="[('product_id', '=', product_id)]" context="{'product_id':product_id}" />
                                     <field name="product_uom" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}" invisible='1'/>
                                     <field name="product_qty" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                     <field name="issued_qty" readonly="1" invisible='1'/>

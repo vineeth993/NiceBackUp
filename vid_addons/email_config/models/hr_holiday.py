@@ -39,7 +39,7 @@ class HrHoliday(models.Model):
 			if len(get_leaves) >= holiday_status_id.leave_limit:
 				raise ValidationError("Your %s Leave limit has reached ,You cannot apply for %s for this financial year" %(holiday_status_id.name, holiday_status_id.name))
 
-		if holiday_status_id.leave_days_limit:
+		if holiday_status_id.leave_days_limit and values['type'] == 'remove':
 			if values["number_of_days_temp"] > holiday_status_id.leave_days_limit:
 				raise ValidationError("You cannot apply for more than %d days for %s "%(holiday_status_id.leave_days_limit, holiday_status_id.name))
 

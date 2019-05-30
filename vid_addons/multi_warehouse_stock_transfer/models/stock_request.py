@@ -99,6 +99,7 @@ class StockWarehouseRequest(models.Model):
 	quant_issued_date = fields.Datetime("Issued Date")
 	is_issued = fields.Boolean(string="Issue", compute="_get_is_issued")
 	# get_user_warehouse = field.Many2many("")
+	dc_id = fields.Many2one("dc.warehouse", string="DC")
 
 	@api.model
 	def _needaction_domain_get(self):
@@ -258,6 +259,8 @@ class StockWarehouseRequest(models.Model):
 			state = 'done'
 		else:
 			state = 'process'
+			
+		outward_ref_id.action_done()
 		outward_ref_id.write({'state':state})
 		self.write({'state':state})
 
