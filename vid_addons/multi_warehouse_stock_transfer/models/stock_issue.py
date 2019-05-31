@@ -199,7 +199,7 @@ class StockWarehouseIssue(models.Model):
 	def action_done(self):
 		dc_ids = [dc.id for dc in self.dc_ids]
 
-		get_dcs = self.env['warehouse.dc'].search([('id', 'in', dc_ids), ('state', '=', 'dc')])
+		get_dcs = self.env["dc.warehouse"].search([('id', 'in', dc_ids), ('state', '=', 'dc')])
 		if get_dcs:
 			get_dcs.action_done()
 
