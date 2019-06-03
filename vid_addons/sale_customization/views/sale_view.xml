@@ -373,6 +373,17 @@
 			</field>
 		</record>
 
+		<record id="product_order_tree_view" model="ir.ui.view">
+			<field name="name">product.order.view</field>
+			<field name="model">sale.order.line</field>
+			<field name="inherit_id" ref="sale.view_order_line_tree"/>
+			<field name="arch" type="xml">
+				<field name="product_uom_qty" position="after">
+					<field name="invoiced_quant" sum="Total"/>
+				</field>
+			</field>
+		</record>
+
 		<menuitem name="Validity Terms" id="validity_terms" parent="base.menu_base_config" action="stock_validity_term_act" sequence="30"/>
 		<menuitem name="Delivery Terms" id="delivery_terms" parent="base.menu_base_config" action="stock_delivery_term_act" sequence="30"/>
 		<menuitem name="Reasons For Sale" id="sale_reasons" parent="base.menu_sales"

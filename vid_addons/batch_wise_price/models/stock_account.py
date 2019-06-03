@@ -20,6 +20,8 @@ class StockPicking(models.Model):
 			company = move.company_id
 			origin = move.picking_id.name
 			sale = move.picking_id.origin
+			quantDict = {}
+
 			partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
 			sale_id = sale_obj.search(cr, uid,[('name','=', sale)], context=context)
 			key = (partner, currency_id, company.id, user_id)
@@ -61,16 +63,29 @@ class StockPicking(models.Model):
 				for quant in move.quant_ids:
 					if quant.qty > 0:
 						if quant.lot_id.pricelist and not sale_id.partner_selling_type == 'special':
-							price_list_obj = self.pool.get('product.price')
-							price_list = price_list_obj.search(cr, uid,[('pricelist', '=', quant.lot_id.pricelist.id), ('product_id', '=', invoice_line_vals['product_id'])], context=context)
-							if price_list:
-								if len(price_list) > 1:
-									price_list = price_list[0]
-								price_list = price_list_obj.browse(cr, uid, price_list, context=context)
-								if price_list.cost:
-									invoice_line_vals.update({'price_unit':price_list.cost})
-						invoice_line_vals.update({'lot_id':quant.lot_id.id,'quantity':quant.qty})
-						val = move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+							if quantDict.get(quant.lot_id.name):
+								quantDict[quant.lot_id.name][0] = quantDict[quant.lot_id.name][0] + quant.qty
+								continue
+							else:
+								quantDict[quant.lot_id.name] = [quant.qty, quant.lot.id] 
+								price_list_obj = self.pool.get('product.price')
+								price_list = price_list_obj.search(cr, uid,[('pricelist', '=', quant.lot_id.pricelist.id), ('product_id', '=', invoice_line_vals['product_id'])], context=context)
+								if price_list:
+									if len(price_list) > 1:
+										price_list = price_list[0]
+									price_list = price_list_obj.browse(cr, uid, price_list, context=context)
+									if price_list.cost:
+										quantDict[quant.lot_id.name].append(price_list.cost)
+								else:
+									quantDict[quant.lot_id.name].append(0)
+						for quant in quantDict:
+							invoice_line_vals.update({'quantity':quantDict[quant][0], 'lot_id':quantDict[quant][1]})
+							if quantDict[quant][2]:
+								invoice_line_vals.update({'price_unit':quantDict[quant][2]})
+								val = move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+
+						# invoice_line_vals.update({'lot_id':quant.lot_id.id,'quantity':quant.qty})
+						# val = move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 			else:
 				move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
 			move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
