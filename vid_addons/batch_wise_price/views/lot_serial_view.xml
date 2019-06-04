@@ -9,7 +9,7 @@
 			<field name="inherit_id" ref="stock.view_production_lot_form"/>
 			<field name="arch" type="xml">
 				<field name="ref" position="after">
-					<field name="pricelist" domain="[('price_ids.product_id', '=', 	product_id)]"/>
+					<field name="pricelist" domain="[('price_ids.product_id', '=', 	product_id)]" options="{'no_create_edit': True, 'no_create':True}"/>
 				</field>
 			</field>
 		</record>
