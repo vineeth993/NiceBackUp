@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <openerp>
-<data>
+	<data>
 
-	<record id="partner_email_config" model="ir.ui.view">
-		<field name="name">partner.email.config</field>
-		<field name="model">hr.employee</field>
-		<field name="inherit_id" ref="hr.view_employee_form"/>
-		<field name="arch" type="xml">
-			<xpath expr="//field[@name='work_email']" position="replace">
-			</xpath>
-			<xpath expr="//label[@for='work_email']" position="replace">
-			</xpath>
-			<xpath expr="//group[@string='Position']" position="after">
-				<group string="Email Configuration">
-					<field name="work_email" widget="email" />
-					<field name="password" password="True"/>
-					<field name="smtp_server"/>
-					<field name="smtp_encryption"/>
-					<field name="email_config_id"  invisible='1'/>
-					<button name="smtp_test" type="object" string="Test Connection" icon="gtk-network" groups="base.group_hr_user"/>
-				</group>
-			</xpath>
-		</field>
-	</record>	
+		<record id="hr_employee_filter_cust" model="ir.ui.view">
+			<field name="name">hr.employee.filter</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_filter"/>
+			<field name="arch" type="xml">
+				<xpath expr="//search" position="inside">
+					<filter name="my_id" string="My" icon="terp-personal" domain="[('user_id', '=', uid)]" />
+				</xpath>
+			</field>
+		</record>
 
-</data>
+		<record id="partner_email_config" model="ir.ui.view">
+			<field name="name">partner.email.config</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='work_email']" position="replace">
+				</xpath>
+				<xpath expr="//label[@for='work_email']" position="replace">
+				</xpath>
+				<xpath expr="//group[@string='Position']" position="after">
+					<group string="Email Configuration">
+						<field name="work_email" widget="email" />
+						<field name="password" password="True"/>
+						<field name="smtp_server"/>
+						<field name="smtp_encryption"/>
+						<field name="email_config_id"  invisible='1'/>
+						<button name="smtp_test" type="object" string="Test Connection" icon="gtk-network" groups="base.group_hr_user"/>
+					</group>
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+			<field name="context">{'search_default_my_id':1}</field>
+		</record>
+
+	</data>
 </openerp>

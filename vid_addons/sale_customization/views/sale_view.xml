@@ -230,7 +230,7 @@
 				<xpath expr="//button[@name='action_quotation_send']"
 					position="after">
 					<button name="action_quotation_confirm" string="Confirm Quotation"
-						type="object" states="draft" />
+						type="object" states="draft" groups="base.group_user"/>
 				</xpath>
 
 				<field name="payment_term" position="after">

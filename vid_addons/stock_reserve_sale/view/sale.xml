@@ -14,7 +14,7 @@
                         string="Reserve Stock"
                         help="Pre-book products from stock"
                         attrs="{'invisible': [('is_stock_reservable', '=', False)]}"
-                        />
+                        groups="base.group_user"/>
                 </button>
 
                 <field name="order_line" position="attributes">
@@ -27,12 +27,12 @@
                         type="action"
                         string="Reserve Stock"
                         attrs="{'invisible': ['|', ('reservation_ids', '!=', []),
-                                                   ('state', '!=', 'draft')]}" />
+                                                   ('state', '!=', 'draft')]}"  groups="base.group_user"/>
                     <button name="release_stock_reservation"
                         type="object"
                         string="Release Reservation"
                         attrs="{'invisible': ['|', ('reservation_ids', '=', []),
-                                                   ('state', '!=', 'draft')]}" />
+                                                   ('state', '!=', 'draft')]}" groups="base.group_user"/>
                 </xpath>
 
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
@@ -42,12 +42,12 @@
                         type="action"
                         string="Reserve Stock"
                         icon="terp-locked"
-                        attrs="{'invisible': [('is_stock_reservable', '=', False)]}" />
+                        attrs="{'invisible': [('is_stock_reservable', '=', False)]}" groups="base.group_user"/>
                     <button name="release_stock_reservation"
                         type="object"
                         string="Release Reservation"
                         icon="gtk-undo"
-                        attrs="{'invisible': [('reservation_ids', '=', [])]}" />
+                        attrs="{'invisible': [('reservation_ids', '=', [])]}" groups="base.group_user"/>
                 </xpath>
 
                 <field name="invoiced" position="before">
@@ -57,7 +57,7 @@
                         <button name="release_all_stock_reservation"
                             string="cancel all"
                             type="object" class="oe_link"
-                            attrs="{'invisible': [('has_stock_reservation', '=', False)]}"/>
+                            attrs="{'invisible': [('has_stock_reservation', '=', False)]}" groups="base.group_user"/>
                     </div>
                 </field>
             </field>

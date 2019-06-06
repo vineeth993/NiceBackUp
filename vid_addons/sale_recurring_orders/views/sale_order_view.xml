@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="sale.view_order_form"/>
 			<field name="arch" type="xml">
 				<button name="invoice_cancel" position="after">
-                    <button name="action_button_generate_agreement" string="Generate agreement" type="object"/>
+                    <button name="action_button_generate_agreement" string="Generate agreement" type="object" attrs="{'invisible':[('state', 'in', ('done', 'cancel', 'progress'))]}" groups="base.group_user"/>
 				</button>
 			</field>
 		</record>
