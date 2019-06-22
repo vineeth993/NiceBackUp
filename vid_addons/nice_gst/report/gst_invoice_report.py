@@ -171,9 +171,9 @@ class ReportInvoice(models.AbstractModel):
 			'taxable_values': taxable_values,
 			'total_values': total_values,
 			'blank_lines': blank_lines,
-			'normal_disc':total_disc_amt,
-			'add_disc':total_extra_amt,
-			'scheme_disc':total_scheme_disc,
+			'normal_disc':round(total_disc_amt, 2),
+			'add_disc':round(total_extra_amt, 2),
+			'scheme_disc':round(total_scheme_disc, 2),
 			'disc':disc,
 			'e_disc':e_disc
 		}
