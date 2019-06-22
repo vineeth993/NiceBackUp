@@ -24,12 +24,12 @@
                     <page name='discount' string="Discount" attrs="{'invisible':[('customer','=',False)]}">
                         <group>
                             <group >
-                                <field name="disc"/>
+                                <field name="disc" invisible="1"/>
                                 <!-- <field name="nedisc"/> -->
                             </group>
                             <group>
-                                <field name="adisc"/>
-                                <field name="tdisc"/>
+                                <field name="adisc" invisible="1"/>
+                                <field name="tdisc" invisible="1"/>
                             </group>
                         </group>
                         <field name="disc_id">

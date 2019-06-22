@@ -13,6 +13,11 @@
                         <field name="control_type" widget="radio"/>
                     </div>
                 </div>
+
+                <field name="type" position="before">
+                    <field name="product_location" domain="[('usage', '=', 'internal')]"/>
+                </field>
+
                 <field name='volume' position="before">
                     <field name="uom_id_pack" style="width:193px;"/>
                 </field>

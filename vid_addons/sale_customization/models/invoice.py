@@ -123,6 +123,7 @@ class AccountInvoice(models.Model):
              " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
              " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
              " * The 'Cancelled' status is used when user cancel invoice.")
+    warehouse_id = fields.Many2one('stock.warehouse', string="Warehouse")
 
     # @api.multi
     # def onchange_partner_id(self, type, partner_id, date_invoice=False,

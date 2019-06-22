@@ -22,7 +22,7 @@ class ResPartner(models.Model):
     lead_time = fields.Integer("Lead Time")
     tax_id = fields.Many2many("account.tax", "form_wise_tax_in_partner", "partner_id", "taxes_id", "Customer Taxes")
     tax_desc = fields.Text("Tax Description")  
-    disc_id = fields.One2many('partner.discount', 'partner_id', string="Reference", copy=True)
+    disc_id = fields.One2many('partner.discount', 'partner_id', string="Reference", copy=True, track_visibility="onchange")
     
     @api.one
     @api.constrains('ref')

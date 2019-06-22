@@ -120,6 +120,8 @@ class SaleOrderLine(models.Model):
 	product_name = fields.Char(string="Prod Name")
 	order_partner_id = fields.Many2one("res.partner")
 	case_lot = fields.Float('Case Lot', compute="_get_product_values", store=True)
+	ordered_qty = fields.Float('Ordered Qty', readonly=True)
+	product_location = fields.Many2one('stock.location', string="Warehouse")
 	invoiced_quant = fields.Float("Invoiced Quant", compute="_get_invoiced_quant", store=True)
 
 	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
@@ -132,17 +134,19 @@ class SaleOrderLine(models.Model):
 		partner_obj = self.pool.get('res.partner')
 		partner_id = partner_obj.browse(cr, uid, partner_id)
 
-		res["value"]["order_partner_id"]  = partner_id.id
-		if context.get('sub_type_id', '/') != '/':
-			res['value']['sale_sub_type'] = context.get('sub_type_id')
+		res["value"]["order_partner_id"] = partner_id.id
 
-		if context.get("partner_type", '/') != '/':
-			res['value']['partner_type'] = context.get("partner_type")
+		# if context.get('sub_type_id', '/') != '/':
+		#     res['value']['sale_sub_type'] = context.get('sub_type_id')
+
+		# if context.get("partner_type", '/') != '/':
+		#     res['value']['partner_type'] = context.get("partner_type")
 		if res and 'price_unit' in res['value'] and res['value']['price_unit'] <=0 :
 			raise exceptions.Warning('Product Price cannot zero or less than zero.')
 		if product:
 			product_obj = self.pool.get('product.product').browse(cr, uid, product)
 			res['value']['product_name'] = product_obj.name
+			res["value"]["product_location"] = product_obj.product_tmpl_id.product_location
 			if product_obj.price_list and res['value']['partner_type'] != 'special':
 				raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
 
@@ -262,8 +266,11 @@ class SaleOrder(models.Model):
 	validated_user = fields.Many2one('res.users', string="Validated User")
 
 	def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
+		loc_obj = self.pool.get("stock.location")
 		res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
 		res['name'] = line.product_name
+		#warehouse_id = loc_obj.get_warehouse(cr, uid, line.product_location, context=context)
+		#res['warehouse_id'] = warehouse_id or order.warehouse_id.id or False
 		return res
 
 	@api.multi

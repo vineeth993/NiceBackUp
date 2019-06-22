@@ -140,7 +140,8 @@ class ProductTemplate(models.Model):
 	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
 	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
 	product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
-	
+	product_location = fields.Many2one('stock.location', company_dependent=True)
+
 	_defaults = {
 		'type': 'product',
 		}

@@ -98,6 +98,8 @@ class SaleOrderTypology(models.Model):
     object_type = fields.Selection([('sale', 'Sale'),
             ('purchase', 'Purchase'),
         ], string="Object Type")
+    warehouse_journal_id = fields.One2many("warehouse.journal", 'type_id', string="Warehouse Journal")
+
 
     def onchange_warehouse(self, cr, uid, ids, warehouse_id, context=None):
         if warehouse_id:
@@ -125,3 +127,14 @@ class SubType(models.Model):
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
         ], string="Object Type", default='sale')
+    # taxes_id = fields.Many2many('account.tax', string="Taxes")
+
+
+
+class WarehouseJournal(models.Model):
+
+    _name = "warehouse.journal"
+
+    warehouse_id = fields.Many2one("stock.location", string="Warehouse location")
+    journal_id = fields.Many2one("account.journal", string="Sales Journal")
+    type_id = fields.Many2one("sale.order.type", string="Reference")

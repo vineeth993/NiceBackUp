@@ -37,9 +37,19 @@
                                 <field name="incoterm_id" />
                             </group>
                         </group>
-                        <group>
+  <!--                       <group>
                             <field name="description" nolabel="1" />
-                        </group>
+                        </group> -->
+                        <notebook>
+                            <page string="Journal">
+                                <field name="warehouse_journal_id">
+                                    <tree editable="top">
+                                        <field name="warehouse_id" domain="[('usage', '=', 'internal'), ('company_id', '=', parent.company_id)]" required="1"/>
+                                        <field name="journal_id" domain="[('type', '=', 'sale'),('company_id', '=', parent.company_id)]" required="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

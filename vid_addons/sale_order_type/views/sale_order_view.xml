@@ -60,6 +60,7 @@
                    </xpath>
                     <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="attributes">
                        <attribute name="context">{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id, 'sub_type_id': parent.sub_type_id, 'partner_type':parent.partner_selling_type}</attribute>
+                       <attribute name="string">Accepted Qty</attribute>
                    </xpath>
             </field>
         </record>

@@ -8,17 +8,17 @@ class ResPartner(models.Model):
 	_inherit = 'res.partner'
 
 
-	country_base_gst_type = fields.Selection([('national', 'National'), ('international', 'International')], string="GST Type")
+	country_base_gst_type = fields.Selection([('national', 'National'), ('international', 'International')], string="GST Type", track_visibility="onchange")
 	gst_reg = fields.Selection([('registered', 'Registered'), ('unregistered', 'Unregistered'),
-								('cs', 'Composite Supplier'),('ngs', 'Non GST Supplier')], string="GST Status", default="registered")
+								('cs', 'Composite Supplier'),('ngs', 'Non GST Supplier')], string="GST Status", default="registered", track_visibility="onchange")
 	gst_category = fields.Selection([
 	('gst', 'Local'),
 	('igst', 'Interstate'),
-	], string="GST Category")
-	gst_no = fields.Char('GST No', size=64)
-	tds_categ = fields.Many2one("tds.category", string="TDS Category")
-	reverse_tax_1 = fields.Many2one('reverse.tax')
-	gst_credit = fields.Boolean('GST Credit')
+	], string="GST Category", track_visibility="onchange")
+	gst_no = fields.Char('GST No', size=64, track_visibility="onchange")
+	tds_categ = fields.Many2one("tds.category", string="TDS Category", track_visibility="onchange")
+	reverse_tax_1 = fields.Many2one('reverse.tax', track_visibility="onchange")
+	gst_credit = fields.Boolean('GST Credit', track_visibility="onchange")
 	ssi_unit = fields.Boolean('SSI Unit')
 	ssi_no = fields.Char("MSME Number")
 	pan = fields.Char("PAN")

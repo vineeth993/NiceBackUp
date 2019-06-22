@@ -109,8 +109,30 @@
                 <t t-set="company" t-value="res_company"></t>
                 <table width="100%">
                     <tr style="border-top: solid 3px black;border-left: solid 3px black;border-right: solid 3px black;">
-                        <td style="padding-bottom:10px;padding-top:10px;font-size:30px;text-align:center;" width="100%">
+                        <td width="50%" style="padding-bottom:10px;padding-top:10px;font-size:30px;text-align:center;" >
                             <b>INVOICE</b>
+                        </td>
+                        <td width="50%" style="border-left: solid 1px black;">
+                            <t t-if="o.warehouse_id">
+                                <table width="100%">
+                                    <tr>
+                                        <td width="30%" style="padding-left:5px;"><b>Despatch Warehouse</b></td>
+                                        <td width="1%">:</td>
+                                        <td width="69%" style="padding-right: 3px;">
+                                            <span t-if="o.warehouse_id.partner_id.street"><span t-field="o.warehouse_id.partner_id.street"/><br/></span>
+                                            <span t-if="o.warehouse_id.partner_id.street2"><span t-field="o.warehouse_id.partner_id.street2"/></span>
+                                            <span t-if="o.warehouse_id.partner_id.city"><br/><span t-field="o.warehouse_id.partner_id.city"/>,</span>
+                                            <span t-if="o.warehouse_id.partner_id.zip"><span t-field="o.warehouse_id.partner_id.zip"/></span>
+                                            <span t-if="o.warehouse_id.partner_id.state_id"><br/><span t-field="o.warehouse_id.partner_id.state_id.name"/>,</span><span t-if="o.warehouse_id.partner_id.country_id"><span t-field="o.warehouse_id.partner_id.country_id.name"/></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left:5px;"><b>GSTIN</b></td>
+                                        <td>:</td>
+                                        <td style="padding-right: 3px;"><span t-field="o.warehouse_id.partner_id.gst_no"/></td>
+                                    </tr>
+                                </table>
+                            </t>
                         </td>
                     </tr>
                 </table>

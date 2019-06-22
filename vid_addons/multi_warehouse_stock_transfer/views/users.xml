@@ -8,6 +8,7 @@
 			<field name="inherit_id" ref="base.view_users_form"/>
 			<field name="arch" type="xml">
 				<field name="partner_id" position="after">
+					<field name="warehouse" domain="[('company_id', '=', company_id)]" />
 					<field name="related_warehouse_id" domain="[('company_id', '=', company_id)]" widget="many2many_tags"/>
 				</field>
 			</field>

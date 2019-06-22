@@ -20,7 +20,7 @@ class StockWarehouseRequest(models.Model):
 		return expected_date.strftime('%Y-%m-%d')
 
 	def _get_picking_type(self):
-		types = self.env["stock.picking.type"].search([("code", "=", "incoming"), ('warehouse_id.type', '=', 'finished'), ('warehouse_id.company_id', '=', self.env.user.company_id.id)])
+		types = self.env["stock.picking.type"].search([("code", "=", "incoming"), ('warehouse_id', '=', self.env.user.warehouse.id)])
 		if not types:
 			raise ValidationError("Make sure you have at least an incoming picking type defined")
 		return types[0]
@@ -34,10 +34,10 @@ class StockWarehouseRequest(models.Model):
 		return val
 
 	def _get_warehouse(self):
-		warehouse_ids = self.env['stock.warehouse'].search([('type', '=', 'finished')])
+		warehouse_ids = self.env.user.warehouse.id
 		if not warehouse_ids:
 			return False
-		return warehouse_ids[0]
+		return warehouse_ids
 
 	@api.depends('stock_line_id.issued_qty')
 	def _get_is_issued(self):
