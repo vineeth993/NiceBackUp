@@ -42,7 +42,7 @@ class ReportInvoice(models.AbstractModel):
 			subtotal = line.quantity*line.price_unit
 			total_nodiscount += subtotal
 			discount = subtotal - line.price_subtotal
-			discount_perc = round((discount * 100/subtotal), 2)
+			discount_perc = round((discount * 100/subtotal), 3)
 			total_discount += discount
 			taxable_value = line.price_subtotal
 			gst_perc, gst, cgst_perc, sgst_perc, igst_perc = 0.0, 0.0, 0.0, 0.0, 0.0
