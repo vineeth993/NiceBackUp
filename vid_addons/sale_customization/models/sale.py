@@ -139,8 +139,8 @@ class SaleOrderLine(models.Model):
 		# if context.get('sub_type_id', '/') != '/':
 		#     res['value']['sale_sub_type'] = context.get('sub_type_id')
 
-		# if context.get("partner_type", '/') != '/':
-		#     res['value']['partner_type'] = context.get("partner_type")
+		if context.get("partner_type", '/') != '/':
+		     res['value']['partner_type'] = context.get("partner_type")
 		if res and 'price_unit' in res['value'] and res['value']['price_unit'] <=0 :
 			raise exceptions.Warning('Product Price cannot zero or less than zero.')
 		if product:
