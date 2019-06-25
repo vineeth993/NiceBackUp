@@ -35,7 +35,7 @@
                     <header>
                         <button name="action_confirm" type="object" states="draft" string="Confirm" class="oe_highlight" />
                         <button name="action_cancel" type="object" states="draft,confirm,process" string="Cancel" groups="base.group_erp_manager"/>
-                        <button name="action_view" type="object" string="View Doc" states="process,issued,done,error" class="oe_highlight"/>
+                        <button name="action_view" type="object" string="View Doc" states="done,error" class="oe_highlight"/>
                         <button name="action_done" type="object" string="Done" states="issued,error" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,process,done"/>
                     </header>
