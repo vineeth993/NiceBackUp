@@ -221,6 +221,14 @@
 			</field>
 		</record>
 
+		<record id="hr_holidays.menu_open_ask_holidays" model="ir.ui.menu">
+			<field name="name">Leave</field>
+		</record>
+
+		<record id="hr_holidays.menu_open_company_allocation" model="ir.ui.menu">
+			<field name="name">Leave Summary</field>
+		</record>
+
 		<record id="request_sanction_holidays" model="ir.actions.act_window">
 			<field name="name">Request To Sanction</field>
 			<field name="res_model">hr.holidays</field>
