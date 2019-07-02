@@ -150,7 +150,7 @@ class LeaveSummary(report_xls):
 				line += 1
 				ws.write(count, line, employee.name, self.normal)
 				line += 1
-				ws.write(count, line, employee.company_id.name, self.normal)
+				ws.write(count, line, employee.address_id.name, self.normal)
 				line += 1
 				ws.write(count, line, employee.department_id.name, self.normal)
 				for leave in leave_status:
