@@ -125,11 +125,11 @@ class LeaveSummary(report_xls):
 		ws.write(1, 0 , name, self.title2)
 
 		leave_status_obj = self.pool.get("hr.holidays.status")
-		leave_status_id = leave_status_obj.search(cr, uid, [], order="employee_id asc")
+		leave_status_id = leave_status_obj.search(cr, uid, [])
 		leave_status = leave_status_obj.browse(cr, uid, leave_status_id)
 
 		employee_obj = self.pool.get("hr.employee")
-		employee_id = employee_obj.search(cr, uid, [])
+		employee_id = employee_obj.search(cr, uid, [], order="employee_id asc")
 		employees = employee_obj.browse(cr, uid, employee_id)
 
 		count = 3
