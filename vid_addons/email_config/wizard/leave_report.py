@@ -17,6 +17,7 @@ class LeaveReport(models.TransientModel):
 	leave_id = fields.Many2many('hr.holidays.status', "leave_employee_rel", "leave_id", "employee_id", string="Leave")
 	description = fields.Boolean('Description')
 	department_id = fields.Many2one("hr.department", string="Department")
+	leave_balance = fields.Boolean("Leave Balance")
 
 	@api.multi
 	def print_leave_report(self):

@@ -22,32 +22,12 @@ class leave_summary_report(report_sxw.rml_parse):
 
 class LeaveSummary(report_xls):
 
-	def generate_xls_report(self, parser, xls_styles, data, objects, wb):
-
-		report_name = 'Leave Summary'
-		ws = wb.add_sheet(report_name)
-		ws.panes_frozen = True
-		ws.remove_splits = True
-		ws.portrait = 0  # Landscape
-		ws.fit_width_to_pages = 1
-		row_pos = 0
-		cols = range(10)
-		for col in cols:
-			ws.col(col).width = 4000
-
-
-		cr, uid = self.cr, self.uid
-		self.title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz left;')
-		self.normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
-		self.number          = xlwt.easyxf(num_format_str='#,##0.00')
-		self.number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
-		self.number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
+	def leave_report(self, cr, uid, parser, xls_styles, data, objects, ws, leave_obj):
 
 		name = "Leave Status Report as on "+str(data['form'][0]['to_date'])
 		ws.write(0, 0 ,"Nice Chemicals (P) Limited", self.title2)
 		ws.write(1, 0 , name, self.title2)
 
-		leave_obj = self.pool.get("hr.holidays")
 
 		if data['form'][0]["category"] == "all":
 			leave_ids = leave_obj.search(cr, uid, [('state', 'not in', ("cancel", "draft", "refuse")), ("doc_created", ">=", data['form'][0]["from_date"]), ("doc_created", "<=", data['form'][0]['to_date'])], order="id asc")		
@@ -135,6 +115,79 @@ class LeaveSummary(report_xls):
 				ws.write(count, 8, leave[8], self.number)
 				ws.write(count, 9, leave[9], self.normal)
 				count += 1
+
+	def leave_full_report(self, cr, uid, parser, xls_styles, data, objects, ws, leave_obj):
+
+		ws.write(0, 0 ,"Nice Chemicals (P) Limited", self.title2)
+		today_date = dt.today().date()
+		today_date = today_date.strftime("%d-%m-%Y")
+		name = "Leave Status Report as on "+str(today_date)
+		ws.write(1, 0 , name, self.title2)
+
+		leave_status_obj = self.pool.get("hr.holidays.status")
+		leave_status_id = leave_status_obj.search(cr, uid, [])
+		leave_status = leave_status_obj.browse(cr, uid, leave_status_id)
+
+		employee_obj = self.pool.get("hr.employee")
+		employee_id = employee_obj.search(cr, uid, [])
+		employees = employee_obj.browse(cr, uid, employee_id)
+
+		count = 3
+		ws.write(count, 0, "Employee ID", self.title2)
+		ws.write(count, 1, "Employee", self.title2)
+		ws.write(count, 2, "Employee Company", self.title2)
+		ws.write(count, 3, "Employee Department", self.title2)
+		column = 3
+		for leave in leave_status:
+			column += 1
+			ws.write(count, column, leave.name, self.title2)
+
+		for employee in employees:
+			if employee.employee_id:
+				line = 0
+				count += 1
+				ws.write(count, line, employee.employee_id, self.normal)
+				line += 1
+				ws.write(count, line, employee.name, self.normal)
+				line += 1
+				ws.write(count, line, employee.company_id.name, self.normal)
+				line += 1
+				ws.write(count, line, employee.department_id.name, self.normal)
+				for leave in leave_status:
+					leave = leave_status_obj.get_days(cr, uid, [leave.id], employee.id)[leave.id]['remaining_leaves']
+					line += 1
+					ws.write(count, line, leave, self.normal)
+
+
+	def generate_xls_report(self, parser, xls_styles, data, objects, wb):
+
+		report_name = 'Leave Summary'
+		ws = wb.add_sheet(report_name)
+		ws.panes_frozen = True
+		ws.remove_splits = True
+		ws.portrait = 0  # Landscape
+		ws.fit_width_to_pages = 1
+		row_pos = 0
+		cols = range(10)
+
+		for col in cols:
+			ws.col(col).width = 4000
+
+		cr, uid = self.cr, self.uid
+
+		self.title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz left;')
+		self.normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
+		self.number          = xlwt.easyxf(num_format_str='#,##0.00')
+		self.number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
+		self.number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
+		leave_obj = self.pool.get("hr.holidays")
+		
+		if not data['form'][0]["leave_balance"]:
+			self.leave_report(cr, uid, parser, xls_styles, data, objects, ws, leave_obj)
+		else:
+			self.leave_full_report(cr, uid, parser, xls_styles, data, objects, ws, leave_obj)
+
+
 
 LeaveSummary('report.leave.summary_report', "leave.report", parser=leave_summary_report)
 
