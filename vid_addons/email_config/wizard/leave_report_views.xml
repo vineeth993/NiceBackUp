@@ -25,7 +25,7 @@
 							<field name="leave_id" widget="many2many_tags" attrs="{'invisible':[('leave_balance', '=', True)], 'required':[('leave_balance', '=', False)]}"/>
 						</group>
 						<group>
-							<field name="description"/>
+							<field name="description" attrs="{'invisible':[('leave_balance', '=', True)]}"/>
 						</group>
 					</group>
 					<footer>
