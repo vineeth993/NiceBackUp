@@ -263,8 +263,8 @@
 			<field name="view_id" ref="hr_holidays.view_holiday"/>
 			<field name="act_window_id" ref="allocation_sanction_holidays"/>
 		</record>
-
-		<menuitem id="leave_manager_approval" name="Leaves To Sanction" parent="hr_holidays.menu_open_ask_holidays" action="request_sanction_holidays" sequence="10"/>
+		
+		<menuitem id="leave_manager_approval" name="Leave To Sanction" parent="hr_holidays.menu_open_ask_holidays" action="request_sanction_holidays" sequence="10"/>
 		<menuitem id="allocation_manager_approval" name="Allocation To Sanction" parent="hr_holidays.menu_open_ask_holidays" action="allocation_sanction_holidays" sequence="13"/>
 		<menuitem id="esic_employer_name_name" name="ESIC Employer" parent="hr.menu_hr_configuration" action="esic_employer_name_action" />
 	</data>

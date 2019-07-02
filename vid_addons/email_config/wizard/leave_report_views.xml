@@ -20,7 +20,7 @@
 							<field name="category" groups="base.group_hr_manager, base.group_hr_user" attrs="{'invisible':[('leave_balance', '=', True)]}"/>
 						</group>
 						<group>
-							<field name="employee_id" attrs="{'required':[('category', '=', 'employee'), ('leave_balance', '=', False)], 'invisible':['|', ('leave_balance', '=', True), ('category', '!=', 'employee')]}"/>
+							<field name="employee_id" attrs="{'required':[('category', '=', 'employee'), ('leave_balance', '=', False)], 'invisible':['|', ('leave_balance', '=', True), ('category', '!=', 'employee')]}"  groups="base.group_hr_manager, base.group_hr_user"/>
 							<field name="department_id" attrs="{'invisible':[('category', '!=', 'department'), ('leave_balance', '=', True)], 'required':[('category', '=', 'department'), ('leave_balance', '=', False)]}" groups="base.group_hr_manager, base.group_hr_user"/>
 							<field name="leave_id" widget="many2many_tags" attrs="{'invisible':[('leave_balance', '=', True)], 'required':[('leave_balance', '=', False)]}"/>
 						</group>
@@ -45,6 +45,6 @@
 			<field name="target">new</field>
 		</record>
 		
-		<menuitem id="menu_leave_report_hrm" name="Leave Book" action="action_leave_report_hrm" parent="hr_holidays.menu_open_ask_holidays" sequence="20"/>
+		<menuitem id="menu_leave_report_hrm" name="Leave Book/Balance" action="action_leave_report_hrm" parent="hr_holidays.menu_open_ask_holidays" sequence="20"/>
 	</data>
 </openerp>
