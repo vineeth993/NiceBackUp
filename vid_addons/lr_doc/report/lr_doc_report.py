@@ -44,9 +44,9 @@ class ReportLr(models.AbstractModel):
 						tax_lines_total[str(tax_percnt)][inv_obj.number] += round(total_amount, 2)
 					else:
 						tax_lines_total[str(tax_percnt)].update({inv_obj.number: round(total_amount, 2)})
-					if invoice_line.product_id.hs_code_id.code[0:2]	in hsn_temp:
+					if invoice_line.product_id.hs_code_id.code[0:4]	in hsn_temp:
 						continue
-					hsn_temp.append(invoice_line.product_id.hs_code_id.code[0:2])
+					hsn_temp.append(invoice_line.product_id.hs_code_id.code[0:4])
 				taxable_amount += inv_obj.amount_untaxed
 
 				for hsn in hsn_temp:
@@ -54,7 +54,7 @@ class ReportLr(models.AbstractModel):
 						hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total = 0, 0, 0, 0
 						hsn_total_taxablevalue = 0
 						tax_percnt = 0
-						if hsn != invoice_line.product_id.hs_code_id.code[0:2]:
+						if hsn != invoice_line.product_id.hs_code_id.code[0:4]:
 							continue
 						hsn_total_taxablevalue += invoice_line.price_subtotal
 						for tax in invoice_line.invoice_line_tax_id:

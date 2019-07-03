@@ -114,18 +114,19 @@ class GetEwpdc(models.TransientModel):
 					elif tax.gst_type == "cess":
 						hsn_cess_total = round((hsn_total_taxablevalue * tax.amount), 2)
 				inv_tax += (hsn_cgst_total + hsn_sgst_total + hsn_igst_total + hsn_cess_total)
-				if not item_list.has_key(line.product_id.hs_code_id.code[0:2]):
-					item_list.update({line.product_id.hs_code_id.code[0:2]:{round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2), line.issued_quant, val, line.product_id.hs_code_id.description]}})
+				product_hsn = line.product_id.hs_code_id.code[0:4]
+				if not item_list.has_key(product_hsn):
+					item_list.update({product_hsn:{round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2), line.issued_quant, val, line.product_id.hs_code_id.description]}})
 				else:
-					if not item_list[line.product_id.hs_code_id.code[0:2]].has_key(round(tax_percnt, 2)):
-						item_list[line.product_id.hs_code_id.code[0:2]].update({round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2), line.issued_quant, val, line.product_id.hs_code_id.description]})
+					if not item_list[product_hsn].has_key(round(tax_percnt, 2)):
+						item_list[product_hsn].update({round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2), line.issued_quant, val, line.product_id.hs_code_id.description]})
 					else:
-						item_list[line.product_id.hs_code_id.code[0:2]][round(tax_percnt, 2)][0] += round(hsn_total_taxablevalue, 2)
-						item_list[line.product_id.hs_code_id.code[0:2]][round(tax_percnt, 2)][1] += round(hsn_igst_total, 2)
-						item_list[line.product_id.hs_code_id.code[0:2]][round(tax_percnt, 2)][2] += round(hsn_sgst_total, 2)
-						item_list[line.product_id.hs_code_id.code[0:2]][round(tax_percnt, 2)][3] += round(hsn_cgst_total, 2)
-						item_list[line.product_id.hs_code_id.code[0:2]][round(tax_percnt, 2)][4] += round(hsn_cess_total, 2)
-						item_list[line.product_id.hs_code_id.code[0:2]][round(tax_percnt, 2)][5] += line.issued_quant
+						item_list[product_hsn][round(tax_percnt, 2)][0] += round(hsn_total_taxablevalue, 2)
+						item_list[product_hsn][round(tax_percnt, 2)][1] += round(hsn_igst_total, 2)
+						item_list[product_hsn][round(tax_percnt, 2)][2] += round(hsn_sgst_total, 2)
+						item_list[product_hsn][round(tax_percnt, 2)][3] += round(hsn_cgst_total, 2)
+						item_list[product_hsn][round(tax_percnt, 2)][4] += round(hsn_cess_total, 2)
+						item_list[product_hsn][round(tax_percnt, 2)][5] += line.issued_quant
 
 		itemList = []
 		billList = {}
