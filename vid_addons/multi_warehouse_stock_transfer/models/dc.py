@@ -75,21 +75,25 @@ class WarehouseDc(models.Model):
 	@api.multi
 	def action_validate(self):
 
-		date_today = date.now()
-		self.create_request_grn()
-		self.issue_refernce.write({'dc_ids':[(4, self.id)]})
-		self.issue_refernce.action_move()
-		self.write({'quant_issued_date':date_today, 'state':'dc'})
-		
-		for line in self.line_id:
-			line.write({'state':'done'})
+		if self.state == "draft":
 
-		if self.warehouse_id.dc_seq:
-			seq_obj = self.env['ir.sequence']
-			self.name = seq_obj.next_by_id(self.warehouse_id.dc_seq.id)
-			self.dc_number = self.name
+			date_today = date.now()
+			self.create_request_grn()
+			self.issue_refernce.write({'dc_ids':[(4, self.id)]})
+			self.issue_refernce.action_move()
+			self.write({'quant_issued_date':date_today, 'state':'dc'})
+			
+			for line in self.line_id:
+				line.write({'state':'done'})
+
+			if self.warehouse_id.dc_seq:
+				seq_obj = self.env['ir.sequence']
+				self.name = seq_obj.next_by_id(self.warehouse_id.dc_seq.id)
+				self.dc_number = self.name
+			else:
+				raise ValidationError("Please create an dc sequence for %s"%(warehouse_id.name))
 		else:
-			raise ValidationError("Please create an dc sequence for %s"%(warehouse_id.name))
+			raise ValidationError("This DC has been Validated")
 
 
 	def create_request_grn(self):
