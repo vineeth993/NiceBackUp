@@ -2,6 +2,7 @@
 
 from openerp.tools.float_utils import float_compare, float_round
 from openerp.osv import fields, osv
+import datetime
 import logging
 from openerp import api
 
@@ -14,6 +15,7 @@ class stock_picking(osv.osv):
 		if context is None:
 			context = {}
 		partner, currency_id, company_id, user_id = key
+		sale_order = move.picking_id.sale_id.name+'-'+datetime.strftime(move.picking_id.sale_id.date_order,'%d-%m-%Y')
 		if inv_type in ('out_invoice', 'out_refund'):
 			account_id = partner.property_account_receivable.id
 			payment_term = partner.property_payment_term.id or False
@@ -39,7 +41,7 @@ class stock_picking(osv.osv):
 			'extra_discount':move.picking_id.sale_id.extra_discount,
 			'nonread_extra_disocunt':move.picking_id.sale_id.nonread_extra_disocunt,
 			'nonread_normal_disocunt':move.picking_id.sale_id.nonread_normal_disocunt,
-			'sale_order':move.picking_id.sale_id.name,
+			'sale_order':sale_order,
 			'comment':move.picking_id.sale_id.note,
 			'partner_shipping_id':move.picking_id.sale_id.partner_shipping_id.id,
 			'brand_id':move.picking_id.sale_id.brand_id.id,
