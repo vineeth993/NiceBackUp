@@ -95,7 +95,29 @@ class GetEwp(models.TransientModel):
 			res['vehicle_number'] = lr_id.freight_no
 			res['transporter_id'] = lr_id.transporter_gstin	
 		return res
-		
+	
+	def getAddress(self, invoice):
+		addr = {}
+		if invoice.warehouse_id:
+			addr = {
+					'gst_no':invoice.warehouse_id.partner_id.gst_no,
+					'street':invoice.warehouse_id.partner_id.street,
+					'street2':invoice.warehouse_id.partner_id.street2,
+					'city':invoice.warehouse_id.partner_id.city_id.name,
+					'zip':int(invoice.warehouse_id.partner_id.zip),
+					'state_code':int(invoice.warehouse_id.partner_id.state_id.code),
+				}
+		else:
+			addr = {
+					'gst_no':self.from_addr.gst_no,
+					'street':self.from_addr.street,
+					'street2':self.from_addr.street2,
+					'city':self.from_addr.city_id.name,
+					'zip':int(self.from_addr.zip),
+					'state_code':int(self.from_addr.state_id.code),
+				}
+		return addr
+
 	@api.multi
 	def get_json(self):
 
@@ -198,22 +220,24 @@ class GetEwp(models.TransientModel):
 			if self.trans_doc_no:
 				trans_doc_no = self.trans_doc_no
 
+			addr = self.getAddress(invoice)
+
 			billList = {
-					'userGstin':self.from_addr.gst_no,
+					'userGstin':addr['gst_no'],
 					'supplyType':self.supply_type,
 					'subSupplyType':self.sub_type,
 					'docType':'INV',
 					'docNo':invoice.number.replace('SAJ-', ''),
 					'docDate':invoice_date,
 					'transType':self.trans_type,
-					'fromGstin':self.from_addr.gst_no,
+					'fromGstin':addr['gst_no'],
 					'fromTrdName':self.from_addr.name,
-					'fromAddr1':self.from_addr.street,
-					'fromAddr2':self.from_addr.street2,
-					'fromPlace':self.from_addr.city_id.name.upper(),
-					'fromPincode':int(self.from_addr.zip),
-					'fromStateCode':int(self.from_addr.state_id.code),
-					'actualFromStateCode':int(self.from_addr.state_id.code),
+					'fromAddr1':addr['street'],
+					'fromAddr2':addr['street2'],
+					'fromPlace':addr['city'].upper(),
+					'fromPincode':addr['zip'],
+					'fromStateCode':addr['state_code'],
+					'actualFromStateCode':addr['state_code'],
 					'toGstin':toGSt,
 					'toTrdName':self.to_addr.name or '',
 					'toAddr1':self.to_addr.street or '',

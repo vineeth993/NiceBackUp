@@ -2,74 +2,121 @@
 <openerp>
 	<data>
 		<template id="report_picking_customized" inherit_id="delivery.report_shipping2">
+			<!-- <xpath expr="//div[@class='row']" position="inside">
+
+			</xpath> -->
 			<xpath expr="//div[@class='row']" position="replace">
-				<div class="col-xs-4 pull-right">
-					<strong>REF: <span t-field="o.origin" style="font-size:40px;"/></strong>
-				</div>
+
 			</xpath>
-			<xpath expr="//div[@class='row']//div[@class='col-xs-6']//div[@name='partner_header']" position='replace'>
-				<div t-if="o.partner_id" name="partner_header">
-					<table class="t_party">
-						<tr>
-							<td><b>Party</b></td>
-							<td width="2%">:</td>
-							<td width="70%"><span t-field="o.partner_id.display_name"/></td>
-						</tr>
-						<tr>
-							<td ><b>Address</b></td>
-							<td>:</td>
-							<td style="padding-left: 3px;">
-								<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
-								<span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
-								<span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
-								<span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
-								<span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</xpath>
-			<xpath expr="//div[@name='invoice_partner']" position="replace"></xpath>
+			<span t-field="o.picking_type_id" position="replace"/>
+			<span t-field="o.name" position="replace"/>
+
+			<xpath expr="//div[@class='row'][1]" position="replace">
+			 	<div class="row">
+			 		<h2>
+				 		<span t-field="o.picking_type_id.warehouse_id"/>:<br/>
+	                	<span t-field="o.name"/>
+	                </h2>
+				 	<div class="col-xs-6">
+	                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
+	                        <span><strong>Supplier Address:</strong></span>
+	                    </div>
+	                    <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
+	                        <span><strong>Warehouse Address:</strong></span>
+	                    </div>
+	                    <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
+	                        <span><strong>Customer Address:</strong></span>
+	                    </div>
+	                    <div t-if="o.partner_id" name="partner_header">
+	                        <table class="t_party">
+								<tr>
+									<td><b>Party</b></td>
+									<td width="2%">:</td>
+									<td width="70%"><span t-field="o.partner_id.display_name"/></td>
+								</tr>
+								<tr>
+									<td ><b>Address</b></td>
+									<td>:</td>
+									<td style="padding-left: 3px;">
+										<span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+										<span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+										<span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+										<span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+										<span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
+									</td>
+								</tr>
+								<tr>
+									<td><b>GSTIN</b></td>
+									<td>:</td>
+									<td>
+										<span t-if="o.origin"><span t-field="o.partner_id.gst_no"/></span>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding-top:10px"><b>Sale Order</b></td>
+									<td>:</td>
+									<td>
+										<span t-if="o.origin"><span t-field="o.origin"/></span>
+									</td>
+								</tr>
+							</table>
+	                    </div>
+	                </div>
+	                <div class="col-xs-5 col-xs-offset-1">
+	                   	<div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
+	                       	<span><strong>Delivery Address:</strong></span>
+	                        <div t-field="o.move_lines[0].partner_id" t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+	                    </div>
+	                    <div t-if="o.picking_type_id.code != 'internal' and (not o.move_lines or not o.move_lines[0].partner_id) and o.picking_type_id.warehouse_id.partner_id">
+	                        <span><strong>Warehouse Address:</strong></span>
+	                       	<div t-field="o.picking_type_id.warehouse_id.partner_id" t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+	                    </div>
+	                </div>
+            	</div>
+			 </xpath>
+
 			<xpath expr="//table[@class='table table-condensed'][2]//thead//tr" position="replace">
 				<tr>
 					<th><strong>Product</strong></th>
 					<th class="text-right"><strong>Quantity</strong></th>
 					<t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
 					<t t-if="o.picking_type_id.code != 'outgoing'"><th><strong>Destination</strong></th></t>
+					<th><strong>Available Stock<br/><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /></strong></th>
 				</tr>
 			</xpath>
 			<xpath expr="//table[@class='table table-condensed'][2]//tbody//tr" position="replace">
 				<tr t-foreach="o.move_lines" t-as="move">
-				<t t-if="(o.state == 'partially_available') or (move.reserved_availability > 0) or (o.state != 'partially_available')">
-				<td><span t-field="move.product_id"/></td>
-				<td class="text-right">
-					<t t-if="o.state != 'partially_available' or o.state == 'confirmed' ">
-						<span t-field="move.product_uom_qty"/>
-					</t>
-					<t t-if="o.state == 'partially_available'">
-						<span t-field="move.product_uom_qty"/>
-					</t>
-				</td>
-					<t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
-					<t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
+					<t t-if="(o.state == 'partially_available') or (move.reserved_availability > 0) or (o.state != 'partially_available')">
+						<td><span t-field="move.product_id"/></td>
+						<td class="text-right">
+							<t t-if="o.state != 'partially_available' or o.state == 'confirmed' ">
+								<span t-field="move.product_uom_qty"/>
+							</t>
+							<t t-if="o.state == 'partially_available'">
+								<span t-field="move.product_uom_qty"/>
+							</t>
+						</td>
+						<t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
+						<t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
 					</t>
 				</tr>
 			</xpath>
 			<xpath expr="//table[@class='table table-condensed'][2]//tbody//tr" position="replace">
 				<tr t-foreach="o.move_lines" t-as="move">
 					<t t-if="(o.state == 'partially_available') or (move.reserved_availability > 0) or (o.state != 'partially_available')">
-					<td><span t-field="move.product_id"/></td>
-					<td class="text-right">
-						<t t-if="o.state != 'partially_available' or o.state == 'confirmed' ">
-							<span t-field="move.product_uom_qty"/>
-						</t>
-						<t t-if="o.state == 'partially_available'">
-							<span t-field="move.product_uom_qty"/>
-						</t>
-					</td>
-					<t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
-					<t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
+						<td><span t-field="move.product_id"/></td>
+						<td class="text-right">
+							<t t-if="o.state != 'partially_available' or o.state == 'confirmed' ">
+								<span t-field="move.product_uom_qty"/>
+							</t>
+							<t t-if="o.state == 'partially_available'">
+								<span t-field="move.product_uom_qty"/>
+							</t>
+						</td>
+						<t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
+						<t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>
 					</t>
+					<td t-esc="move.get_available(move.product_id, move.location_id)"/>
 				</tr>
 			</xpath>
 			<xpath expr="//table[@class='table table-condensed'][3]//thead//tr" position="replace">
@@ -82,7 +129,7 @@
 			</xpath>
 			
 			<xpath expr="////table[@class='table table-condensed'][2]" postion="after">
-				<table width="100%">
+				<table style="border-top:1px solid black;" width="100%">
 					<tr>
 						<td width="15%">Taken by<br/>Name &amp; Signature:</td>
 						<td width="20%">Checked by<br/>Name &amp; Signature:</td>

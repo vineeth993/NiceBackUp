@@ -4,7 +4,11 @@
 ##############################################################################
 
 from openerp import api, models, fields
+from openerp.exceptions import ValidationError
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
@@ -14,8 +18,13 @@ class StockPicking(models.Model):
         if picking and picking.sale_id:
             sale = picking.sale_id
             if (vals.get('type', '') == 'out_invoice' and
-                    sale.type_id.journal_id):
-                vals['journal_id'] = sale.type_id.journal_id.id
+                    sale.type_id):
+                warehouse_journal_id = self.env["warehouse.journal"].search([('type_id', '=', sale.type_id.id), ('warehouse_id', '=', picking.picking_type_id.default_location_src_id.id)])
+                if warehouse_journal_id:
+                    vals['journal_id'] = warehouse_journal_id.journal_id.id
+                else:
+                    # raise ValidationError("Please define journal in sale order type %s for this warehosue %s"%(sale.type_id.name, picking.picking_type_id.default_location_src_id.warehouse_id.name))
+                    vals['journal_id'] = sale.type_id.journal_id.id
             elif (vals.get('type', '') == 'out_refund' and
                     sale.type_id.refund_journal_id):
                 vals['journal_id'] = sale.type_id.refund_journal_id.id

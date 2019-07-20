@@ -26,5 +26,14 @@
 	    	string="Quotation To send"
 	    	report_type="qweb-pdf"
 	    	name="sale_customization.report_quotation"/>
+
+	    <report 
+            string="Delivery Order" 
+            id="stock.action_report_picking" 
+            model="stock.picking" 
+            report_type="qweb-pdf"
+            name="stock.report_picking" 
+            file="stock.report_picking" 
+        />
 	</data>
 </openerp>

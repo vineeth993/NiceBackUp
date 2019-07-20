@@ -101,16 +101,17 @@
                 <th>Description</th>
                 <th class="text-center">Pack</th>
                 <th class="text-center">Quantity(Unit)</th>
-                <t t-if="o.state in ['draft','confirm','sent','cancel']">
-                    <th class="text-center">Unit Price</th>
-                    <th class="text-center">Disc.(%)</th>
-                    <th class="text-center" >Taxes</th>
-                    <th class="text-center">Tax Type</th>
-                </t>
+                <!-- <t t-if="o.state in ['draft','confirm','sent','cancel']"> -->
+                <th class="text-center">Unit Price</th>
+                <th class="text-center">Disc.(%)</th>
+                <th class="text-center" >Taxes</th>
+                <th class="text-center">Tax Type</th>
+<!--                 </t>
                 <t t-if="o.state not in ['draft','confirm','sent','cancel']">
                     <th class="text-center">Stock as on <br/><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /> </th>
                     <th class="text-center">Unit Price</th>
                 </t>
+ -->            
                 <th class="text-center">Amount</th>
             </tr>
         </xpath>
@@ -134,33 +135,33 @@
                     <td class="text-center">
                         <span t-field="l.product_uom_qty"/>
                     </td>
-                    <t t-if="o.state in ['draft','confirm','sent','cancel']">
-                        <td class="text-center">
-                            <span t-field="l.price_unit"/>
+                    <!-- <t t-if="o.state in ['draft','confirm','sent','cancel']"> -->
+                    <td class="text-center">
+                        <span t-field="l.price_unit"/>
+                    </td>
+                    <td class="text-center">
+                        <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
                         </td>
-                        <td class="text-center">
-                            <span t-esc="round((((l.product_uom_qty * l.price_unit) - l.price_subtotal) * 100/(l.product_uom_qty * l.price_unit)), 2)"/>
-                        </td>
-                        <td class="text-center">
-                            <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>
-                        </td>
-                        <td class="text-center">
-    			        <t t-if="l.tax_id">
+                    <td class="text-center">
+                        <span t-esc="sum(map(lambda x: x.amount, l.tax_id))*100"/>
+                    </td>
+                    <td class="text-center">
+        			     <t t-if="l.tax_id">
                             <t t-if="l.tax_id[0].gst_type == 'igst'">
                                 INTER
                             </t>
                             <t t-if="l.tax_id[0].gst_type == 'cgst' or l.tax_id[0].gst_type == 'sgst'">
                                 LOCAL
                             </t>
-    			        </t>
-                        </td>
-                    </t>
+        			     </t>
+                    </td>
+    <!--                 </t>
                     <t t-if="o.state not in ['draft','confirm','sent','cancel']">
                         <td class="text-center" t-esc="l.get_product_qty(l.product_id, o.warehouse_id)"/>
                         <td class="text-center">
                             <span t-field="l.price_unit"/>
                         </td>
-                    </t>
+                    </t> -->
                     <td class="text-right">
                         <span t-field="l.price_subtotal"
                             t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>

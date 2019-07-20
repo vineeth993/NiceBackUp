@@ -14,7 +14,7 @@
 			<field name="inherit_id" ref="stock.view_warehouse" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='code']" position="after">
-					<field name="type" />
+					<field name="type" required="1" />
 				</xpath>
 			</field>
 		</record>
@@ -212,6 +212,7 @@
 					<field name="partner_type" invisible="1"/>
 					<field name="sale_sub_type" invisible="1"/>
 					<field name="product_name" invisible="1"/>
+					<field name="product_location" domain="[('usage', '=', 'internal'),('company_id', '=', parent.company_id),('type', '=', 'finished')]" />
 				</xpath>
 
 				<xpath
@@ -227,10 +228,10 @@
 					
 				</xpath>
 
-				<xpath expr="//button[@name='action_quotation_send']"
-					position="after">
+				<xpath expr="//button[@name='action_quotation_send']" position="after">
 					<button name="action_quotation_confirm" string="Confirm Quotation"
 						type="object" states="draft" groups="base.group_user"/>
+					<button name="%(warehouse_validation_action)d" string="Confirm Warehouse" type="action" states="warehouse" groups="base.group_user" class="oe_highlight"/>
 				</xpath>
 
 				<field name="payment_term" position="after">

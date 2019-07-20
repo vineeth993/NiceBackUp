@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="warehouse_validation_form" model="ir.ui.view">
+			<field name="name">Warehouse Validation</field>
+			<field name="model">warehouse.validation</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Warehouse Validation">
+					<field name="name" invisible="1"/>
+					<field name="order_date" invisible="1"/>
+					<field name="company_id" invisible="1"/>
+					<group>
+						<div class="oe_grey" groups="stock.group_tracking_lot">
+                            Please check or replace the warehouse in which the product should be excuted.
+                        </div>
+					</group>
+					<group>
+						<field name="line_id" nolabel="1">
+							<tree string="Warehouse Line Tree" editable="bottom" delete="false" create="0">
+								<field name="sl_no" readonly="1"/>
+								<field name="product_id" readonly="1"/>
+								<field name="product_qty" readonly="1"/>
+								<field name="location_id" domain="[('usage', '=', 'internal'), ('company_id', '=', parent.company_id), ('type', '=', 'finished')]" required="1" options="{'no_create_edit':True, 'no_open':True, 'no_edit':True}"/>
+							</tree>
+						</field>
+					</group>
+					<footer>
+						<button name="action_validate" string="Validate" type="object" class="oe_highlight"/>
+						or
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="warehouse_validation_action" model="ir.actions.act_window">
+			<field name="name">Warehouse Validation</field>
+			<field name="res_model">warehouse.validation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="warehouse_validation_form"/>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>

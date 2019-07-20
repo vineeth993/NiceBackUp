@@ -70,6 +70,9 @@ class InvoiceMerge(models.TransientModel):
                 if d['brand_id'] != invs[0]['brand_id']:
                     raise UserError(
                         _('Not all invoices are for the same brand'))
+                if d['warehouse_id'] != invs[0]['warehouse_id']:
+                    raise UserError(
+                        _('Not all invoices are executed from same warehouse'))
 
         return {}
 

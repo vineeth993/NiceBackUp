@@ -146,7 +146,10 @@ class SaleOrderLine(models.Model):
 		if product:
 			product_obj = self.pool.get('product.product').browse(cr, uid, product)
 			res['value']['product_name'] = product_obj.name
-			res["value"]["product_location"] = product_obj.product_tmpl_id.product_location
+			if context.get('multi_warehouse', '/') != "/":
+				if context.get('multi_warehouse'):
+					res["value"]["product_location"] = product_obj.product_tmpl_id.product_location
+
 			if product_obj.price_list and res['value']['partner_type'] != 'special':
 				raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
 
@@ -164,6 +167,73 @@ class SaleOrderLine(models.Model):
 class StockWarehouse(models.Model):
 	_inherit = 'stock.warehouse'
 	
+	type = fields.Selection([
+			('raw', 'Raw Materials'),
+			('manufacture', 'Manufacturing'),
+			('semi-finished', 'Semi Finished'),
+			('finished', 'Finished'),
+			])
+
+	def create(self, cr, uid, vals, context=None):
+		if context is None:
+			context = {}
+		if vals is None:
+			vals = {}
+		data_obj = self.pool.get('ir.model.data')
+		seq_obj = self.pool.get('ir.sequence')
+		picking_type_obj = self.pool.get('stock.picking.type')
+		location_obj = self.pool.get('stock.location')
+
+		#create view location for warehouse
+		loc_vals = {
+				'name': _(vals.get('code')),
+				'usage': 'view',
+				'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
+		}
+		if vals.get('company_id'):
+			loc_vals['company_id'] = vals.get('company_id')
+		wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
+		vals['view_location_id'] = wh_loc_id
+		#create all location
+		def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
+		reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
+		delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+		context_with_inactive = context.copy()
+		context_with_inactive['active_test'] = False
+		sub_locations = [
+			{'name': _('Stock'), 'active': True, 'field': 'lot_stock_id'},
+			{'name': _('Input'), 'active': reception_steps != 'one_step', 'field': 'wh_input_stock_loc_id'},
+			{'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'field': 'wh_qc_stock_loc_id'},
+			{'name': _('Output'), 'active': delivery_steps != 'ship_only', 'field': 'wh_output_stock_loc_id'},
+			{'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'field': 'wh_pack_stock_loc_id'},
+		]
+		for values in sub_locations:
+			loc_vals = {
+				'name': values['name'],
+				'usage': 'internal',
+				'location_id': wh_loc_id,
+				'active': values['active'],
+				'type':vals.get('type')
+			}
+			if vals.get('company_id'):
+				loc_vals['company_id'] = vals.get('company_id')
+			location_id = location_obj.create(cr, uid, loc_vals, context=context_with_inactive)
+			vals[values['field']] = location_id
+
+		#create WH
+		new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
+		warehouse = self.browse(cr, uid, new_id, context=context)
+		self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
+
+		#create routes and push/pull rules
+		new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
+		self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
+		return new_id	
+
+class StockLocation(models.Model):
+
+	_inherit = "stock.location"
+
 	type = fields.Selection([
 			('raw', 'Raw Materials'),
 			('manufacture', 'Manufacturing'),
@@ -198,7 +268,7 @@ class SaleOrder(models.Model):
 				'amount_tax': cur.round(val),
 				'amount_total':cur.round(val) + cur.round(val1),
 				})
-			
+
 	def _get_warehouse(self):
 		warehouse_ids = self.env['stock.warehouse'].search([('type', '=', 'finished')])
 		if not warehouse_ids:
@@ -240,6 +310,7 @@ class SaleOrder(models.Model):
 	state = fields.Selection([
 			('draft', 'Draft Quotation'),
 			('confirm', 'Quotation Confirmed'),
+			('warehouse', 'Warehouse Validation'),
 			('sent', 'Quotation Sent'),
 			('cancel', 'Cancelled'),
 			('waiting_date', 'Waiting Schedule'),
@@ -269,8 +340,9 @@ class SaleOrder(models.Model):
 		loc_obj = self.pool.get("stock.location")
 		res = super(SaleOrder, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
 		res['name'] = line.product_name
-		#warehouse_id = loc_obj.get_warehouse(cr, uid, line.product_location, context=context)
-		#res['warehouse_id'] = warehouse_id or order.warehouse_id.id or False
+		if order.multiple_warehouse:
+			warehouse_id = loc_obj.get_warehouse(cr, uid, line.product_location, context=context)
+			res['warehouse_id'] = warehouse_id or order.warehouse_id.id or False
 		return res
 
 	@api.multi

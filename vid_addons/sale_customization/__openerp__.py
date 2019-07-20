@@ -15,6 +15,7 @@ CRM/Sales Customization
         'views/partner_selling_type_view.xml',
         'views/partner_view.xml',
         'views/product_view.xml',
+        'wizard/warehouse_validation.xml',
         'views/sale_view.xml',
         'views/account_view.xml',
         'views/print_on_envolope.xml',

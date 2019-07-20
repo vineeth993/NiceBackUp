@@ -20,7 +20,7 @@ class AccountInvoice(models.Model):
     def _get_invoice_key_cols(self):
         return [
             'partner_id', 'user_id', 'type', 'account_id', 'currency_id',
-            'journal_id', 'company_id', 'partner_bank_id', 'sale_sub_type_id','sale_type_id',
+            'journal_id', 'company_id', 'partner_bank_id', 'sale_sub_type_id','sale_type_id','warehouse_id'
         ]
 
     @api.model
@@ -62,7 +62,8 @@ class AccountInvoice(models.Model):
             'normal_disc':invoice.normal_disc,
             'extra_discount':invoice.extra_discount,
             'nonread_extra_disocunt':invoice.nonread_extra_disocunt,
-            'nonread_normal_disocunt':invoice.nonread_normal_disocunt
+            'nonread_normal_disocunt':invoice.nonread_normal_disocunt,
+            'warehouse_id':invoice.warehouse_id.id
         }
 
     @api.model
