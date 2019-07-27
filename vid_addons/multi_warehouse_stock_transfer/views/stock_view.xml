@@ -13,7 +13,7 @@
 				</button>
 				
 				<xpath expr="//button[@name='force_assign']" position="replace">
-					<button name="force_assign" string="Force Availability" type="object" groups="base.group_user" attrs="{'invisible':['|',('is_dc','=', False), ('state', 'not in', ('confirmed','waiting','partially_available'))]}"/>
+					<button name="force_assign" string="Force Availability" type="object" groups="base.group_user" attrs="{'invisible':['|','|',('is_dc','=', False), ('state', 'not in', ('confirmed','waiting','partially_available')), ('location_type', '!=', 'semi-finished')]}"/>
 				</xpath>
 
 				<field name="origin" position="after">
@@ -21,6 +21,7 @@
 					<field name="request_id" invisible="1"/>
 					<field name="warehouse_dc_id" invisible="1"/>
 					<field name="is_dc" invisible="1"/>
+					<field name="location_type" invisible="1"/>
 				</field>
 			</field>
 		</record>

@@ -34,13 +34,16 @@
                 <form>
                     <header>
                         <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" states="draft"/>
-                        <button name="action_view" type="object" string="Issue Stock" states="confirm,process,done,error,issue" class="oe_highlight"/>
+                        <button name="action_view" type="object" string="Issue Stock" states="confirm,process,done,error,issue,wip" class="oe_highlight"/>
                         <button name="action_view_dc" type="object" string="View DC" class="oe_highlight" attrs="{'invisible':[('dc_exists', '=', False)]}" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,process,done"/>
                     </header>
                     <h1>
                         <field name="name" class="oe_inline" readonly="1" />
                     </h1>
+                    <div class="oe_right oe_button_box">
+                        <button name="action_create_wip" string="Create WIP" type="object" class="oe_inline oe_stat_button" icon="fa-truck" attrs='{"invisible":["|", ("location_type", "!=", "finished"), ("state", "!=", "confirm")]}'/>
+                    </div>
                     <group>
                         <group >
                             <field name="request_warehouse_from_id"  readonly="1" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
@@ -89,6 +92,7 @@
                                     <field name="warehouse_id" />
                                     <field name="dc_ids" widget="many2many_tags"/>
                                     <field name="dc_exists" invisible="1"/>
+                                    <field name="location_type"/>
                                 </group>
                             </group>
                         </page>

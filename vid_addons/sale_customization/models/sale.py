@@ -37,6 +37,10 @@ class SaleOrderLine(models.Model):
 			gst, igst, formstate, forminter = False, False, False, False
 			sub_type_id = line.order_id.sub_type_id
 			company = self.env['res.users'].browse(self._uid).company_id
+			notRegistered = False
+			
+			if line.order_id.partner_id.gst_reg == 'unregistered':
+				notRegistered = True
 
 			if sub_type_id:
 				if sub_type_id and sub_type_id.tax_categ == 'gst':
@@ -59,6 +63,8 @@ class SaleOrderLine(models.Model):
 					if prod_tax.company_id.id == company.id:
 						if gst:
 							if prod_tax.tax_categ == 'gst':
+								taxes_ids.append(prod_tax.id)
+							if prod_tax.tax_categ == 'cess' and notRegistered:
 								taxes_ids.append(prod_tax.id)
 						elif igst:
 							if prod_tax.tax_categ == 'igst':

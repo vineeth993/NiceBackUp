@@ -25,6 +25,7 @@ class ReportInvoice(models.AbstractModel):
 		sgst_values = {'2.5': 0.0, '6.0': 0.0, '9.0': 0.0, '14.0': 0.0}
 		cgst_values = {'2.5': 0.0, '6.0': 0.0, '9.0': 0.0, '14.0': 0.0}
 		igst_values = {'5.0': 0.0, '12.0': 0.0, '18.0': 0.0, '28.0': 0.0}
+		cess_values = {'2.0':0.0}
 		taxable_values = {'0.0':0.0, '5.0': 0.0, '12.0': 0.0, '18.0': 0.0, '28.0': 0.0}
 		total_nodiscount, total_discount, total_qty = 0.0, 0.0, 0.0
 		total_disc_amt = 0
@@ -45,8 +46,8 @@ class ReportInvoice(models.AbstractModel):
 			discount_perc = round((discount * 100/subtotal), 3)
 			total_discount += discount
 			taxable_value = line.price_subtotal
-			gst_perc, gst, cgst_perc, sgst_perc, igst_perc = 0.0, 0.0, 0.0, 0.0, 0.0
-			nogst_amt, sgst_amt, cgst_amt, igst_amt = 0.0, 0.0, 0.0, 0.0
+			gst_perc, gst, cgst_perc, sgst_perc, igst_perc, cess_perc = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+			nogst_amt, sgst_amt, cgst_amt, igst_amt, cess_amt = 0.0, 0.0, 0.0, 0.0, 0.0
 			for tax in line.invoice_line_tax_id:
 				gst_perc += tax.amount*100
 				if tax.gst_type == 'sgst':
@@ -58,6 +59,9 @@ class ReportInvoice(models.AbstractModel):
 				elif tax.gst_type == 'igst':
 					igst_perc = tax.amount*100
 					igst_amt  = round(igst_perc * taxable_value / 100, 2)
+				elif tax.gst_type == 'cess':
+					cess_perc = tax.amount*100
+					cess_amt  = round(cess_perc * taxable_value / 100, 2)                    
 
 			normal_disc = subtotal - ((subtotal * line.discount) / 100)
 			extra_disc = normal_disc - ((normal_disc * line.extra_discount) / 100)
@@ -75,6 +79,7 @@ class ReportInvoice(models.AbstractModel):
 			sgst_perc_str = str(sgst_perc)
 			cgst_perc_str = str(cgst_perc)
 			igst_perc_str = str(igst_perc)
+			cess_perc_str = str(cess_perc)
 			if gst_perc_str in taxable_values:
 				taxable_values.update({gst_perc_str: taxable_values[gst_perc_str]+taxable_value})
 			if sgst_perc_str in sgst_values:
@@ -83,6 +88,8 @@ class ReportInvoice(models.AbstractModel):
 				cgst_values.update({cgst_perc_str: cgst_values[cgst_perc_str]+cgst_amt})
 			if igst_perc_str in igst_values:
 				igst_values.update({igst_perc_str: igst_values[igst_perc_str]+igst_amt})
+			if cess_perc_str in cess_values:
+				cess_values.update({cess_perc_str:cess_values[cess_perc_str]+cess_amt})
 			# if len(line.product_id.name) >= 31:
 			#     name = line.product_id.name[0:30]+"\n"+line.product_id.name[30:]
 			# else:
@@ -118,6 +125,8 @@ class ReportInvoice(models.AbstractModel):
 		sgst_values.update({'sgst_total': sum(sgst_values.values())})
 		cgst_values.update({'cgst_total': sum(cgst_values.values())})
 		igst_values.update({'igst_total': sum(igst_values.values())})
+		cess_values.update({'cess_total': sum(cess_values.values())})
+
 		total_values = {
 			'total_5': (sgst_values['2.5']+cgst_values['2.5']+igst_values['5.0']+taxable_values['5.0']),
 			'total_12':(sgst_values['6.0']+cgst_values['6.0']+igst_values['12.0']+taxable_values['12.0']),
@@ -168,6 +177,7 @@ class ReportInvoice(models.AbstractModel):
 			'sgst_values': sgst_values,
 			'cgst_values': cgst_values,
 			'igst_values': igst_values,
+			'cess_values': cess_values,
 			'taxable_values': taxable_values,
 			'total_values': total_values,
 			'blank_lines': blank_lines,

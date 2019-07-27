@@ -105,11 +105,11 @@ class StockWarehouseRequest(models.Model):
 	def _needaction_domain_get(self):
 		return [('state', '=', 'issued')]
 
-	@api.onchange("request_warehouse_to_id")
-	def onchange_warehouse_id(self):
-		if self.request_warehouse_to_id:
-			if self.request_warehouse_to_id == self.warehouse_id:
-				raise ValidationError("Cannot request to same warehouse")
+	# @api.onchange("request_warehouse_to_id")
+	# def onchange_warehouse_id(self):
+	# 	if self.request_warehouse_to_id:
+	# 		if self.request_warehouse_to_id == self.warehouse_id:
+	# 			raise ValidationError("Cannot request to same warehouse")
 
 	@api.model
 	def create(self, val):
@@ -280,6 +280,9 @@ class StockWarehouseRequest(models.Model):
 
 	@api.onchange("request_warehouse_to_id")
 	def onchange_request_warehouse_id(self):
+		if self.request_warehouse_to_id:
+			if self.request_warehouse_to_id == self.warehouse_id:
+				raise ValidationError("Cannot request to same warehouse")
 		for line in self:
 			if line.request_warehouse_to_id:
 				line.partner_id = line.request_warehouse_to_id.partner_id.id

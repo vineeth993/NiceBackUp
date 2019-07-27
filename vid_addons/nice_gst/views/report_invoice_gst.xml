@@ -387,6 +387,8 @@
                         <td style="border-right: solid 1px black;text-align:center;">CGST AMT.</td>
                         <td style="border-right: solid 1px black;text-align:center;">SGST</td>
                         <td style="border-right: solid 1px black;text-align:center;">SGST AMT.</td>
+                        <td style="border-right: solid 1px black;text-align:center;">CESS</td>
+                        <td style="border-right: solid 1px black;text-align:center;">CESS AMT.</td>
                         <td style="border-right: solid 1px black;text-align:center;">TOTAL VALUE</td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
@@ -401,6 +403,8 @@
                         <td style="border-right: solid 1px black;padding: 0px 2px;text-align:center;">0.00%</td>
                         <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
                         <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
+                        <td style="border-right: solid 1px black;padding: 0px 2px;">0.00</td>
                     </tr>
                     <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;text-align:right;">
                         <td style="border-right: solid 1px black;text-align:center">Normal(<span t-esc="disc"/>)</td>
@@ -413,7 +417,8 @@
                         <td style="border-right: solid 1px black;"><span t-esc="sgst_values['2.5']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;">2.5%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="cgst_values['2.5']"/></td>
-                        
+                        <td style="border-right: solid 1px black;text-align:center;">2%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="cess_values['2.0']"/></td>                       
                         <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_5']"><span t-esc="total_values['total_5']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
@@ -428,6 +433,8 @@
                         <td style="border-right: solid 1px black;"><span t-esc="sgst_values['6.0']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;">6%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="cgst_values['6.0']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;"></td>
+                        <td style="border-right: solid 1px black;"></td>
                         <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_12']"><span t-esc="total_values['total_12']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
@@ -442,6 +449,8 @@
                         <td style="border-right: solid 1px black;"><span t-esc="sgst_values['9.0']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;">9%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="cgst_values['9.0']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;"></td>
+                        <td style="border-right: solid 1px black;"></td>
                         <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_18']"><span t-esc="total_values['total_18']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
@@ -456,6 +465,8 @@
                         <td style="border-right: solid 1px black;"><span t-esc="sgst_values['14.0']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;">14%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="cgst_values['14.0']"/></td>
+                        <td style="border-right: solid 1px black;text-align:center;"></td>
+                        <td style="border-right: solid 1px black;"></td>
                         <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_28']"><span t-esc="total_values['total_28']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>
@@ -474,6 +485,9 @@
                         <td style="border-right: solid 1px black;"></td>
                         <td style="border-right: solid 1px black;"><b><t t-if="cgst_values['cgst_total']"><span t-esc="cgst_values['cgst_total']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
+                        <td style="border-right: solid 1px black;"></td>
+                        <td style="border-right: solid 1px black;"><b><t t-if="cess_values['cess_total']"><span t-esc="cess_values['cess_total']"
+                            t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>             
                         <td style="padding-right: 3px;"><b><span t-field="o.amount_total"
                             t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
                     </tr>
@@ -481,14 +495,14 @@
                     	<tr style="border-left: solid 3px black;border-right: solid 3px black;">
                         	<td style="border-right: solid 1px black;text-align:left;padding-left: 5px;"></td>
                         	<td colspan="5" style="padding-left:5px; border-right: solid 1px black;text-align:left;"></td>
-                       	 	<td colspan="3" style="border-right: solid 1px black;text-align:right;"><b>Round Off Amount</b></td>
+                       	 	<td colspan="5" style="border-right: solid 1px black;text-align:right;"><b>Round Off Amount</b></td>
                         	<td colspan="2" style="text-align:right;padding-right: 3px;"><b><span t-field="o.round_off_amount"
                             		t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
                     	</tr>
                     	<tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
                         	<td style="border-right: solid 1px black;text-align:left;padding-left: 5px;">Amount in Words:</td>
                         	<td colspan="5" style="padding-left:5px; border-right: solid 1px black;text-align:left;"><b><span t-field="o.amount_in_words"/></b></td>
-                        	<td colspan="3" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
+                        	<td colspan="5" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
                         	<td colspan="2" style="text-align:right;padding-right: 3px;"><b><span style="font-size: 20px" t-field="o.round_off_total"
                             	t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
                     	</tr>
@@ -497,7 +511,7 @@
 		       <tr style="border-bottom: solid 1px black;border-left: solid 3px black;border-right: solid 3px black;">
                                 <td style="border-right: solid 1px black;text-align:left;padding-left: 5px;">Amount in Words:</td>
                                 <td colspan="5" style="padding-left:5px; border-right: solid 1px black;text-align:left;"><b><span t-field="o.amount_in_words"/></b></td>
-                                <td colspan="3" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
+                                <td colspan="5" style="border-right: solid 1px black;text-align:right;"><b>GRAND TOTAL</b></td>
                                 <td colspan="2" style="text-align:right;padding-right: 3px;"><b><span style="font-size: 20px" t-field="o.amount_total"
                                 t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></b></td>
                         </tr>
@@ -509,7 +523,7 @@
                         <td style="padding-left:5px;font-size:10px;" width="25">
                             <b>REMARKS:</b><t t-if="o.comment"><span t-field="o.comment"/>, </t><t t-if="o.partner_id.tax_desc"><span t-field="o.partner_id.tax_desc"/></t>
                         </td>
-                        <td colspan="8" style="padding-left:5px; border-right: solid 1px black;text-align:left;"></td>
+                        <td colspan="10" style="padding-left:5px; border-right: solid 1px black;text-align:left;"></td>
                     </tr>
                 </table>
 <!--                <table width="100%">

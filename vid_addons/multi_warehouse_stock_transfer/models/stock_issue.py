@@ -72,6 +72,7 @@ class StockWarehouseIssue(models.Model):
 	stock_line_id = fields.One2many("warehouse.stock.issue.line", "transfer_id", string="Reference")
 	state = fields.Selection([('draft', 'Draft'),
 								('confirm', 'Accepted'),
+								('wip', 'WIP Created'),
 								('issue', 'Issued'),
 								('process','Processing'),
 								('error', 'Qty Mismatch'),
@@ -87,6 +88,16 @@ class StockWarehouseIssue(models.Model):
 	reference = fields.Many2one("warehouse.stock.request", string="Reference", readonly=True)
 	dc_ids = fields.Many2many("dc.warehouse", "issue_dc_relation", "issue_id", "dc_id", string="DC's")
 	dc_exists = fields.Boolean("DC", compute="_get_dc", default=False)
+	location_type = fields.Selection([('raw', 'Raw Materials'),
+										('manufacture', 'Manufacturing'),
+										('semi-finished', 'Semi Finished'),
+										('finished', 'Finished'),
+										], string='Type', compute="_get_location")
+
+	@api.depends()
+	def _get_location(self):
+		for res in self:
+			res.location_type = res.picking_id.default_location_src_id.type
 
 	@api.model
 	def _needaction_domain_get(self):
@@ -151,6 +162,47 @@ class StockWarehouseIssue(models.Model):
 			value.write({'state':'confirm'})
 			stock_move_obj.create(val)
 		stock_id.action_confirm()
+
+	@api.multi
+	def action_create_wip(self):
+		
+		get_wip = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id), ('type', '=', 'semi-finished'), ('partner_id', '=', self.warehouse_id.partner_id.id)])
+		types = self.env["stock.picking.type"].search([("code", "=", "incoming"), ('warehouse_id.type', '=', 'finished'), ('warehouse_id', '=', self.warehouse_id.id)])
+		
+		wip_request_obj = self.env["warehouse.stock.request"]
+		wip_request_line_obj = self.env['warehouse.stock.request.line']
+
+		val = {
+			'request_warehouse_to_id':get_wip.id,
+			'partner_id':get_wip.partner_id,
+			'state':'draft',
+			'warehouse_id':self.warehouse_id.id,
+			'picking_id':types[0].id,
+			'company_id':self.company_id.id
+		}
+		wip_request = wip_request_obj.new(val)
+		wip_request.onchange_request_warehouse_id()
+		val = wip_request._convert_to_write({line:wip_request[line] for line in wip_request._cache})
+
+		request_id = wip_request_obj.create(val)
+
+		if val:
+			for line in self.stock_line_id:
+				val = {
+					'product_id':line.product_id.id,
+					'product_qty':line.product_qty,
+					'transfer_id':request_id.id,
+					'unit_price':line.unit_price,
+				}
+				ctx = {}
+				ctx.update({'company_id':self.company_id.id, 'default_picking':types[0].id, 'default_date':self.expected_date})
+				wip_request_line = wip_request_line_obj.with_context(ctx).new(val)
+				wip_request_line.onchange_product_id()
+				val = wip_request_line._convert_to_write({line:wip_request_line[line] for line in wip_request_line._cache})
+				wip_request_line_obj.create(val)
+
+		self.write({'state':'wip'})
+
 
 	@api.multi
 	def action_move(self):

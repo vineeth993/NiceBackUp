@@ -14,6 +14,16 @@ class StockPicking(models.Model):
 	request_id = fields.Many2one("warehouse.stock.request", string="Request")
 	is_dc = fields.Boolean(string="DC", default=False)
 	warehouse_dc_id = fields.Many2one('dc.warehouse', string="Dc")
+	location_type = fields.Selection([('raw', 'Raw Materials'),
+										('manufacture', 'Manufacturing'),
+										('semi-finished', 'Semi Finished'),
+										('finished', 'Finished'),
+										], string='Type', compute="_get_location")
+
+	@api.depends()
+	def _get_location(self):
+		for res in self:
+			res.location_type = res.location_id.type
 
 	@api.multi
 	def action_create_dc(self):

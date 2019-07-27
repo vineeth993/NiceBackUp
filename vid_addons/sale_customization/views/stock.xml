@@ -25,5 +25,34 @@
 			</field>
 		</record>
 
+		<record id="view_picking_internal_search_cust" model="ir.ui.view">
+			<field name="name">view.picking.search.cust</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_internal_search"/>
+			<field name="arch" type="xml">
+				<xpath expr="//search" position="inside">
+					<filter name="sale_order" string="Order" domain="[('is_dc', '=', False)]" help="Sale Order"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="stock.action_picking_tree_waiting" model="ir.actions.act_window">
+			<field name="name">Waiting Availability Transfers</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="domain"></field>
+			<field name="context">{
+					'search_default_picking_type_id': [active_id],
+					'default_picking_type_id': active_id,
+					'contact_display': 'partner_address',
+					'search_default_waiting': 1,
+					'search_default_sale_order':1
+			}
+			</field>
+			<field name="search_view_id" ref="view_picking_internal_search_cust"/>
+		</record>
+		
 	</data>
 </openerp>

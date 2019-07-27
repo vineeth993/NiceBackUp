@@ -6,7 +6,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-class StockTranser(models.Model):
+class StockTranser(models.TransientModel):
 
 	_inherit = "stock.transfer_details_items"
 
