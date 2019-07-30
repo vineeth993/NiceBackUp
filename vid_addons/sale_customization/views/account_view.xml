@@ -20,7 +20,7 @@
 				<xpath expr="//sheet/h1" postion="before">
                     <div class="oe_right oe_button_box">
                         <button class="oe_inline oe_stat_button" string="Create GRN" type="object"
-                                name="action_create_grn" icon="fa-truck" states="open"/>
+                                name="action_create_grn" icon="fa-truck" states="open" groups="base.group_user"/>
                     </div>
                 </xpath>   
 				

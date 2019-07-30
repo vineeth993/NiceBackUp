@@ -25,7 +25,7 @@ class ReportInvoice(models.AbstractModel):
 		sgst_values = {'2.5': 0.0, '6.0': 0.0, '9.0': 0.0, '14.0': 0.0}
 		cgst_values = {'2.5': 0.0, '6.0': 0.0, '9.0': 0.0, '14.0': 0.0}
 		igst_values = {'5.0': 0.0, '12.0': 0.0, '18.0': 0.0, '28.0': 0.0}
-		cess_values = {'2.0':0.0}
+		cess_values = {'1.0':0.0}
 		taxable_values = {'0.0':0.0, '5.0': 0.0, '12.0': 0.0, '18.0': 0.0, '28.0': 0.0}
 		total_nodiscount, total_discount, total_qty = 0.0, 0.0, 0.0
 		total_disc_amt = 0
@@ -49,7 +49,8 @@ class ReportInvoice(models.AbstractModel):
 			gst_perc, gst, cgst_perc, sgst_perc, igst_perc, cess_perc = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 			nogst_amt, sgst_amt, cgst_amt, igst_amt, cess_amt = 0.0, 0.0, 0.0, 0.0, 0.0
 			for tax in line.invoice_line_tax_id:
-				gst_perc += tax.amount*100
+				if tax.gst_type != 'cess':
+					gst_perc += tax.amount*100
 				if tax.gst_type == 'sgst':
 					sgst_perc = tax.amount*100
 					sgst_amt  = round(sgst_perc * taxable_value / 100, 2)

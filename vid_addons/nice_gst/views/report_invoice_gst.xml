@@ -417,8 +417,8 @@
                         <td style="border-right: solid 1px black;"><span t-esc="sgst_values['2.5']"/></td>
                         <td style="border-right: solid 1px black;text-align:center;">2.5%</td>
                         <td style="border-right: solid 1px black;"><span t-esc="cgst_values['2.5']"/></td>
-                        <td style="border-right: solid 1px black;text-align:center;">2%</td>
-                        <td style="border-right: solid 1px black;"><span t-esc="cess_values['2.0']"/></td>                       
+                        <td style="border-right: solid 1px black;text-align:center;">1%</td>
+                        <td style="border-right: solid 1px black;"><span t-esc="cess_values['1.0']"/></td>                       
                         <td style="border-right: solid 1px black;"><b><t t-if="total_values['total_5']"><span t-esc="total_values['total_5']"
                             t-esc-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/></t></b></td>
                     </tr>

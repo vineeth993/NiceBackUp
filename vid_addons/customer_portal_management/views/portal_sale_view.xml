@@ -17,7 +17,7 @@
 				<form>
 					<header>
 						<button name="action_confirm" type="object" groups="base.group_portal" string="Confirm Order" class="oe_highlight" states="draft"/>
-						<button name="action_cancel" type="object" groups="base.group_portal" string="Cancel" state="draft,confirm" />
+						<button name="action_cancel" type="object" groups="base.group_portal" string="Cancel" state="confirm" />
 						<button name="action_quotation" type="object" groups="base.group_user" string="Convert Order" class="oe_highlight" states="confirm"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,order"/>
 					</header>
