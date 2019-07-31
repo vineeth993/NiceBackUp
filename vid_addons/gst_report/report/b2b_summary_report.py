@@ -174,7 +174,7 @@ class B2bSummary(report_xls):
                 if line.invoice_line_tax_id:
                     if line.invoice_line_tax_id[0].gst_type in ["sgst", "cgst"]:
                         tax_perc = (line.invoice_line_tax_id[0].amount*2)*100
-                    elif line.invoice_line_tax_id[0].gst_type in ["igst", "cess"]:
+                    elif line.invoice_line_tax_id[0].gst_type == "igst":
                         tax_perc = (line.invoice_line_tax_id[0].amount)*100
                 else:
                     tax_perc = 0
