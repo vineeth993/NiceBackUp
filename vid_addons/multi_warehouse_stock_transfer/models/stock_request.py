@@ -177,6 +177,8 @@ class StockWarehouseRequest(models.Model):
 	def action_progress(self):
 		stock_picking_obj = self.env['stock.picking']
 		stock_move_obj = self.env['stock.move']
+		if self.state == "process":
+			return
 		if not self.stock_line_id:
 			raise ValidationError("Please Specify the product")
 		val = {'partner_id':self.partner_id.id,

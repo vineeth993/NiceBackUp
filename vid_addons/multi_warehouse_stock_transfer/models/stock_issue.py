@@ -93,6 +93,7 @@ class StockWarehouseIssue(models.Model):
 										('semi-finished', 'Semi Finished'),
 										('finished', 'Finished'),
 										], string='Type', compute="_get_location")
+	wip_ref = fields.Many2one("warehouse.stock.request", string="WIP Reference")
 
 	@api.depends()
 	def _get_location(self):
@@ -132,6 +133,9 @@ class StockWarehouseIssue(models.Model):
 
 		if self.reference.state == 'cancel':
 			raise ValidationError("The reference document is canceled")
+
+		if self.state == 'confirm':
+			return
 
 		val = {'partner_id':self.partner_id.id,
 				'move_type':'direct',
@@ -201,7 +205,7 @@ class StockWarehouseIssue(models.Model):
 				val = wip_request_line._convert_to_write({line:wip_request_line[line] for line in wip_request_line._cache})
 				wip_request_line_obj.create(val)
 
-		self.write({'state':'wip'})
+		self.write({'state':'wip', 'wip_ref':request_id})
 
 
 	@api.multi
@@ -253,7 +257,8 @@ class StockWarehouseIssue(models.Model):
 
 		get_dcs = self.env["dc.warehouse"].search([('id', 'in', dc_ids), ('state', '=', 'dc')])
 		if get_dcs:
-			get_dcs.action_done()
+			for dc in get_dcs:
+				dc.action_done()
 
 
 	def action_view(self, cr, uid, ids, context=None):

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<template id="assets_backend" name="ribbon_test assets" inherit_id="web.assets_backend">
+	        <xpath expr="." position="inside">
+	            <link rel="stylesheet" href="/customer_portal_management/static/src/css/static.css"/>
+	        </xpath>
+	    </template>
+
+	</data>
+</openerp>

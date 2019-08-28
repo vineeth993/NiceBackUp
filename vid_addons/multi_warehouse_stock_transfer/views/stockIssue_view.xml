@@ -17,10 +17,11 @@
             <field name="arch" type="xml">
                 <tree string="Issue" colors="grey:state == 'cancel';red:state == 'error';blue:state == 'process'green:state == 'issue'">
                     <field name="request_warehouse_from_id"/>
+                    <field name="warehouse_id"/>
                     <field name="name"/>
                     <field name="reference"/>
                     <field name="request_date"/>
-                    <field name="expected_date"/>
+                    <!-- <field name="expected_date"/> -->
                     <!-- <field name="created_user"/> -->
                     <field name="state"/>
                 </tree>
@@ -54,6 +55,7 @@
                             <field name="request_date" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             <field name="expected_date" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             <field name="currency_id" invisible="1" options="{'no_create':True, 'no_create_edit':True, 'no_open':True}"/>
+                            <field name="wip_ref" readonly="1"/>
                         </group>
                     </group>
                     <notebook>

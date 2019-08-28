@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <openerp>
-	<data>
+	<data noupdate="1">
 
 		<record id="customer_portal_order_type" model="ir.sequence.type">
 			<field name="name">Customer Portal</field>

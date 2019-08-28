@@ -32,7 +32,7 @@ class WarehouseValidation(models.TransientModel):
 					'sl_no':count,
 					'product_id':line.product_id.id,
 					'product_qty':line.product_uom_qty,
-					'location_id':line.product_location.id,
+					'location_id':line.product_location.id or line.product_id.product_tmpl_id.product_location.id,
 					}
 				items.append(item)
 			res['line_id'] = items

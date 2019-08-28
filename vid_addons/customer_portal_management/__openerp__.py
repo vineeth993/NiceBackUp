@@ -18,16 +18,19 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','portal','portal_sale'],
+    'depends': ['base','portal','portal_sale', 'web'],
 
     # always loaded
     'data': [
+        'wizard/confirm_order_view.xml',
         'views/portal_sale_view.xml',
         'views/sale_menu_view.xml',
         'views/portal_menu.xml',
         'views/portal_price_list.xml',
+        'views/base_view.xml',
         'security/ir.model.access.csv',
-        'data/sequence.xml'
+        'data/sequence.xml',
+        'data/rules.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
