@@ -205,7 +205,7 @@ class StockWarehouseIssue(models.Model):
 				val = wip_request_line._convert_to_write({line:wip_request_line[line] for line in wip_request_line._cache})
 				wip_request_line_obj.create(val)
 
-		self.write({'state':'wip', 'wip_ref':request_id})
+		self.write({'state':'wip', 'wip_ref':request_id.id})
 
 
 	@api.multi
