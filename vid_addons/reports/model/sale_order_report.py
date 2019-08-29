@@ -18,6 +18,6 @@ class StockMove(models.Model):
 
 	def get_available(self, product_id, location_id):
 
-		qty_available = product_id.with_context({'warehouse':location_id.warehouse_id.id}).qty_available
+		qty_available = product_id.with_context({'location':location_id.id}).qty_available
 		return qty_available
 
