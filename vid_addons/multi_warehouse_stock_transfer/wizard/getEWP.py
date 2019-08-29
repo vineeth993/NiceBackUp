@@ -238,4 +238,4 @@ class GetEwpdc(models.TransientModel):
 
 		line_ids = []
 				
-		lr_id.write({'json_file': base64.b64encode(out), 'json_file_name':self.name+'.json', 'state':'dc'})
+		lr_id.write({'json_file': base64.b64encode(out), 'json_file_name':self.name+'.json'})
