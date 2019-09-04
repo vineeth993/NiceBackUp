@@ -227,7 +227,7 @@ class StockWarehouse(models.Model):
 			vals[values['field']] = location_id
 
 		#create WH
-		new_id = super(stock_warehouse, self).create(cr, uid, vals=vals, context=context)
+		new_id = super(StockWarehouse, self).create(cr, uid, vals=vals, context=context)
 		warehouse = self.browse(cr, uid, new_id, context=context)
 		self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
 
