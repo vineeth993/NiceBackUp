@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		
+		<record id="cancel_stock_picking_form" model="ir.ui.view">
+			<field name="name">Cancel Picking</field>
+			<field name="model">stock.cancel</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<p>Press cancel button to cancel the picking</p>
+					</group>
+					<footer>
+						<button name="action_picking_cancel" type="object" string="Cancel Picking" class="oe_highlight"/>
+						or
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="cancel_stock_picking_cancel" model="ir.actions.act_window">
+			<field name="name">Cancel Picking</field>
+			<field name="res_model">stock.cancel</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="cancel_stock_picking_form"/>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</openerp>

@@ -23,6 +23,7 @@
     # always loaded
     'data': [
         'wizard/getEWP_view.xml',
+        'wizard/stock_cancel.xml',
         'report/report.xml',
         'views/Warehouse_cust_view.xml',
         'views/stockRequest_view.xml',
