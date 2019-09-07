@@ -17,8 +17,8 @@
             <field name="arch" type="xml">
                 <tree string="Inward" colors="grey:state == 'cancel';green:state == 'issued';red:state == 'error';blue:state == 'process'">
                     <field name="request_warehouse_to_id"/>
-                    <field name="name"/>
-                    <field name="reference"/>
+                    <field name="name" string="Request No"/>
+                    <!-- <field name="reference"/> -->
                     <field name="request_date"/>
                     <!-- <field name="expected_date"/> -->
                     <field name="quant_issued_date"/>
