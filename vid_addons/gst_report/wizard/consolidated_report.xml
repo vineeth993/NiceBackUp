@@ -34,6 +34,6 @@
 			<field name="target">new</field>
 		</record>
 
-		<menuitem id="gstr_consolidate_menuitem" name="GSTR Sale Report" action="gstr_consolidate_action" parent="menu_gstr_report"/>
+		<menuitem id="gstr_consolidate_menuitem" name="GSTR Sale Report" action="gstr_consolidate_action" parent="menu_gstr_report" sequence="3"/>
 	</data>
 </openerp>

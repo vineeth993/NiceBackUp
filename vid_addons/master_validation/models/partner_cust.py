@@ -18,9 +18,9 @@ class PartnerCust(models.Model):
 
 	@api.multi
 	def write(self, vals):
-		if self.state == "approve" and self.env.context.get('make_readonly') and vals.get('message_last_post', '/') == '/' and self.is_company and vals.get('credit', '/') == '/':
+		if self.state == "approve" and self.env.context.get('make_readonly') and vals.get('message_last_post', '/') == '/' and self.is_company and vals.get('credit', '/') == '/' and vals.get('email', '/') == '/' and vals.get('company_id', '/') == '/' and vals.get('signup_type', '/') == '/' and vals.get('signup_expiration', '/') == '/' and vals.get('signup_token', '/') == '/' and vals.get('tz', '/') == '/' :
 			raise ValidationError("Document is approved cannot be edited please contact administrator")
-		elif self.state == "approve" and self.env.context.get('make_readonly', 1) == 1  and vals.get('message_last_post', '/') == '/' and self.is_company  and vals.get('credit', '/') == '/':
+		elif self.state == "approve" and self.env.context.get('make_readonly', 1) == 1  and vals.get('message_last_post', '/') == '/' and self.is_company  and vals.get('credit', '/') == '/' and vals.get('email', '/') == '/' and vals.get('company_id', '/') == '/' and vals.get('signup_type', '/') == '/' and vals.get('signup_expiration', '/') == '/' and vals.get('signup_token', '/') == '/' and vals.get('tz', '/') == '/' :
 			raise ValidationError("Document is approved cannot be edited please contact administrator")
 		res = super(PartnerCust, self).write(vals)
 		return res

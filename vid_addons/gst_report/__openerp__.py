@@ -26,9 +26,11 @@
         'wizard/hsn_report.xml',
         'wizard/B2B_sale_report.xml',
         'wizard/consolidated_report.xml',
+        'wizard/cess_sale_report_view.xml',
         'report/hsn_summary_report.xml',
         'report/b2b_summary_report.xml',
-        'report/gstr_conso_report.xml'
+        'report/gstr_conso_report.xml',
+        'report/cess_summary_report_view.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

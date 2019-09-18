@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<record id="cess_report_form_view" model="ir.ui.view">
+			<field name="name">Cess Report</field>
+			<field name="model">cess_sale.report</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<group>
+							<field name="from_date" required="1"/>
+							<field name="to_date" required="1"/>
+						</group>
+						<group>
+							<field name="company_id" required="1"/>
+						</group>
+						<group>
+							<field name="sale_order_type" domain='[("object_type", "=", "sale"), ("company_id", "=", company_id)]' required="1"/>
+							<field name="sale_sub_type" domain='[("type_id", "=", sale_order_type), ("company_id", "=", company_id)]' required="1"/>
+						</group>
+					</group>
+					<footer>
+						<button name="action_cess_report" string="Download" icon="gtk-print" type="object"/>
+						<button string="_Cancel" special="cancel" icon="gtk-cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="cess_report_action" model="ir.actions.act_window">
+			<field name="name">Cess Report</field>
+			<field name="res_model">cess_sale.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="cess_report_form_view"/>
+			<field name="target">new</field>
+		</record>
+ 
+		<menuitem id="cess_report_menu_acion" name="Cess Report" action="cess_report_action" parent="gst_report.menu_gstr_report" sequence="4"/>
+
+	</data>
+</openerp>
