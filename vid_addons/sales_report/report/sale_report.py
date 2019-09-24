@@ -105,11 +105,12 @@ class sale_status_report(report_xls):
 				else:
 					orderLineQty.update({str(line.product_id.name):[line.product_uom_qty, line.discount, line.extra_discount, line.additional_discount, line.product_id.default_code]})
 
-			for line in stocks.move_lines:
-				if stockQty.has_key(str(line.product_id.name)):
-					stockQty[str(line.product_id.name)] += line.product_uom_qty
-				else:
-					stockQty.update({str(line.product_id.name):line.product_uom_qty})
+			for stock in stocks:
+				for line in stock.move_lines:
+					if stockQty.has_key(str(line.product_id.name)):
+						stockQty[str(line.product_id.name)] += line.product_uom_qty
+					else:
+						stockQty.update({str(line.product_id.name):line.product_uom_qty})
 
 			for orderLine in orderLineQty:
 				if stockQty.has_key(orderLine):
@@ -388,11 +389,12 @@ class sale_status_report(report_xls):
 				else:
 					orderLineQty.update({str(line.product_id.name):[line.product_uom_qty, line.product_id.default_code]})
 
-			for line in stocks.move_lines:
-				if stockQty.has_key(str(line.product_id.name)):
-					stockQty[str(line.product_id.name)] += line.product_uom_qty
-				else:
-					stockQty.update({str(line.product_id.name):line.product_uom_qty})
+			for stock in stocks:
+				for line in stock.move_lines:
+					if stockQty.has_key(str(line.product_id.name)):
+						stockQty[str(line.product_id.name)] += line.product_uom_qty
+					else:
+						stockQty.update({str(line.product_id.name):line.product_uom_qty})
 
 			for orderLine in orderLineQty:
 				if stockQty.has_key(orderLine):
