@@ -181,60 +181,14 @@ class StockWarehouse(models.Model):
 			])
 
 	def create(self, cr, uid, vals, context=None):
-		if context is None:
-			context = {}
-		if vals is None:
-			vals = {}
-		data_obj = self.pool.get('ir.model.data')
-		seq_obj = self.pool.get('ir.sequence')
-		picking_type_obj = self.pool.get('stock.picking.type')
-		location_obj = self.pool.get('stock.location')
-
-		#create view location for warehouse
-		loc_vals = {
-				'name': _(vals.get('code')),
-				'usage': 'view',
-				'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
-		}
-		if vals.get('company_id'):
-			loc_vals['company_id'] = vals.get('company_id')
-		wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
-		vals['view_location_id'] = wh_loc_id
-		#create all location
-		def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
-		reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
-		delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-		context_with_inactive = context.copy()
-		context_with_inactive['active_test'] = False
-		sub_locations = [
-			{'name': _('Stock'), 'active': True, 'field': 'lot_stock_id'},
-			{'name': _('Input'), 'active': reception_steps != 'one_step', 'field': 'wh_input_stock_loc_id'},
-			{'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'field': 'wh_qc_stock_loc_id'},
-			{'name': _('Output'), 'active': delivery_steps != 'ship_only', 'field': 'wh_output_stock_loc_id'},
-			{'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'field': 'wh_pack_stock_loc_id'},
-		]
-		for values in sub_locations:
-			loc_vals = {
-				'name': values['name'],
-				'usage': 'internal',
-				'location_id': wh_loc_id,
-				'active': values['active'],
-				'type':vals.get('type')
-			}
-			if vals.get('company_id'):
-				loc_vals['company_id'] = vals.get('company_id')
-			location_id = location_obj.create(cr, uid, loc_vals, context=context_with_inactive)
-			vals[values['field']] = location_id
-
-		#create WH
 		new_id = super(StockWarehouse, self).create(cr, uid, vals=vals, context=context)
 		warehouse = self.browse(cr, uid, new_id, context=context)
-		self.create_sequences_and_picking_types(cr, uid, warehouse, context=context)
-
-		#create routes and push/pull rules
-		new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
-		self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
-		return new_id	
+		warehouse.wh_input_stock_loc_id.write({'type':vals.get('type')})
+		warehouse.wh_qc_stock_loc_id.write({'type':vals.get('type')})
+		warehouse.wh_output_stock_loc_id.write({'type':vals.get('type')})
+		warehouse.wh_pack_stock_loc_id.write({'type':vals.get('type')})
+		warehouse.lot_stock_id.write({'type':vals.get('type')})
+		return new_id
 
 class StockLocation(models.Model):
 
