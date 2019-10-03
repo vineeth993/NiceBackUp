@@ -41,7 +41,7 @@ class HsnReport(report_xls):
 		number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
 		number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
 
-		headers = {0:"HSN", 1:"Description", 2:'UQC', 3:"Total Quantity", 4:'Total Value', 5:'Taxable Value', 6:'Integrated Tax Amount', 7:'Central Tax Amount', 8:'State/UT Tax Amount', 9:'Cess Amount'}
+		headers = {0:"HSN", 1:"Description", 2:'UQC', 3:"Total Quantity", 4:'Total Value', 5:'Taxable Value', 6:'Tax(%)', 7:'Integrated Tax Amount', 8:'Central Tax Amount', 9:'State/UT Tax Amount', 10:'Cess Amount'}
 
 		for header in headers:
 			ws.write(3, header, headers[header], title2)
@@ -77,12 +77,17 @@ class HsnReport(report_xls):
 					for tax in line.invoice_line_tax_id:
 						if tax.gst_type == "cgst":
 							hsn_cgst_total = round((line.price_subtotal * tax.amount), 2)
+							tax_perc = tax.amount * 2 * 100
 						elif tax.gst_type == "sgst":
 							hsn_sgst_total = round((line.price_subtotal * tax.amount), 2)
+							tax_perc = tax.amount * 2 * 100
 						elif tax.gst_type == "igst":
 							hsn_igst_total = round((line.price_subtotal * tax.amount), 2)
+							tax_perc = tax.amount * 100
 						elif tax.gst_type == "cess":
 							hsn_cess_total = round((line.price_subtotal * tax.amount), 2)
+						else:
+							tax_perc = 0
 					hsn_taxed = line.price_subtotal + hsn_cgst_total + hsn_sgst_total + hsn_igst_total + hsn_cess_total
 					if hsn_dict.get(line.product_id.hs_code_id.code[0:4]):
 						hsn_dict[line.product_id.hs_code_id.code[0:4]][0] += line.quantity
@@ -94,7 +99,7 @@ class HsnReport(report_xls):
 						hsn_dict[line.product_id.hs_code_id.code[0:4]][6] += hsn_taxed
 					else:
 						hsn_count += 1
-						hsn_dict[line.product_id.hs_code_id.code[0:4]] = [line.quantity, line.price_subtotal, hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total, hsn_taxed, line.product_id.hs_code_id.description]   
+						hsn_dict[line.product_id.hs_code_id.code[0:4]] = [line.quantity, line.price_subtotal, hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total, hsn_taxed, line.product_id.hs_code_id.description, tax_perc]   
 					
 					hsn_total_taxable += line.price_subtotal
 					hsn_total_amount += hsn_taxed
@@ -116,23 +121,24 @@ class HsnReport(report_xls):
 			ws.write(count, 3, hsn_dict[hsn][0], number2d)
 			ws.write(count, 4, hsn_dict[hsn][6], number2d)
 			ws.write(count, 5, hsn_dict[hsn][1], number2d)
-			ws.write(count, 6, hsn_dict[hsn][4], number2d)
-			ws.write(count, 7, hsn_dict[hsn][2], number2d)
-			ws.write(count, 8, hsn_dict[hsn][3], number2d)
-			ws.write(count, 9, hsn_dict[hsn][5], number2d)
+			ws.write(count, 6, hsn_dict[hsn][8], number2d)
+			ws.write(count, 7, hsn_dict[hsn][4], number2d)
+			ws.write(count, 8, hsn_dict[hsn][2], number2d)
+			ws.write(count, 9, hsn_dict[hsn][3], number2d)
+			ws.write(count, 10, hsn_dict[hsn][5], number2d)
 			count += 1
 
 		ws.write(0, 0, 'Summary For HSN(12)', title2)
-		headers = {0:"No.of HSN", 4:'Total Value', 5:'Taxable Value', 6:'Total Integrated Tax', 7:'Total Central Tax', 8:'Total State/UT Tax', 9:'Total Cess'}
+		headers = {0:"No.of HSN", 4:'Total Value', 5:'Taxable Value', 7:'Total Integrated Tax', 8:'Total Central Tax', 9:'Total State/UT Tax', 10:'Total Cess'}
 		for header in headers:
 			ws.write(1, header, headers[header], title2)
 		ws.write(2, 0, hsn_count, number2d)
 		ws.write(2, 4, round(hsn_total_amount, 2), number2d)
 		ws.write(2, 5, round(hsn_total_taxable, 2), number2d)
-		ws.write(2, 6, round(hsn_total_igst, 2), number2d)
-		ws.write(2, 7, round(hsn_total_cgst, 2), number2d)
-		ws.write(2, 8, round(hsn_total_sgst, 2), number2d)
-		ws.write(2, 9, round(hsn_total_cess, 2), number2d)
+		ws.write(2, 7, round(hsn_total_igst, 2), number2d)
+		ws.write(2, 8, round(hsn_total_cgst, 2), number2d)
+		ws.write(2, 9, round(hsn_total_sgst, 2), number2d)
+		ws.write(2, 10, round(hsn_total_cess, 2), number2d)
 
 
 
