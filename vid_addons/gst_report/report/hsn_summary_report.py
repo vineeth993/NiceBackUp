@@ -63,43 +63,53 @@ class HsnReport(report_xls):
 		hsn_count = 0
 		hsn_dict = {}
 
-		hsn_cgst_total = 0
-		hsn_sgst_total = 0
-		hsn_igst_total = 0
-		hsn_cess_total = 0
-		hsn_taxed = 0
-		
 		count = 4
+
+		tax_perc = 0
 
 		if invoice_id:
 			for invoice in invoices:
 				for line in invoice.invoice_line:
-					for tax in line.invoice_line_tax_id:
-						if tax.gst_type == "cgst":
-							hsn_cgst_total = round((line.price_subtotal * tax.amount), 2)
-							tax_perc = tax.amount * 2 * 100
-						elif tax.gst_type == "sgst":
-							hsn_sgst_total = round((line.price_subtotal * tax.amount), 2)
-							tax_perc = tax.amount * 2 * 100
-						elif tax.gst_type == "igst":
-							hsn_igst_total = round((line.price_subtotal * tax.amount), 2)
-							tax_perc = tax.amount * 100
-						elif tax.gst_type == "cess":
-							hsn_cess_total = round((line.price_subtotal * tax.amount), 2)
-						else:
-							tax_perc = 0
+
+					hsn_cgst_total = 0
+					hsn_sgst_total = 0
+					hsn_igst_total = 0
+					hsn_cess_total = 0
+					hsn_taxed = 0
+
+					if line.invoice_line_tax_id:
+						for tax in line.invoice_line_tax_id:
+							if tax.gst_type == "cgst":
+								hsn_cgst_total = round((line.price_subtotal * tax.amount), 2)
+								tax_perc = tax.amount * 2 * 100
+							elif tax.gst_type == "sgst":
+								hsn_sgst_total = round((line.price_subtotal * tax.amount), 2)
+								tax_perc = tax.amount * 2 * 100
+							elif tax.gst_type == "igst":
+								hsn_igst_total = round((line.price_subtotal * tax.amount), 2)
+								tax_perc = tax.amount * 100
+							# elif tax.gst_type == "cess":
+							# 	hsn_cess_total = round((line.price_subtotal * tax.amount), 2)
+							else:
+								tax_perc = 0
+					else:
+						tax_perc = 0		
+
 					hsn_taxed = line.price_subtotal + hsn_cgst_total + hsn_sgst_total + hsn_igst_total + hsn_cess_total
 					if hsn_dict.get(line.product_id.hs_code_id.code[0:4]):
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][0] += line.quantity
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][1] += line.price_subtotal
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][2] += hsn_cgst_total
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][3] += hsn_sgst_total
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][4] += hsn_igst_total
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][5] += hsn_cess_total
-						hsn_dict[line.product_id.hs_code_id.code[0:4]][6] += hsn_taxed
+						if hsn_dict[line.product_id.hs_code_id.code[0:4]].get(tax_perc):
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][0] += line.quantity
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][1] += line.price_subtotal
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][2] += hsn_cgst_total
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][3] += hsn_sgst_total
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][4] += hsn_igst_total
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][5] += hsn_cess_total
+							hsn_dict[line.product_id.hs_code_id.code[0:4]][tax_perc][6] += hsn_taxed
+						else:
+							hsn_dict[line.product_id.hs_code_id.code[0:4]].update({tax_perc:[line.quantity, line.price_subtotal, hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total, hsn_taxed, line.product_id.hs_code_id.description]})
 					else:
 						hsn_count += 1
-						hsn_dict[line.product_id.hs_code_id.code[0:4]] = [line.quantity, line.price_subtotal, hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total, hsn_taxed, line.product_id.hs_code_id.description, tax_perc]   
+						hsn_dict[line.product_id.hs_code_id.code[0:4]] = {tax_perc:[line.quantity, line.price_subtotal, hsn_cgst_total, hsn_sgst_total, hsn_igst_total, hsn_cess_total, hsn_taxed, line.product_id.hs_code_id.description]}
 					
 					hsn_total_taxable += line.price_subtotal
 					hsn_total_amount += hsn_taxed
@@ -108,25 +118,20 @@ class HsnReport(report_xls):
 					hsn_total_sgst += hsn_sgst_total
 					hsn_total_cess += hsn_cess_total
 
-					hsn_cgst_total = 0
-					hsn_sgst_total = 0
-					hsn_igst_total = 0
-					hsn_cess_total = 0
-					hsn_taxed = 0
-
 		for hsn in hsn_dict:
-			ws.write(count, 0, hsn, number2d)
-			ws.write(count, 1, hsn_dict[hsn][7], normal)
-			ws.write(count, 2, 'NOS-NUMBERS', normal)
-			ws.write(count, 3, hsn_dict[hsn][0], number2d)
-			ws.write(count, 4, hsn_dict[hsn][6], number2d)
-			ws.write(count, 5, hsn_dict[hsn][1], number2d)
-			ws.write(count, 6, hsn_dict[hsn][8], number2d)
-			ws.write(count, 7, hsn_dict[hsn][4], number2d)
-			ws.write(count, 8, hsn_dict[hsn][2], number2d)
-			ws.write(count, 9, hsn_dict[hsn][3], number2d)
-			ws.write(count, 10, hsn_dict[hsn][5], number2d)
-			count += 1
+			for tax in hsn_dict[hsn]:
+				ws.write(count, 0, hsn, number2d)
+				ws.write(count, 1, hsn_dict[hsn][tax][7], normal)
+				ws.write(count, 2, 'NOS-NUMBERS', normal)
+				ws.write(count, 3, hsn_dict[hsn][tax][0], number2d)
+				ws.write(count, 4, hsn_dict[hsn][tax][6], number2d)
+				ws.write(count, 5, hsn_dict[hsn][tax][1], number2d)
+				ws.write(count, 6, tax, number2d)
+				ws.write(count, 7, hsn_dict[hsn][tax][4], number2d)
+				ws.write(count, 8, hsn_dict[hsn][tax][2], number2d)
+				ws.write(count, 9, hsn_dict[hsn][tax][3], number2d)
+				ws.write(count, 10, hsn_dict[hsn][tax][5], number2d)
+				count += 1
 
 		ws.write(0, 0, 'Summary For HSN(12)', title2)
 		headers = {0:"No.of HSN", 4:'Total Value', 5:'Taxable Value', 7:'Total Integrated Tax', 8:'Total Central Tax', 9:'Total State/UT Tax', 10:'Total Cess'}
