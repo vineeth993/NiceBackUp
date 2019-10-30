@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="daily_stock_report_form_view" model="ir.ui.view">
+            <field name="name">Daily Stock Report</field>
+            <field name="model">daily.stock.report</field>
+            <field name="arch" type="xml">
+                <form string="Daily Stock Report">
+                    <field invisible="1" name="state"/>
+                    <field name="name" invisible="1"/>
+                    <group states="choose" string="Export Settings">
+                        <group>
+                                <field name="report_date_start" />
+                                <field name="company_id"/>
+                                <!-- <field name="weight_uom_id" domain="[('category_id.name','=','Weight')]" /> -->
+                                <field name="type" />
+                        </group>
+                        <group>
+                                <field name="report_date" />    
+                                <field name="action" readonly="1" />    
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Filters">
+                                <group colspan="4">
+                                    <field name="product_ids" >
+                                        <tree string="Products" editable = "bottom">
+                                            <field name="product_id"/>
+                                        </tree>
+                                    </field>
+                                    <!-- <field name="category_ids" >
+                                        <tree string="Category" editable = "bottom">
+                                            <field name="category_id"/>
+                                        </tree>
+                                    </field> -->
+                                    <field name="location_ids" >
+                                        <tree string="Location" editable = "bottom">
+                                            <field name="location_id" domain="[('company_id', '=', parent.company_id), ('type', '=', parent.type)]" required="1"/>
+                                        </tree>
+                                    </field>
+                                    <field name="brand_ids" >
+                                        <tree string="Brand" editable = "bottom">
+                                            <field name="brand_id" required="1"/>
+                                        </tree>
+                                    </field>
+
+                                </group>
+                            </page>
+                            <page string="Layout Options">
+                                <group>
+                                    <group>
+                                        <field name="show_incoming" /> 
+                                        <field name="show_outgoing" /> 
+                                    </group>
+                                    <group>
+                                        <field name="show_opening" /> 
+                                        <field name="show_valuation" /> 
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+<!--                        <group>
+                            <field name="location_ids" >
+                                <tree string="Location" editable = "bottom">
+                                    <field name="location_id" required="1"/>
+                                </tree>
+                            </field>
+                        </group>-->
+                    </group>
+                    <div states="get">
+                        <h2>Export Complete</h2>
+                        <p>Here is the daily stock report: <field name="data" readonly="1" filename="name"/></p>
+                    </div>
+                    <footer states="choose">
+                        <button name="act_getstockreport" string="Export" type="object" class="oe_highlight"/> 
+                        <!-- <button name="act_get_journal" string="Get Journal"  type="object" class="oe_highlight"/> or -->
+                        <button special="cancel" string="Cancel" type="object" class="oe_link"/>
+                    </footer>
+                    <footer states="get">
+                        <button special="cancel" string="Close" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_daily_stock_report" model="ir.actions.act_window">
+            <field name="name">Daily Stock Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">daily.stock.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.next_id_61" action="action_daily_stock_report" id="menu_daily_stock_report" sequence="5"/>
+    </data>
+</openerp>
