@@ -8,9 +8,10 @@
 			<field name="name">customer.tree</field>
 			<field name="model">portal.sale</field>
 			<field name="arch" type="xml">
-				<tree>
-					<field name="name"/>
-					<field name="partner_id"/>
+				<tree colors="green:state =='order';grey:state == 'cancel';red:state == 'confirm'">
+					<field name="name" string="SL.No"/>
+					<field name="partner_id" string="Party"/>
+					<field name="order_no"/>
 					<field name="order_date"/>
 					<field name="amount_taxable"/>
 					<field name="amount_total"/>
@@ -25,7 +26,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="customer_portal_order_tree"/>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state', '=', 'confirm')]</field>
+			<field name="domain">[('state', '!=', 'draft')]</field>
 		</record>
 
 		<menuitem id="menu_sale_portal_menuitem" name="Customer Order" parent="base.menu_sales" action="customer_portal_order_view" sequence="4"/>

@@ -295,6 +295,7 @@ class SaleOrder(models.Model):
 	discount_stat = fields.Boolean("Discount")
 	brand_id = fields.Many2one("product.brand", string="Product Type")
 	validated_user = fields.Many2one('res.users', string="Validated User")
+	customer_remarks = fields.Text(string="Remarks")
 
 	def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
 		loc_obj = self.pool.get("stock.location")

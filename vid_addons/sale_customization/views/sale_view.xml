@@ -145,6 +145,7 @@
 						attrs="{'invisible':[('partner_selling_type', '==','normal')],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" />
 					<!-- <field name="scheme_id"/> -->
 					<field name="employee_id" readonly="1" invisible='1'/>
+					<field name="customer_remarks"/>
 				</xpath>
 
 <!-- 				<field name="warehouse_id" position="attributes">

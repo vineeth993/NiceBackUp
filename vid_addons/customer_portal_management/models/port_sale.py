@@ -75,6 +75,7 @@ class PortalSale(models.Model):
 	gst_type = fields.Many2one("sale.order.type", string="Gst Type", compute=_get_paratmeters, store=True)
 	gst_sub_type = fields.Many2one("sale.order.sub.type", string="Gst Sub Type", compute=_get_paratmeters, store=True)
 	order_date = fields.Date(string="Order Date", default=lambda x:date.today(), track_visibility="onchange")
+	accepted_date = fields.Date(string="Accepted Date")
 	order_no = fields.Char(string="Order No", track_visibility="onchange")
 	product_categ_id = fields.Many2one("product.brand", string="Product Category", track_visibility="onchange")
 	line_id = fields.One2many("portal.sale.line", "sale_id", string="Line Ref", copy=True)
@@ -85,6 +86,7 @@ class PortalSale(models.Model):
 	normal = fields.Float(string="Normal", compute=_get_discount, store="True")
 	extra = fields.Float(string="Extra", compute=_get_discount, store="True")
 	sale_order = fields.Many2one("sale.order", string="Sale Order ref")
+	customer_remarks = fields.Text(string="Remarks")
 
 	@api.multi
 	def action_confirm(self):
@@ -121,7 +123,8 @@ class PortalSale(models.Model):
 			'normal_disc':self.normal,
 			'extra_discount':self.extra,
 			'section_id':self.partner_id.section_id.id,
-			'fiscal_position':self.partner_id.property_account_position.id
+			'fiscal_position':self.partner_id.property_account_position.id,
+			'customer_remarks':self.customer_remarks
 		}
 		sale_id = sale_obj.create(vals)
 		for line in self.line_id:
@@ -139,13 +142,18 @@ class PortalSale(models.Model):
 
 			sale_line_obj.with_context(context).create(line_val)
 
-		self.write({'state':'order', 'sale_order':sale_id.id})
+		self.write({'state':'order', 'sale_order':sale_id.id, 'accepted_date':date.today})
 
 	@api.model
 	def create(self, val):
 		if val.get('name', '/') == '/':
 			val['name'] = self.env['ir.sequence'].next_by_code("customer.portal")
 		return super(PortalSale, self).create(val)
+
+
+	@api.model
+	def _needaction_domain_get(self):
+		return [('state', '=', 'confirm')]
 
 class PortalSaleLine(models.Model):
 
@@ -193,7 +201,6 @@ class PortalSaleLine(models.Model):
 			# 		taxes_ids.append(tax.id)
 
 			line.product_taxes = taxes_ids
-			line.product_price = line.product_id.lst_price
 
 
 	@api.depends("product_price", "product_qty", "product_id", "sale_id.order_type", "sale_id.product_categ_id")
@@ -218,7 +225,7 @@ class PortalSaleLine(models.Model):
 
 	product_id = fields.Many2one("product.product", string="Product")
 	product_qty = fields.Float(string="Quantity")
-	product_price = fields.Float(string="Price", compute=_get_price, store=True)
+	product_price = fields.Float(string="Price", store=True)
 	product_taxes = fields.Many2many("account.tax", "rel_product_taxes_id", "product_taxes", "sale_id", string="Taxes", compute=_get_product, store=True)
 	product_subtotal = fields.Float(string="Subtotal", store=True, compute=_get_subtotal)
 	sale_id = fields.Many2one("portal.sale", string="Portal reference")
@@ -228,46 +235,16 @@ class PortalSaleLine(models.Model):
 	normal = fields.Float(string="Normal", compute=_get_subtotal, store=True)
 	extra = fields.Float(string="Extra", compute=_get_subtotal, store=True)
 
-	# @api.onchange("product_id", "order_id.order_type")
-	# def on_change_product_id(self):
-	# 	for line in self:
-			
-	# 		if line.product_id.price_list and line.sale_id.order_type != "special":
-	# 			raise ValidationError("This product cannot be quoted in NORMAL order please change the Type to SPECIAL")
-	# 		gst, igst, formstate, forminter = False, False, False, False
-	# 		taxes_ids = []
-	# 		sub_type_id = None
-	# 		if not line.product_id:
-	# 			return None
-	# 		if line._context.get("sale_sub_type", "/") != '/':
-	# 			sub_type_id = line.sale_sub_type
-	# 		if sub_type_id:
-	# 			if sub_type_id.tax_categ == 'gst':
-	# 				gst = True
-	# 				igst, formstate, forminter = False, False, False
-	# 			elif sub_type_id.tax_categ == 'igst':
-	# 				gst, formstate, forminter = False, False, False
-	# 				igst = True
-	# 			elif sub_type_id.tax_categ == 'formstate':
-	# 				gst, igst, forminter = False, False, False
-	# 				formstate = True
-	# 			elif sub_type_id.tax_categ == 'forminter':
-	# 				gst, igst, formstate = False, False, False
-	# 				forminter = True
-	# 			else:
-	# 				gst, igst, formstate, forminter = False, False, False, False
-	# 		# fpos = line.order_id.partner_id.property_account_position
-	# 		if gst or igst:
-	# 			for prod_tax in line.product_id.taxes_id:
-	# 				if prod_tax.company_id.id == line.company_id.id:
-	# 					if gst:
-	# 						if prod_tax.tax_categ == 'gst':
-	# 							taxes_ids.append(prod_tax.id)
-	# 					elif igst:
-	# 						if prod_tax.tax_categ == 'igst':
-	# 							taxes_ids.append(prod_tax.id)
+	@api.onchange("product_price")
+	def on_change_product_price(self):
+		for line in self: 
+			if line.sale_id.order_type != 'special':
+				if line.product_id and line.product_price != line.product_id.lst_price:
+					line.update({
+						'product_price':line.product_id.lst_price
+						})
 
-
-
-	# 	line.product_taxes = taxes_ids
-	# 	line.product_price = line.product_id.lst_price
+	@api.onchange("product_id", "sale_id.order_type")
+	def on_change_product_id(self):
+		for line in self:
+			line.product_price = line.product_id.lst_price
