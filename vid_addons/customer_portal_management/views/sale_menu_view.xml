@@ -14,8 +14,7 @@
 					<field name="partner_id" string="Party"/>
 					<field name="sale_order"/>
 					<field name="accepted_date" string="Sale Order Date"/>
-					<field name="amount_taxable"/>
-					<field name="amount_total"/>
+					<field name="amount_total" string="Order Value"/>
 					<field name="state"/>
 				</tree>
 			</field>
