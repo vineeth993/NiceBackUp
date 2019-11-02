@@ -18,8 +18,9 @@
 				<tree colors="green:state =='order';grey:state == 'cancel'">
 					<field name="name" string="SL.No."/>
 					<field name="order_date"/>
-					<field name="order_no" string="Order Ref"/>
-					<field name="accepted_date"/>
+					<field name="order_no" string="Customer Order Ref"/>
+					<field name="sale_order" string="Nice Order"/>
+					<field name="accepted_date" string="Confirmed Date"/>
 					<field name="amount_total" string="Order Value(Approx)*"/>
 					<field name="state"/>
 				</tree>
