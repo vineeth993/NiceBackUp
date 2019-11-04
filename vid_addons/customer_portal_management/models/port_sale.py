@@ -124,7 +124,8 @@ class PortalSale(models.Model):
 			'extra_discount':self.extra,
 			'section_id':self.partner_id.section_id.id,
 			'fiscal_position':self.partner_id.property_account_position.id,
-			'customer_remarks':self.customer_remarks
+			'customer_remarks':self.customer_remarks,
+			'multiple_warehouse':True
 		}
 		sale_id = sale_obj.create(vals)
 		for line in self.line_id:
@@ -137,7 +138,8 @@ class PortalSale(models.Model):
 				'product_id':line.product_id.id,
 				'product_uom_qty':line.product_qty,
 				'ordered_qty':line.product_qty,
-				'order_partner_id':self.partner_id.id
+				'order_partner_id':self.partner_id.id,
+				'product_location':line.product_id.product_tmpl_id.product_location.id
 			}
 
 			sale_line_obj.with_context(context).create(line_val)
