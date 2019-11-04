@@ -142,7 +142,7 @@ class PortalSale(models.Model):
 
 			sale_line_obj.with_context(context).create(line_val)
 
-		self.write({'state':'order', 'sale_order':sale_id.id, 'accepted_date':date.today})
+		self.write({'state':'order', 'sale_order':sale_id.id, 'accepted_date':date.today()})
 
 	@api.model
 	def create(self, val):
