@@ -64,7 +64,7 @@ class PortalSaleSummary(report_xls):
 			serial += 1
 			count += 1
 			product = line.product_id.name.rsplit("-", 1)
-			ws.write(count, 0, serial, number)
+			ws.write(count, 0, serial, normal)
 			ws.write(count, 1, line.product_id.default_code, normal)
 			ws.write(count, 2, product[0], normal2)
 			ws.write(count, 3, product[1], normal)
