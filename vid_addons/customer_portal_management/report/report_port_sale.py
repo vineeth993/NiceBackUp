@@ -32,7 +32,7 @@ class PortalSaleSummary(report_xls):
 		number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
 		
 		report_name = 'Order Data'
-		ws = wb.add_sheet(report_name)
+		ws = wb.add_sheet(report_name, cell_overwrite_ok = True)
 		ws.panes_frozen = True
 		ws.remove_splits = True
 		ws.portrait = 0  # Landscape
@@ -68,8 +68,8 @@ class PortalSaleSummary(report_xls):
 			ws.write(count, 1, line.product_id.default_code, normal)
 			ws.write(count, 2, product[0], normal2)
 			ws.write(count, 3, product[1], normal)
-			ws.write(count, 4, line.product_qty, number)
+			ws.write(count, 4, line.product_qty, normal)
 			if data['form']["order_type"] == "special":
-				ws.write(count, 5, line.product_price, number)
+				ws.write(count, 5, line.product_price, normal)
 
 PortalSaleSummary('report.portal.excel_report', "portal.sale", parser=portal_sale_summary)
