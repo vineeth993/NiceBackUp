@@ -104,6 +104,20 @@ class PortalSale(models.Model):
 		return super(PortalSale, self).unlink()
 
 	@api.multi
+	def action_get_sale(self):
+		data = {}
+		data["id"] = self.id
+		data["form"] = self.read()[0]
+		name = str(self.partner_id.name) + str(self.name)
+
+		return {
+			"type":"ir.actions.report.xml",
+			"report_name":"portal.excel_report",
+			"datas":data,
+			"name":name
+		}
+
+	@api.multi
 	def action_quotation(self):
 		
 		sale_obj = self.env['sale.order']

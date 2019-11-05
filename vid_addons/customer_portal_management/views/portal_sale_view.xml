@@ -37,6 +37,7 @@
 						<button name="%(portal_order_confirm_action)d" type="action" groups="base.group_portal" string="Confirm Order" class="oe_highlight" states="draft"/>
 						<button name="action_cancel" type="object" groups="base.group_portal" string="Cancel" states="confirm" />
 						<button name="action_quotation" type="object" groups="base.group_user" string="Convert Order" class="oe_highlight" states="confirm"/>
+						<button name="action_get_sale" type="object" groups="base.group_portal" states="order" string="Get Sale in Excel" icon="gtk-print"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,order"/>
 					</header>
 					<h1>

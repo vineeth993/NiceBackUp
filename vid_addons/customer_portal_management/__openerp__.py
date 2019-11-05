@@ -28,6 +28,7 @@
         'views/portal_menu.xml',
         'views/portal_price_list.xml',
         'views/base_view.xml',
+        'report/report_portal_sale.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',
         'data/rules.xml'
