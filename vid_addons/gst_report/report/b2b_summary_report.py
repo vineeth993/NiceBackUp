@@ -194,9 +194,9 @@ class B2bSummary(report_xls):
                 total_inv_amt_l += invoice.round_off_total
                 for tax in taxes:
                     total_taxable_amt_l += taxes[tax]
-                    wsl.write(count_l, 0, self.normal)
+                    wsl.write(count_l, 0, invoice.number.replace('SAJ-',''), self.normal)
                     wsl.write(count_l, 1, date_invoice, self.normal)
-                    wsl.write(count_l, 2, invoice.price_subtotal, self.number)
+                    wsl.write(count_l, 2, invoice.round_off_total, self.number)
                     wsl.write(count_l, 3, place_supply, self.normal)
                     wsl.write(count_l, 4, tax, self.number)
                     wsl.write(count_l, 5, taxes[tax], self.number)
