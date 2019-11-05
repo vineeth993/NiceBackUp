@@ -37,7 +37,7 @@
 						<button name="%(portal_order_confirm_action)d" type="action" groups="base.group_portal" string="Confirm Order" class="oe_highlight" states="draft"/>
 						<button name="action_cancel" type="object" groups="base.group_portal" string="Cancel" states="confirm" />
 						<button name="action_quotation" type="object" groups="base.group_user" string="Convert Order" class="oe_highlight" states="confirm"/>
-						<button name="action_get_sale" type="object" groups="base.group_portal" states="order" string="Get Sale in Excel" icon="gtk-print"/>
+						<button name="action_get_sale" type="object" groups="base.group_portal" states="order" string="Get Order in Excel" icon="gtk-print"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,order"/>
 					</header>
 					<h1>
@@ -55,11 +55,11 @@
 							<field name="order_no" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
 							<field name="order_type" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
 							<field name="product_categ_id" attrs="{'readonly':[('state', '!=', 'draft')]}" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" required="1"/>
-							<field name="normal" attrs="{'invisible':[('order_type', '!=', 'normal')]}"/>
+							<field name="normal" attrs="{'invisible':[('order_type', '!=', 'normal')]}" string="Normal Discount"/>
 							<field name="customer_remarks" placeholder="Please enter your remarks regarding this order"/>
 							<!-- <field name="extra"/> -->
 							<field name="accepted_date" readonly='1' string="Confirmed Date"/>
-							<field name="sale_order" readonly="1" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" string="Nice Order"/>
+							<field name="sale_order" readonly="1" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" string="Nice Order no"/>
 						</group>
 					</group>
 					<notebook>

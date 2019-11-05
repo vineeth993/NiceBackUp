@@ -42,10 +42,13 @@ class PortalSaleSummary(report_xls):
 		for col in cols:
 			ws.col(col).width = 4000
 
-		headers = {0:"Sl No", 1:"Product name", 2:"Product Code", 3:"Quantity", 4:"Rate"}
+		headers = {0:"Sl No", 1:"Product name", 2:"Product Code", 3:"Quantity"}
 
 		for header in headers:
 			ws.write(1, header, headers[header], title2)
+
+		if data['form']["order_type"] == "special":
+			ws.write(1, 4, 'Special Rate', title2)
 
 		portal_obj = self.pool.get("portal.sale")
 		portal_line_obj = self.pool.get("portal.sale.line")
@@ -60,9 +63,10 @@ class PortalSaleSummary(report_xls):
 			serial += 1
 			count += 1
 			ws.write(count, 0, serial, number)
-			ws.write(count, 1, line.product_id.name, normal)
-			ws.write(count, 2, line.product_id.default_code, normal)
+			ws.write(count, 1, line.product_id.default_code, normal)
+			ws.write(count, 2, line.product_id.name, normal)
 			ws.write(count, 3, line.product_qty, number)
-			ws.write(count, 4, line.product_price, number)
+			if data['form']["order_type"] == "special":
+				ws.write(count, 4, line.product_price, number)
 
 PortalSaleSummary('report.portal.excel_report', "portal.sale", parser=portal_sale_summary)
