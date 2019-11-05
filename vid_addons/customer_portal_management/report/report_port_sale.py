@@ -42,13 +42,13 @@ class PortalSaleSummary(report_xls):
 		for col in cols:
 			ws.col(col).width = 4000
 
-		headers = {0:"Sl No", 1:"Product name", 2:"Product Code", 3:"Quantity"}
+		headers = {0:"Sl No", 1:"Product Code", 2:"Product Name", 3:"Quantity (Nos)"}
 
 		for header in headers:
 			ws.write(1, header, headers[header], title2)
 
 		if data['form']["order_type"] == "special":
-			ws.write(1, 4, 'Special Rate', title2)
+			ws.write(1, 4, 'Special Rate *', title2)
 
 		portal_obj = self.pool.get("portal.sale")
 		portal_line_obj = self.pool.get("portal.sale.line")
