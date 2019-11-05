@@ -108,7 +108,7 @@ class PortalSale(models.Model):
 		data = {}
 		data["id"] = self.id
 		data["form"] = self.read()[0]
-		name = str(self.partner_id.name) + str(self.name)
+		name = str(self.partner_id.name) + "-" +str(self.name)
 
 		return {
 			"type":"ir.actions.report.xml",

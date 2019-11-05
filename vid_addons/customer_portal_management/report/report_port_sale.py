@@ -25,7 +25,8 @@ class PortalSaleSummary(report_xls):
 
 		cr, uid = self.cr, self.uid
 		title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz centre;')
-		normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
+		normal2          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
+		normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz centre;')
 		number          = xlwt.easyxf(num_format_str='#,##0;(#,##0)')
 		number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
 		number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
@@ -65,7 +66,7 @@ class PortalSaleSummary(report_xls):
 			product = line.product_id.name.rsplit("-", 1)
 			ws.write(count, 0, serial, number)
 			ws.write(count, 1, line.product_id.default_code, normal)
-			ws.write(count, 2, product[0], normal)
+			ws.write(count, 2, product[0], normal2)
 			ws.write(count, 3, product[1], normal)
 			ws.write(count, 4, line.product_qty, number)
 			if data['form']["order_type"] == "special":
