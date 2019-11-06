@@ -103,7 +103,7 @@ class PortalSale(models.Model):
 	excel_sheet = fields.Binary(string="Upload Excel Data")
 	excel_sheet_name = fields.Char(string="Excel File")
 	excel_template = fields.Binary("Excel Template", default=_get_file)
-	model_file_name = fields.Char("Model name", default="upload_model.xlsx")
+	model_file_name = fields.Char("Model name", default="upload_model.xls")
 
 	@api.multi
 	def action_confirm(self):
