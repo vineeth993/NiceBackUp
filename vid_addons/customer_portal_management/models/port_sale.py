@@ -70,7 +70,7 @@ class PortalSale(models.Model):
 	def _get_file(self):
 		# _logger.info("In deauult")
 		# file = open("E:\\OdooDevelopment\\NiceBackUp\\vid_addons\\batch_wise_price\models\\test.xlsx", "rb")
-		file = open("/opt/odoo/custom/NiceBackUp/vid_addons/customer_portal_management/models/test.xls", "rb")
+		file = open("/opt/odoo/NiceVid/vid_addons/customer_portal_management/models/test.xls", "rb")
 		out = file.read()
 		file.close()
 		excel_template = base64.b64encode(out)
