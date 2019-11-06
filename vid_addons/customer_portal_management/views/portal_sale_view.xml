@@ -34,7 +34,7 @@
 			<field name="arch" type="xml">
 				<form>
 					<header>
-						<button name="%(portal_order_confirm_action)d" type="action" groups="base.group_portal" string="Confirm Order" class="oe_highlight" states="draft"/>
+						<button name="%(portal_order_confirm_action)d" type="action" groups="base.group_portal" string="Confirm Order" class="oe_highlight" states="draft,upload"/>
 						<button name="action_cancel" type="object" groups="base.group_portal" string="Cancel" states="confirm" />
 						<button name="action_quotation" type="object" groups="base.group_user" string="Convert Order" class="oe_highlight" states="confirm"/>
 						<button name="action_get_sale" type="object" groups="base.group_portal" states="order" string="Excel" icon="gtk-print"/>
@@ -52,19 +52,26 @@
 						</group>
 						<group>
 							<field name="order_date" readonly='1'/>
-							<field name="order_no" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
-							<field name="order_type" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
-							<field name="product_categ_id" attrs="{'readonly':[('state', '!=', 'draft')]}" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" required="1"/>
+							<field name="order_no" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}"/>
+							<field name="order_type" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}"/>
+							<field name="product_categ_id" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" required="1"/>
 							<field name="normal" attrs="{'invisible':[('order_type', '!=', 'normal')]}" string="Normal Discount"/>
-							<field name="customer_remarks" placeholder="Please enter your remarks regarding this order"/>
+							<field name="customer_remarks" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}" placeholder="Please enter your remarks regarding this order"/>
 							<!-- <field name="extra"/> -->
-							<field name="accepted_date" readonly='1' string="Confirmed Date"/>
-							<field name="sale_order" readonly="1" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" string="Nice Order No."/>
+							<field name="accepted_date" attrs="{'invisible':[('state', '!=', 'order')]}" readonly='1' string="Confirmed Date"/>
+							<field name="sale_order" attrs="{'invisible':[('state', '!=', 'order')]}" readonly="1" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" string="Nice Order No."/>
+						</group>
+						<group>
+							<field name="excel_template" readonly="1" attrs="{'invisible':[('state','!=', 'draft')]}" filename="model_file_name" widget="binary"/>
+							<field name="model_file_name" invisible="1"/>
+							<field name="excel_sheet" attrs="{'readonly':[('state', '!=', 'draft')]}" filename="excel_sheet_name" widget="binary"/>
+							<field name="excel_sheet_name" invisible="1"/>
+							<button name="upload_excel" type="object" groups="base.group_portal" string="Confirm" class="oe_highlight" attrs="{'invisible':['|', ('excel_sheet', '=', False), ('state', '!=', 'draft')]}"/>
 						</group>
 					</group>
 					<notebook>
 						<page string="Product">
-							<field name="line_id" attrs="{'readonly':[('state', '!=', 'draft')]}">
+							<field name="line_id" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}">
 								<tree editable="bottom" class="product_width">
 									<field name="product_id" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" context='{"company_id":parent.company_id, "sale_type":parent.gst_type, "sale_sub_type":parent.gst_sub_type, "tree_view_ref":"customer_portal_management.product_price_list_tree"}' domain="[('sale_ok', '=', True), ('product_brand_id', '=', parent.product_categ_id)]" required="1"/>
 									<field name="product_qty" required="1"/>

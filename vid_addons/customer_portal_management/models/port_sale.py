@@ -4,6 +4,9 @@ from openerp.exceptions import ValidationError
 from datetime import date
 import logging
 from datetime import datetime
+import xlrd
+import tempfile
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -64,11 +67,21 @@ class PortalSale(models.Model):
 			res.gst_sub_type = res.env.user.partner_id.sale_sub_type_id.id
 			res.company_id = res.env.user.company_id.id
 
+	def _get_file(self):
+		# _logger.info("In deauult")
+		# file = open("E:\\OdooDevelopment\\NiceBackUp\\vid_addons\\batch_wise_price\models\\test.xlsx", "rb")
+		file = open("/opt/odoo/custom/NiceBackUp/vid_addons/customer_portal_management/models/test.xls", "rb")
+		out = file.read()
+		file.close()
+		excel_template = base64.b64encode(out)
+		return excel_template
+
 	name = fields.Char("name", copy=False)
 	partner_id = fields.Many2one("res.partner", string="Partner", track_visibility="onchange", default=lambda self:self.env.user.partner_id.id)
 	order_type = fields.Selection([('normal', 'Normal'),
 									('special', 'Special')], string="Type", default="normal", track_visibility="onchange")
 	state = fields.Selection([('draft', 'Draft'),
+								('upload', 'Uploaded'),
 								('confirm', 'Confirm'),
 								('order', 'Order Taken'),
 								('cancel', 'Cancel')], string="Status", default="draft", track_visibility="onchange")
@@ -87,6 +100,10 @@ class PortalSale(models.Model):
 	extra = fields.Float(string="Extra", compute=_get_discount, store="True")
 	sale_order = fields.Many2one("sale.order", string="Sale Order ref")
 	customer_remarks = fields.Text(string="Remarks")
+	excel_sheet = fields.Binary(string="Upload Excel Data")
+	excel_sheet_name = fields.Char(string="Excel File")
+	excel_template = fields.Binary("Excel Template", default=_get_file)
+	model_file_name = fields.Char("Model name", default="upload_model.xlsx")
 
 	@api.multi
 	def action_confirm(self):
@@ -166,6 +183,34 @@ class PortalSale(models.Model):
 			val['name'] = self.env['ir.sequence'].next_by_code("customer.portal")
 		return super(PortalSale, self).create(val)
 
+
+	@api.multi
+	def upload_excel(self):
+
+		if self.excel_sheet:
+			file_path = tempfile.gettempdir()+'/file.xls'
+			data = self.excel_sheet
+			f = open(file_path,'wb')
+			f.write(data.decode('base64'))
+			f.close()
+			sheet = xlrd.open_workbook(file_path)
+			sheet = sheet.sheet_by_index(0)
+
+			for line in xrange(sheet.nrows):
+				row_value = sheet.row(line)
+				product_id = self.env['product.product'].search([('default_code', '=', row_value[1].value.strip()), ('product_brand_id', '=', self.product_categ_id.id)])
+				val = {}
+				if product_id:
+					val = {'product_id':product_id.id,
+							'product_qty':int(row_value[4].value),
+							'product_price':product_id.lst_price,
+							'sale_id':self.id}
+
+					if self.order_type == "special":
+						val.update({'product_price':float(row_value[5].value)})
+
+					self.env['portal.sale.line'].create(val)
+					self.write({'state':'upload'})
 
 	@api.model
 	def _needaction_domain_get(self):
