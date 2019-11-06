@@ -64,7 +64,7 @@
 						<group>
 							<field name="excel_template" readonly="1" attrs="{'invisible':[('state','!=', 'draft')]}" filename="model_file_name" widget="binary"/>
 							<field name="model_file_name" invisible="1"/>
-							<field name="excel_sheet" attrs="{'readonly':[('state', '!=', 'draft')]}" filename="excel_sheet_name" widget="binary"/>
+							<field name="excel_sheet" attrs="{'readonly':[('state', '!=', 'draft')], 'invisible':[('product_categ_id', '=', False)]}" filename="excel_sheet_name" widget="binary"/>
 							<field name="excel_sheet_name" invisible="1"/>
 							<button name="upload_excel" type="object" groups="base.group_portal" string="Confirm" class="oe_highlight" attrs="{'invisible':['|', ('excel_sheet', '=', False), ('state', '!=', 'draft')]}"/>
 						</group>
