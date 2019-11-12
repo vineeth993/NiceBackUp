@@ -221,7 +221,7 @@ class PortalSaleLine(models.Model):
 	_name = "portal.sale.line"
 	_order = "id desc"
 
-	@api.depends("product_id", "sale_id.gst_sub_type")
+	@api.depends("product_id", "sale_id.gst_sub_type", "sale_id.order_type")
 	def _get_product(self):
 		for line in self:
 			gst, igst, formstate, forminter = False, False, False, False
@@ -229,6 +229,9 @@ class PortalSaleLine(models.Model):
 			sub_type_id = None
 			if not line.product_id:
 				return None
+			if line.product_id.price_list and line.sale_id.order_type == "normal":
+				message = "Please change Order Type to Special to enter this item %s or \n Create a new order for this item or \n Delete this item from this order" %line.product_id.name
+				raise ValidationError(message)
 			# if line._context.get("sale_sub_type", "/") != '/':
 			sub_type_id = line.sale_id.gst_sub_type
 			if sub_type_id:
@@ -260,7 +263,7 @@ class PortalSaleLine(models.Model):
 			# if sub_type_id and sub_type_id.taxes_id:
 			# 	for tax in sub_type_id.taxes_id:
 			# 		taxes_ids.append(tax.id)
-
+			line.product_price = line.product_id.lst_price
 			line.product_taxes = taxes_ids
 
 
@@ -305,7 +308,9 @@ class PortalSaleLine(models.Model):
 						'product_price':line.product_id.lst_price
 						})
 
-	@api.onchange("product_id", "sale_id.order_type")
-	def on_change_product_id(self):
-		for line in self:
-			line.product_price = line.product_id.lst_price
+	# @api.onchange("product_id", "sale_id.order_type")
+	# def on_change_product_id(self):
+	# 	for line in self:
+	# 		# _logger.info("The value in onchange = "+str(line.sale_id.order_type))
+	# 		if line.product_id:
+	# 			line.product_price = line.product_id.lst_price
