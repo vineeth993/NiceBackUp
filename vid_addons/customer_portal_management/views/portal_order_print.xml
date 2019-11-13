@@ -54,8 +54,12 @@
 				<div class="page">
 					<div class="oe_structure"/>
 					<p style="padding-bottom:20px" class="text-right">
-					   <b style="font-size:20px">Customer Order #
+					   <b style="font-size:20px">Sl No #
 							<span t-field="doc.name"/>
+						</b>
+						<br/>
+						<b style="font-size:20px">Customer Order ref #
+							<span t-field="doc.order_no"/>
 						</b>
 						<br/>
 						<b t-if="doc.order_date" class="text-right">
