@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<report
+			string="Order"
+			id="portal_order_print"
+			model="portal.sale"
+			report_type="qweb-pdf"
+	    	groups="base.group_portal"
+	    	name="customer_portal_management.print_portal_order"
+			/>
+	</data>
+</openerp>

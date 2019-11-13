@@ -18,7 +18,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','portal','portal_sale', 'web'],
+    'depends': ['base','portal','portal_sale', 'web', 'report'],
 
     # always loaded
     'data': [
@@ -28,6 +28,8 @@
         'views/portal_menu.xml',
         'views/portal_price_list.xml',
         'views/base_view.xml',
+        'views/portal_order_print.xml',
+        'report.xml',
         'report/report_portal_sale.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<template id="external_layout">
+			<t t-if="not o and doc">
+				<t t-set="o" t-value="doc"/>
+			</t>
+			<t t-if="o and 'company_id' in o">
+				<t t-set="company" t-value="o.company_id"></t>
+			</t>
+			<t t-if="not o or not 'company_id' in o">
+				<t t-set="company" t-value="res_company"></t>
+			</t>
+			<t t-call="customer_portal_management.external_layout_header" />
+			<br/><br/>
+			<t t-raw="0" />
+			<t t-call="report.external_layout_footer" />
+		</template>
+		
+		<template id="external_layout_header">
+			<div class="header">
+				<div class="row" style="padding-top:25px">
+					<div class="col-xs-3" style="display:inline-block;float:left;">
+						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 50px;"/>
+					</div>
+					<div class="col-xs-9" name="company_name" style="display:inline-block;">
+						   <!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
+						<img src="/customer_portal_management/static/img/company_logo.png" style="width:50%;float:right;"/>
+					</div>
+
+					<div class="text-right" name="company_address"  style="padding-right: 12px;">
+						<span t-field="company.street"/>,<br/> <span t-field="company.street2"/>,<br/> <span t-field="company.city"/>, <span t-field="company.state_id.name"/>, <span t-field="company.country_id"/>, <span t-field="company.zip"/><br/>
+						<t t-if="company.phone">Phone: <span t-field="company.phone"/></t>
+						<ul t-if="not company.custom_footer" class="list-inline">
+							<li t-if="company.website">Website: <span t-field="company.website"/></li>
+							<li t-if="company.email and company.website">&amp;bull;</li>
+							<li t-if="company.email">Email: <span t-field="company.email"/></li>
+							<li t-if="company.fax and company.email or company.website and company.fax">&amp;bull;</li>
+							<li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+							<li t-if="company.gst_no and company.fax or company.gst_no and company.email or company.gst_no and company.website">&amp;bull;</li>
+							<li t-if="company.gst_no">GSTN: <span t-field="company.gst_no"/></li>
+						</ul>
+					</div>
+					<div style="border-bottom: 1px solid black;"></div>
+				</div>
+			</div>
+		</template>
+
+		<template id="port_order_print_template">
+			<t t-call="customer_portal_management.external_layout">
+				<t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+				<div class="page">
+					<div class="oe_structure"/>
+					<p style="padding-bottom:20px" class="text-right">
+					   <b style="font-size:20px">Customer Order #
+							<span t-field="doc.name"/>
+						</b>
+						<br/>
+						<b t-if="doc.order_date" class="text-right">
+							<span >Date:</span>
+							<span t-field="doc.order_date" t-field-options="{&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+						</b>
+					</p>
+					<div class="row">
+						<div class="col-xs-6">
+							<table>
+								<tr>
+									<td width="79%"><span t-field="doc.partner_id.name"/></td>
+								</tr>
+								<tr>
+									<td style="padding-right: 3px;">
+										<span t-if="doc.partner_id.street"><span t-field="doc.partner_id.street"/><br/></span>
+										<span t-if="doc.partner_id.street2"><span t-field="doc.partner_id.street2"/><br/></span>
+										<span t-if="doc.partner_id.city_id"><span t-field="doc.partner_id.city_id.name"/>,</span>
+										<span t-if="doc.partner_id.zip"><span t-field="doc.partner_id.zip"/></span>
+										<span t-if="doc.partner_id.state_id"><br/><span t-field="doc.partner_id.state_id.name"/>,</span><span t-if="doc.partner_id.country_id"><span t-field="doc.partner_id.country_id.name"/></span>
+									</td>
+								</tr>
+								<tr>
+									<t t-if="doc.partner_id.mobile"><td style="padding-right: 3px;"><span t-field="doc.partner_id.mobile"/></td></t>
+									<t t-if=" not doc.partner_id.mobile"><td style="padding-right: 3px;"/></t>
+								</tr>
+								<tr>
+									<t t-if="doc.partner_id.email"><td style="padding-right: 3px;"><span t-field="doc.partner_id.email"/></td></t>
+									<t t-if=" not doc.partner_id.email"><td style="padding-right: 3px;"/></t>
+								</tr>
+								<tr>
+									<td style="padding-right: 3px;"><span t-field="doc.partner_id.gst_no"/></td>
+								</tr>
+							</table>
+						</div>
+					</div><br/>
+
+					<table class="table table-condensed">
+						<thead >
+							<tr>
+								<th style="border-top:solid 2px">Code</th>
+								<th style="border-top:solid 2px">Product Description</th>
+								<th style="border-top:solid 2px">Unit</th>
+								<th style="border-top:solid 2px" class="text-right">Quantity</th>
+								<th style="border-top:solid 2px" class="text-right">Rate</th>
+								<th style="border-top:solid 2px" class="text-right">Tax(%)</th>
+								<th style="border-top:solid 2px" class="text-right ">Subtotal(Approx*)</th>
+							</tr>
+					   </thead>
+					   <tbody class="sale_tbody">
+							<t t-foreach="doc.line_id" t-as="l">
+								<tr>
+									<td>
+										<span t-field="l.product_id.default_code"/>
+									</td>
+									<td>
+										<span t-esc="l.product_id.name.rsplit('-',1)[0]"/>
+									</td>
+									<td>
+										<span t-esc="l.product_id.name.rsplit('-',1)[1]"/>
+									</td>
+									<td class="text-right">
+										<span t-field="l.product_qty"/>
+									</td>
+									<td class="text-right">
+										<span t-field="l.product_price"/>
+									</td>
+									<td class="text-right">
+										<span t-esc="sum(map(lambda tax:tax.amount, l.product_taxes)) * 100"/>
+									</td>
+									<td class="text-right">
+										<span t-field="l.product_subtotal"/>
+									</td>
+								</tr>
+							</t>
+					   </tbody>
+				   </table>
+                	<div style="border-bottom: 2px solid black;"></div>
+					<div class="row">
+						<div class="col-xs-4 pull-right">
+							<table class="table table-condensed">
+								<tr>
+									<td><strong>Total Without Taxes</strong></td> 
+									<td class="text-right">
+										<span t-esc="round(doc.amount_taxable, 2)"
+												t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Taxes</strong></td> 
+									<td class="text-right">
+										<span t-esc="round(doc.amount_taxes, 2)"
+												t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+									</td>
+								</tr>
+								<tr class="border-black">
+									<td><strong>Total</strong></td> 
+									<td class="text-right">
+										<span t-esc="round(doc.amount_total, 2)"
+												t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+
+		<template id="print_portal_order">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="doc">
+					<t t-call="customer_portal_management.port_order_print_template" t-lang="doc.partner_id.lang"/>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>
