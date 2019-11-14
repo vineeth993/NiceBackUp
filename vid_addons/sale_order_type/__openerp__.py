@@ -50,6 +50,7 @@
         "views/res_partner_view.xml",
         "data/default_type.xml",
         "views/account_invoice_view.xml",
+        "views/res_company.xml"
     ],
     "installable": True,
 }

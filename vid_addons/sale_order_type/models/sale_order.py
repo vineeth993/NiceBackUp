@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
         comodel_name='sale.order.type', string='Type', readonly=True, compute="_get_value", store=True)
     sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type", readonly=True, compute="_get_value", store=True)
     user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user)
-    multiple_warehouse = fields.Boolean("Multiple Warehouse")
+    multiple_warehouse = fields.Boolean("Multiple Warehouse", default=lambda self: self.env.user.company_id.is_multi_warehouse)
 
     # @api.onchange('partner_invoice_id')
     # def onchange_partner_invoice_id(self):
