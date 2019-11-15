@@ -42,7 +42,7 @@ class sale_status_report(report_xls):
 	def customer_pending_report(self, parser, xls_styles, data, objects, wb):
 
 		cr, uid = self.cr, self.uid
-		report_name = 'Sale Summary Report' + '-' + time.strftime('%d-%m-%Y')
+		report_name = 'Sale Summary Report ' + '-' + time.strftime('%d-%m-%Y')
 		ws = wb.add_sheet(report_name)
 		ws.panes_frozen = True
 		ws.remove_splits = True
@@ -52,8 +52,15 @@ class sale_status_report(report_xls):
 		cols = range(10)
 		for col in cols:
 			ws.col(col).width = 4000
+		ws.col(1).width = 5000
+		ws.col(2).width = 5000
+		ws.col(4).width = 10000
+		
 		title2          = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on; align: horiz centre;')
 		normal          = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
+		normal_order    = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
+		normal_name     = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz left;')
+		normal_center   = xlwt.easyxf('font: height 200, name Arial, colour_index black; align: horiz center;')
 		number          = xlwt.easyxf(num_format_str='#,##0;(#,##0)')
 		number2d        = xlwt.easyxf(num_format_str='#,##0.00;(#,##0.00)')
 		number2d_bold   = xlwt.easyxf('font: height 200, name Arial, colour_index black, bold on;',num_format_str='#,##0.00;(#,##0.00)')
@@ -66,19 +73,19 @@ class sale_status_report(report_xls):
 			sale_ids = sale_obj.search(cr, uid, [('state', 'not in', ('draft', 'cancel', 'done', 'shipping_except')),
 				('date_order', '>=', data['form']['date_from']), ('date_order', '<=', data['form']['date_to']),("partner_id", "=", int(data['form']['customer'][0]))
 				])
-		count = 3
-		
+		count = 2
+
 		sales = sale_obj.browse(cr, uid, sale_ids)
 
 		from_date = datetime.datetime.strptime(data['form']['date_from'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
 		to_date = datetime.datetime.strptime(data['form']['date_to'], '%Y-%m-%d').date().strftime('%d-%m-%Y')
 
-		name = "Pending Sale Order status for "+str(data['form']['customer'][1]) + "from " +from_date+" to "+to_date
+		name = "Pending Sale Order status for "+str(data['form']['customer'][1]) + " from " +from_date+" to "+to_date
 
 		ws.write(0, 0, name, title2)
 
 		headers = {
-			0: 'Sale Order Date', 1: 'Sale Order No', 2: 'Product', 3:'Normal Disc', 4:'Additional Disc', 5:'Extra Disc',6: 'Order Qty', 7: 'Issued Qty.', 8: 'Pending Qty.',
+			0: 'Sale Order Date', 1: 'Sale Order No', 2:'Order Ref', 3:'PCode', 4: 'Product', 5:'Pack', 6: 'Order Qty', 7: 'Issued Qty.', 8: 'Pending Qty.',
 			}
   
 		for header in headers:
@@ -121,15 +128,15 @@ class sale_status_report(report_xls):
 						issuedQuan = 0
 
 					if quantityPending > 0:
-						ws.write(count, 0, date, normal)
-						ws.write(count, 1, sale.name, normal)
-						ws.write(count, 2, '['+str(orderLineQty[orderLine][4])+']'+str(orderLine), normal)
-						ws.write(count, 3, orderLineQty[orderLine][1], normal)
-						ws.write(count, 4, orderLineQty[orderLine][2], normal)
-						ws.write(count, 5, orderLineQty[orderLine][3], normal)
-						ws.write(count, 6, orderLineQty[orderLine][0], normal)
-						ws.write(count, 7, issuedQuan, normal)
-						ws.write(count, 8, quantityPending, normal)
+						ws.write(count, 0, date, normal_center)
+						ws.write(count, 1, sale.name, normal_order)
+						ws.write(count, 2, sale.client_order_ref, normal_order)
+						ws.write(count, 3, orderLineQty[orderLine][4], normal_center)
+						ws.write(count, 4, orderLine.rsplit('-', 1)[0], normal_name)
+						ws.write(count, 5, orderLine.rsplit('-', 1)[1], normal_center)
+						ws.write(count, 6, orderLineQty[orderLine][0], normal_center)
+						ws.write(count, 7, issuedQuan, normal_center)
+						ws.write(count, 8, quantityPending, normal_center)
 						count += 1
 			invoiceQty = {}
 			orderLineQty = {}

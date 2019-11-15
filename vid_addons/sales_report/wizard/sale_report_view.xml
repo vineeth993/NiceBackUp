@@ -12,10 +12,10 @@
                     <group colspan="4" col="4">
                         <field name="date_from" required="1"/>
                         <field name="date_to" required="1"/>
-                        <field name="prod_or_cust" />
-                        <field name="company_id" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}"/>
+                        <field name="prod_or_cust" groups="base.group_user"/>
+                        <field name="company_id" attrs="{'invisible':[('prod_or_cust', '=', 'cust')]}" groups="base.group_user"/>
                     </group>
-                    <group>
+                    <group groups="base.group_user">
                         <field name="product" attrs="{'invisible':[('prod_or_cust', 'in', ('cust', 'all', 'all_order'))]}"/>
                         <field name="customer" attrs="{'invisible':[('prod_or_cust', 'in', ('prod', 'all', 'all_order'))]}"/>
                     </group>
@@ -37,7 +37,9 @@
         </record>
         
         <menuitem id="menu_sale_status_report" parent="base.menu_sales" action="action_sale_status_report" sequence="20"/>
-        
-        
+        <menuitem id="menu_portal_sale_pending" name="Sale Pending" parent="portal.portal_orders" action="action_sale_status_report" sequence="100"/>
+
+    
+
     </data>
 </openerp>

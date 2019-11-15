@@ -17,6 +17,9 @@ class sale_status_report(osv.osv_memory):
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id
 
+    def _get_default_customer(self, cr, uid, context=None):
+        user_id = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+        return user_id.partner_id.id
 
     _columns = {
         'date_from': fields.date('From'),
@@ -28,9 +31,10 @@ class sale_status_report(osv.osv_memory):
         }
 
     _defaults = {
-        'date_from': time.strftime("%Y-01-01"),
+        'date_from': time.strftime("%Y-04-01"),
         'date_to': time.strftime("%Y-%m-%d"),
-        'company_id':_get_default_company
+        'company_id':_get_default_company,
+        'customer':_get_default_customer
         }
 
     def print_sales_report(self, cr, uid, ids, context=None):
