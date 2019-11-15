@@ -282,7 +282,7 @@ class SaleOrder(models.Model):
 			], 'Status', readonly=True, copy=False, select=True)
 	order_line = fields.One2many('sale.order.line', 'order_id', 'Order Lines',
 		readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True)
-	warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', required=True, default=_get_warehouse)
+	warehouse_id = fields.Many2one('stock.warehouse', 'Default Warehouse', required=True, default=_get_warehouse)
 	amount_untaxed = fields.Float(string='Taxable Value', store=True, readonly=True, compute='_amount_all', track_visibility='always')
 	amount_tax = fields.Float(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
 	amount_total = fields.Float(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
