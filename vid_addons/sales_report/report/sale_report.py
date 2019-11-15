@@ -127,13 +127,17 @@ class sale_status_report(report_xls):
 					else:
 						issuedQuan = 0
 
+					prod_split = orderLine.rsplit('-', 1)
 					if quantityPending > 0:
 						ws.write(count, 0, date, normal_center)
 						ws.write(count, 1, sale.name, normal_order)
 						ws.write(count, 2, sale.client_order_ref, normal_order)
 						ws.write(count, 3, orderLineQty[orderLine][4], normal_center)
-						ws.write(count, 4, orderLine.rsplit('-', 1)[0], normal_name)
-						ws.write(count, 5, orderLine.rsplit('-', 1)[1], normal_center)
+						ws.write(count, 4, prod_split[0], normal_name)
+						if len(prod_split) == 2:
+							ws.write(count, 5, prod_split[1], normal_center)
+						else:
+							ws.write(count, 5, '1 NOS', normal_center)
 						ws.write(count, 6, orderLineQty[orderLine][0], normal_center)
 						ws.write(count, 7, issuedQuan, normal_center)
 						ws.write(count, 8, quantityPending, normal_center)

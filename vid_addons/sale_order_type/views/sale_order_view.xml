@@ -56,7 +56,7 @@
               </field>
 
               <field name="date_order" position="after">
-                <field name="multiple_warehouse" readonly="1"/>
+                <field name="multiple_warehouse" invisible="1"/>
               </field>
 
               <field name="partner_shipping_id" position="after">
