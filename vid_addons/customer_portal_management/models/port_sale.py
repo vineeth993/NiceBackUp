@@ -201,12 +201,14 @@ class PortalSale(models.Model):
 				product_id = self.env['product.product'].search([('default_code', '=', row_value[1].value.strip()), ('product_brand_id', '=', self.product_categ_id.id)])
 				val = {}
 				if product_id:
+					if type(row_value[4].value) not in (int, float):
+						raise ValidationError("The Quantity should be Integer or Float")
 					val = {'product_id':product_id.id,
 							'product_qty':int(row_value[4].value),
 							'product_price':product_id.lst_price,
 							'sale_id':self.id}
 
-					if self.order_type == "special":
+					if self.order_type == "special" and row_value[5].value:
 						val.update({'product_price':float(row_value[5].value)})
 
 					self.env['portal.sale.line'].create(val)
