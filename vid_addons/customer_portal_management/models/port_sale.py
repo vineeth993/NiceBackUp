@@ -221,7 +221,7 @@ class PortalSale(models.Model):
 class PortalSaleLine(models.Model):
 
 	_name = "portal.sale.line"
-	_order = "id desc"
+	_order = "id"
 
 	@api.depends("product_id", "sale_id.gst_sub_type", "sale_id.order_type")
 	def _get_product(self):
