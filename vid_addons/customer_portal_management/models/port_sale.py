@@ -170,8 +170,9 @@ class PortalSale(models.Model):
 				'product_uom_qty':line.product_qty,
 				'ordered_qty':line.product_qty,
 				'order_partner_id':self.partner_id.id,
-				'product_location':line.product_id.product_tmpl_id.product_location.id
-			}
+				'product_location':line.product_id.product_tmpl_id.product_location.id,
+				'price_unit':line.product_price
+				}
 
 			sale_line_obj.with_context(context).create(line_val)
 
