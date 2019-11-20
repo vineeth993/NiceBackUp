@@ -37,7 +37,8 @@
         </record>
         
         <menuitem id="menu_sale_status_report" parent="base.menu_sales" action="action_sale_status_report" sequence="20"/>
-        <menuitem id="menu_portal_sale_pending" name="Order Pending Report" parent="portal.portal_orders" action="action_sale_status_report" sequence="100"/>
+        <menuitem id="portal_report_menu" name="Reports" parent="portal.portal_menu" sequence="21"/>
+        <menuitem id="menu_portal_sale_pending" name="Order Pending Report" parent="portal_report_menu" action="action_sale_status_report" sequence="10"/>
 
     
 
