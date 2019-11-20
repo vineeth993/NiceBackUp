@@ -236,6 +236,7 @@
 				</xpath>
 
 				<field name="payment_term" position="after">
+					<field name="customer_order_ref"/>
 					<field name="delivery_term"/>
 					<field name="validity_term"/>
 					<field name="other_terms"/>

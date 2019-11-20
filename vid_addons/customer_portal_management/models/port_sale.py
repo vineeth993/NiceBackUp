@@ -84,6 +84,7 @@ class PortalSale(models.Model):
 								('upload', 'Uploaded'),
 								('confirm', 'Confirm'),
 								('order', 'Order Taken'),
+								('order_cancel', 'Order Cancelled'),
 								('cancel', 'Cancel')], string="Status", default="draft", track_visibility="onchange")
 	gst_type = fields.Many2one("sale.order.type", string="Gst Type", compute=_get_paratmeters, store=True)
 	gst_sub_type = fields.Many2one("sale.order.sub.type", string="Gst Sub Type", compute=_get_paratmeters, store=True)
@@ -156,7 +157,8 @@ class PortalSale(models.Model):
 			'section_id':self.partner_id.section_id.id,
 			'fiscal_position':self.partner_id.property_account_position.id,
 			'customer_remarks':self.customer_remarks,
-			'multiple_warehouse':True
+			'multiple_warehouse':True,
+			'customer_order_ref':self.id
 		}
 		sale_id = sale_obj.create(vals)
 		for line in self.line_id:
@@ -200,6 +202,7 @@ class PortalSale(models.Model):
 			for line in xrange(sheet.nrows):
 				row_value = sheet.row(line)
 				product_id = self.env['product.product'].search([('default_code', '=', row_value[1].value.strip()), ('product_brand_id', '=', self.product_categ_id.id)])
+				
 				val = {}
 				if product_id:
 					if type(row_value[4].value) not in (int, float):

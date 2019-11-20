@@ -296,6 +296,7 @@ class SaleOrder(models.Model):
 	brand_id = fields.Many2one("product.brand", string="Product Type")
 	validated_user = fields.Many2one('res.users', string="Validated User")
 	customer_remarks = fields.Text(string="Remarks")
+	customer_order_ref = fields.Many2one("portal.sale", string="Customer Order Ref")
 
 	def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
 		loc_obj = self.pool.get("stock.location")
@@ -309,6 +310,17 @@ class SaleOrder(models.Model):
 	@api.multi
 	def action_ship_recreate(self):
 		self.signal_workflow('ship_recreate')
+
+	def action_cancel(self, cr, uid, ids, context=None):
+		res = super(SaleOrder, self).action_cancel(cr, uid, ids, context=context)
+		sale_order = self.pool.get('sale.order').browse(cr, uid, ids, context=context)
+		for sale in sale_order:
+			if sale.customer_order_ref:
+				sale.customer_order_ref.write({'state':'order_cancel'})		
+		# if self.customer_order_ref:
+		# 	self.customer_order_ref.write(cr, uid, ids, {'state':'order_cancel'})
+		return res
+
 
 	@api.multi
 	def onchange_partner_id(self, partner_id):

@@ -15,7 +15,7 @@
 			<field name="name">Order</field>
 			<field name="model">portal.sale</field>
 			<field name="arch" type="xml">
-				<tree colors="green:state =='order';grey:state == 'cancel'">
+				<tree colors="green:state =='order';grey:state in ('cancel', 'order_cancel')">
 					<field name="name" string="SL.No."/>
 					<field name="order_date"/>
 					<field name="order_no" string="Customer Order Ref"/>
