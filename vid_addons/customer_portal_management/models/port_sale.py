@@ -269,7 +269,7 @@ class PortalSaleLine(models.Model):
 			# if sub_type_id and sub_type_id.taxes_id:
 			# 	for tax in sub_type_id.taxes_id:
 			# 		taxes_ids.append(tax.id)
-			line.product_price = line.product_id.lst_price
+			#line.product_price = line.product_id.lst_price
 			line.product_taxes = taxes_ids
 
 
@@ -314,9 +314,9 @@ class PortalSaleLine(models.Model):
 						'product_price':line.product_id.lst_price
 						})
 
-	# @api.onchange("product_id", "sale_id.order_type")
-	# def on_change_product_id(self):
-	# 	for line in self:
+	@api.onchange("product_id", "sale_id.order_type")
+	def on_change_product_id(self):
+		for line in self:
 	# 		# _logger.info("The value in onchange = "+str(line.sale_id.order_type))
-	# 		if line.product_id:
-	# 			line.product_price = line.product_id.lst_price
+			if line.product_id:
+				line.product_price = line.product_id.lst_price
