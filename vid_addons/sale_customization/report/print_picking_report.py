@@ -14,9 +14,8 @@ class PrintPicking(models.AbstractModel):
 		doc_id = []
 		for order in orders:
 			stock_search = self.env['stock.picking'].search([('origin', '=', order.name), ('state', 'not in', ('cancel', 'done'))])
-			if stock_search:
-				doc_id.append(stock_search)
-
+			for stock in stock_search:
+				doc_id.append(stock)
 		docargs = {
 			"doc_ids":docids,
 			"docs":doc_id,
