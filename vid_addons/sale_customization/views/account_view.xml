@@ -67,7 +67,8 @@
          			<attribute name="default_order">date_invoice desc</attribute>
          		</xpath>
          		<xpath expr="//field[@name='company_id']" position="after">
-         			<field name="partner_selling_type" />          			
+         			<field name="partner_selling_type" /> 
+                    <field name="warehouse_id"/>         			
          		</xpath>
          		<xpath expr="//field[@name='origin']" position="attributes">
          			<attribute name="invisible">1</attribute>
