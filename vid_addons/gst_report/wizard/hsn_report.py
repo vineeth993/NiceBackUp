@@ -10,6 +10,8 @@ class HsnReport(models.TransientModel):
     
     from_date = fields.Date("From date")
     to_date = fields.Date("To Date")
+    report_type = fields.Selection([('monthly', 'Monthly'), 
+                                    ('annually', 'Annually')], string="Report Type", default="monthly")
     company = fields.Many2one("res.company", string="Company", default=lambda self: self.env['res.users']._get_company())
     
     @api.multi
