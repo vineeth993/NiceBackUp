@@ -207,8 +207,8 @@ class sale_status_report(report_xls):
 				for line in invoice.invoice_line:
 					if line.product_id.id != data['form']['product'][0]:
 						continue                    
-					if invoiceQty.has_key(str(line.product_id.name)):
-						invoiceQty[str(line.product_id.name)] += line.quantity
+					if invoiceQty.has_key(str(line.partner_id.name)):
+						invoiceQty[str(line.partner_id.name)] += line.quantity
 					else:
 						invoiceQty.update({str(invoice.partner_id.name):line.quantity})
 			for order in orderLineQty:
