@@ -21,6 +21,10 @@ class sale_status_report(osv.osv_memory):
         user_id = self.pool.get('res.users').browse(cr, uid, uid,context=context)
         return user_id.partner_id.id
 
+    def _get_default_date(self, cr, uid, context=None):
+        user_id = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+        return time.strftime("%Y-%m-%d")
+
     _columns = {
         'date_from': fields.date('From'),
         'date_to': fields.date('To'),
@@ -32,7 +36,7 @@ class sale_status_report(osv.osv_memory):
 
     _defaults = {
         'date_from': time.strftime("%Y-04-01"),
-        'date_to': time.strftime("%Y-%m-%d"),
+        'date_to': _get_default_date,
         'company_id':_get_default_company,
         'customer':_get_default_customer
         }

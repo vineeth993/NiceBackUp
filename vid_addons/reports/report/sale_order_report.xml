@@ -30,6 +30,13 @@
                                     <span t-if="o.partner_id.street"><span t-field="o.partner_id.gst_no"/><br/></span>   
                                 </td>
                             </tr>
+                            <tr>
+                                <td><b style="color:red;font-size:20px">Reference</b></td>
+                                <td>:</td>
+                                <td>
+                                    <span t-if="o.client_order_ref"><span style="color:red;font-size:20px" t-field="o.client_order_ref"/><br/></span>
+                                </td>
+                            </tr>
                         </table>
                     </td>
                     <td width="30%">

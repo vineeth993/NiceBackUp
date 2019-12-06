@@ -175,6 +175,7 @@ class sale_status_report(report_xls):
 				('company_id', '=', data['form']['company_id'][0])])
 		count = 3
 
+		has_invoiced = True
 
 		sales = sale_obj.browse(cr, uid, sale_ids)
 
@@ -211,10 +212,17 @@ class sale_status_report(report_xls):
 					else:
 						invoiceQty.update({str(invoice.partner_id.name):line.quantity})
 			for order in orderLineQty:
+				
 				if invoiceQty.has_key(str(order)):
+					has_invoiced = True
+				else:
+					has_invoiced = False
+
+				if has_invoiced:
 					pendingQuant = orderLineQty[order] - invoiceQty[order]
 				else:
-					pendingQuant = 0
+					pendingQuant = orderLineQty[order]
+					
 				if pendingQuant > 0:
 					ws.write(count, 0, order, normal)
 					ws.write(count, 1, sale.name, normal)
