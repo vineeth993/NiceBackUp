@@ -212,7 +212,7 @@ class sale_status_report(report_xls):
 					else:
 						invoiceQty.update({str(invoice.partner_id.name):line.quantity})
 			for order in orderLineQty:
-				
+				invoicedQty = 0
 				if invoiceQty.has_key(str(order)):
 					has_invoiced = True
 				else:
@@ -220,15 +220,17 @@ class sale_status_report(report_xls):
 
 				if has_invoiced:
 					pendingQuant = orderLineQty[order] - invoiceQty[order]
+					invoicedQty = invoiceQty[order]
 				else:
 					pendingQuant = orderLineQty[order]
-					
+					invoicedQty  = 0
+
 				if pendingQuant > 0:
 					ws.write(count, 0, order, normal)
 					ws.write(count, 1, sale.name, normal)
 					ws.write(count, 2, date, normal)
 					ws.write(count, 3, orderLineQty[order], normal)
-					ws.write(count, 4, invoiceQty[order], normal)
+					ws.write(count, 4, invoicedQty, normal)
 					ws.write(count, 5, pendingQuant, normal)
 					count += 1
 			
