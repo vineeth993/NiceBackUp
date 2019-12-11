@@ -8,7 +8,8 @@
 			<field name="inherit_id" ref="stock.view_picking_form"/>
 			<field name="arch" type="xml">
 				
-				<button name="action_cancel" position="after">
+				<button name="action_cancel" position="replace">
+					<button name="%(multi_warehouse_stock_transfer.cancel_stock_picking_cancel)d" states="assigned,confirmed,partially_available,draft,waiting" string="Cancel Transfer" groups="base.group_user" type="action"/>
 					<button name="action_create_dc" type="object" string="Create DC" attrs="{'invisible':['|', '|', ('is_dc', '&lt;&gt;', True), ('state', '&lt;&gt;', 'done'), ('warehouse_dc_id', '!=', False)]}" class="oe_highlight"/>
 				</button>
 				
@@ -23,6 +24,17 @@
 					<field name="is_dc" invisible="1"/>
 					<field name="location_type" invisible="1"/>
 				</field>
+
+				<xpath expr="//page[@string='Additional Info']/group[@string='General Informations']" position="after">
+					<group string="Order Informations">
+						<group>
+							<field name="sale_bill_type"/>
+							<field name="normal_discount"/>
+							<field name="extra_discount"/>
+						</group>
+					</group>
+				</xpath>
+
 			</field>
 		</record>
 	</data>

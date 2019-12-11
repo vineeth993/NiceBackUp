@@ -19,6 +19,27 @@ class StockPicking(models.Model):
 										('semi-finished', 'Semi Finished'),
 										('finished', 'Finished'),
 										], string='Type', compute="_get_location")
+	sale_bill_type = fields.Selection([('normal', 'Normal'), ('special', 'Special'), ('extra', 'Extra')], string="Bill Type", compute="_get_values")
+	normal_discount = fields.Float("Normal Disc", compute="_get_values")
+	extra_discount = fields.Float("Extra Disc", compute="_get_values")
+
+	@api.depends()
+	def _get_values(self):
+		for picking in self:
+			if picking.group_id:
+				sale_ids = self.env['sale.order'].search([('procurement_group_id', '=', picking.group_id.id)])
+				if sale_ids:
+					picking.sale_bill_type = sale_ids[0].partner_selling_type
+					if sale_ids[0].partner_selling_type == "normal":
+						picking.normal_discount = sale_ids[0].normal_disc
+						picking.extra_discount = sale_ids[0].extra_discount
+					elif sale_ids[0].partner_selling_type == "extra":
+						picking.normal_discount = sale_ids[0].normal_disc
+						picking.extra_discount = sale_ids[0].nonread_extra_disocunt
+					else:
+						picking.normal_discount = sale_ids[0].nonread_normal_disocunt
+						picking.extra_discount = sale_ids[0].nonread_extra_disocunt						
+					# res[picking.id] = sale_ids[0].partner_selling_type
 
 	@api.depends()
 	def _get_location(self):
