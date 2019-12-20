@@ -15,7 +15,7 @@
             <field name="name">Stock Issue</field>
             <field name="model">warehouse.stock.issue</field>
             <field name="arch" type="xml">
-                <tree string="Issue" colors="grey:state == 'cancel';red:state == 'error';blue:state == 'process'green:state == 'issue'">
+                <tree string="Issue" colors="grey:state == 'cancel';red:state == 'error';blue:state == 'process'green:state == 'issue';#ff00cc:state=='draft'">
                     <field name="request_warehouse_from_id"/>
                     <field name="warehouse_id"/>
                     <field name="name"/>
