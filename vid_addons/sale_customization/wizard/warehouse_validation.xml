@@ -13,7 +13,7 @@
 					<field name="company_id" invisible="1"/>
 					<group>
 						<div class="oe_grey" groups="stock.group_tracking_lot">
-                            Please check or replace the warehouse in which the product should be excuted.
+                            Please check or replace the warehouse in which the product should be executed.
                         </div>
 					</group>
 					<group>
@@ -21,6 +21,7 @@
 							<tree string="Warehouse Line Tree" editable="bottom" delete="false" create="0">
 								<field name="sl_no" readonly="1"/>
 								<field name="product_id" readonly="1"/>
+								<field name="product_stock" readonly="1"/>
 								<field name="product_qty" readonly="1"/>
 								<field name="location_id" domain="[('usage', '=', 'internal'), ('company_id', '=', parent.company_id), ('type', '=', 'finished')]" required="1" options="{'no_create_edit':True, 'no_open':True, 'no_edit':True}"/>
 							</tree>

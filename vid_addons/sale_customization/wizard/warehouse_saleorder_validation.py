@@ -28,11 +28,13 @@ class WarehouseValidation(models.TransientModel):
 			count = 0
 			for line in order_id.order_line:
 				count += 1
+				prod_stock = line.product_id.with_context({'location':line.product_location.id}).qty_available				
 				item = {
 					'sl_no':count,
 					'product_id':line.product_id.id,
 					'product_qty':line.product_uom_qty,
 					'location_id':line.product_location.id or line.product_id.product_tmpl_id.product_location.id,
+					'product_stock':prod_stock if prod_stock > 0 else 0
 					}
 				items.append(item)
 			res['line_id'] = items
@@ -55,3 +57,13 @@ class WarehouseValidationLine(models.TransientModel):
 	location_id = fields.Many2one("stock.location", string="Warehouse")
 	sl_no = fields.Integer("Sl No.")
 	validation_id = fields.Many2one("warehouse.validation", string="Validation Ref")
+	product_stock = fields.Float("Stock")
+
+	@api.onchange("location_id")
+	def onchange_location_id(self):
+		for line in self:
+			prod_stock = line.product_id.with_context({'location':line.location_id.id}).qty_available
+			if prod_stock > 0:
+				line.product_stock = prod_stock
+			else:
+				line.product_stock = 0
