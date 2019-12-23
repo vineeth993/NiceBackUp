@@ -38,6 +38,7 @@
         "account",
         "nice_gst",
         "purchase",
+        "account_voucher"
     ],
     "demo": [
         "demo/sale_order_demo.xml",

@@ -178,6 +178,8 @@ class account_invoice_refund(models.TransientModel):
 class AccountVoucher(models.Model):
 	_inherit = "account.voucher"
 
+	partner_receivable = fields.Float("Receivable")
+
 	def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
 		user_obj = self.pool.get('res.users')
 		company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
@@ -187,6 +189,12 @@ class AccountVoucher(models.Model):
 				res['fields'][field]['domain'] = [('company_id', '=', company_id)]
 		return res
 
+	def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=None):
+		res = super(AccountVoucher, self).onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=context)
+		partner_pool = self.pool.get('res.partner')
+		partner = partner_pool.browse(cr, uid, partner_id, context=context)
+		res['value']['partner_receivable'] = partner.credit
+		return res
 
 class onshipping(models.TransientModel):
 

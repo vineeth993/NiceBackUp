@@ -35,5 +35,16 @@
             </field>
         </record>
 
+        <record id="account_voucher_cust" model="ir.ui.view">
+            <field name="name">account.voucher.cust</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="partner_receivable" readonly="1"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
