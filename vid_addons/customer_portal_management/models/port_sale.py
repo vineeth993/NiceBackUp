@@ -105,10 +105,11 @@ class PortalSale(models.Model):
 	excel_sheet_name = fields.Char(string="Excel File")
 	excel_template = fields.Binary("Excel Template", default=_get_file)
 	model_file_name = fields.Char("Model name", default="upload_model.xls")
+	confirmed_date = fields.Date(string="Confirmed Date")
 
 	@api.multi
 	def action_confirm(self):
-		self.write({"state":"confirm"})
+		self.write({"state":"confirm", "confirmed_date":date.today()})
 
 	@api.multi
 	def action_cancel(self):
@@ -201,7 +202,8 @@ class PortalSale(models.Model):
 
 			for line in xrange(sheet.nrows):
 				row_value = sheet.row(line)
-				product_id = self.env['product.product'].search([('default_code', '=', row_value[1].value.strip()), ('product_brand_id', '=', self.product_categ_id.id)])
+				product_code = str(row_value[1].value)
+				product_id = self.env['product.product'].search([('default_code', '=', product_code.strip()), ('product_brand_id', '=', self.product_categ_id.id)])
 				
 				val = {}
 				if product_id:

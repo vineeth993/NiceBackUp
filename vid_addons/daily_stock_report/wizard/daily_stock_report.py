@@ -379,6 +379,9 @@ class daily_stock_report(osv.osv_memory):
 		
 		return uom_ids[0]
 
+	def _get_default_date(self, cr, uid, context=None):
+		return time.strftime('%Y-%m-%d')
+
 	_columns = {
 			'name': fields.char('File Name', readonly=True),
 			'report_date_start': fields.date('Start Date'),
@@ -405,13 +408,14 @@ class daily_stock_report(osv.osv_memory):
 	}
 	_defaults = {
 		'state': 'choose',
-		'report_date_start': time.strftime('%Y-%m-%d'),
-		'report_date': time.strftime('%Y-%m-%d'),
+		'report_date_start': _get_default_date,
+		'report_date': _get_default_date,
 		'action': 'individual',
-		'show_incoming': False,
-		'show_outgoing': False,
-		'show_opening': False,
-		'show_valuation': False,
+		'show_incoming': True,
+		'show_outgoing': True,
+		'show_opening': True,
+		'show_valuation': True,
 		'weight_uom_id': _get_default_weight_uom_id,
-		'type':'finished'
+		'type':'finished',
+		'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
 	}

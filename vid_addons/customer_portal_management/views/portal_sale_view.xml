@@ -15,11 +15,12 @@
 			<field name="name">Order</field>
 			<field name="model">portal.sale</field>
 			<field name="arch" type="xml">
-				<tree colors="green:state =='order';grey:state in ('cancel', 'order_cancel')">
+				<tree colors="green:state =='order';grey:state in ('cancel', 'order_cancel')" order="confirmed_date desc">
 					<field name="name" string="SL.No."/>
 					<field name="order_date"/>
 					<field name="order_no" string="Customer Order Ref"/>
 					<field name="sale_order" string="Nice Order"/>
+					<field name="confirmed_date" string="Order Date"/>
 					<field name="accepted_date" string="Confirmed Date"/>
 					<field name="amount_total" string="Order Value(Approx)*"/>
 					<field name="state"/>
@@ -59,6 +60,7 @@
 							<field name="customer_remarks" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}" placeholder="Please enter your remarks regarding this order"/>
 							<!-- <field name="extra"/> -->
 							<field name="accepted_date" attrs="{'invisible':[('state', '!=', 'order')]}" readonly='1' string="Confirmed Date"/>
+							<field name="confirmed_date" attrs="{'invisible':[('state', '!=', 'order')]}" readonly='1' string="Order Confirmed Date"/>
 							<field name="sale_order" attrs="{'invisible':[('state', '!=', 'order')]}" readonly="1" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" string="Nice Order No."/>
 						</group>
 						<group>
@@ -73,6 +75,9 @@
 					</group>
 					<notebook>
 						<page string="Product">
+							<p style='color:red;text-align:center;font-size:15px'>
+								Note: Unit Price Cannot Be Changed If The Bill Type Is <b>Normal / Extra</b>
+							</p>
 							<field name="line_id" attrs="{'readonly':[('state', 'not in', ('draft', 'upload'))]}">
 								<tree editable="bottom" class="product_width">
 									<field name="product_id" options="{'no_create':True, 'no_open':True, 'no_create_edit':True}" context='{"company_id":parent.company_id, "sale_type":parent.gst_type, "sale_sub_type":parent.gst_sub_type, "tree_view_ref":"customer_portal_management.product_price_list_tree"}' domain="[('sale_ok', '=', True), ('product_brand_id', '=', parent.product_categ_id)]" required="1"/>

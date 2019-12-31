@@ -8,10 +8,11 @@
 			<field name="name">customer.tree</field>
 			<field name="model">portal.sale</field>
 			<field name="arch" type="xml">
-				<tree colors="green:state =='order';grey:state == 'cancel';red:state == 'confirm'">
+				<tree colors="green:state =='order';grey:state == 'cancel';red:state == 'confirm'"  default_order="confirmed_date desc">
 					<field name="name" string="SL.No"/>
 					<field name="order_date" />
 					<field name="partner_id" string="Party"/>
+					<field name="confirmed_date" string="Confirmed Date"/>
 					<field name="sale_order"/>
 					<field name="accepted_date" string="Sale Order Date"/>
 					<field name="amount_total" string="Order Value"/>
