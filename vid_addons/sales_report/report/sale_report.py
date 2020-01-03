@@ -84,10 +84,15 @@ class sale_status_report(report_xls):
 
 		ws.write(0, 0, name, title2)
 
-		headers = {
-			0: 'Sale Order Date', 1: 'Sale Order No', 2:'Order Ref', 3:'PCode', 4: 'Product', 5:'Pack', 6: 'Order Qty', 7: 'Issued Qty.', 8: 'Pending Qty.',
-			}
-  
+		if data['form']['is_user']:
+			headers = {
+				0: 'Sale Order Date', 1: 'Sale Order No', 2:'Order Ref', 3:'PCode', 4: 'Product', 5:'Pack', 6: 'Order Qty', 7: 'Issued Qty', 8: 'Pending Qty',
+				}
+		else:
+			headers = {
+				0: 'Sale Order Date', 1: 'Sale Order No', 2:'PCode', 3: 'Product', 4:'Pack', 5: 'Order Qty', 6: 'Issued Qty', 7: 'Pending Qty', 8:'Discount', 9:'Extra Discount', 10:'Additonal Discount'
+				}
+	  	
 		for header in headers:
 			ws.write(count , header, headers[header], title2)
 
@@ -119,29 +124,56 @@ class sale_status_report(report_xls):
 					else:
 						stockQty.update({str(line.product_id.name):line.product_uom_qty})
 
-			for orderLine in orderLineQty:
-				if stockQty.has_key(orderLine):
-					quantityPending = stockQty[orderLine]
-					if invoiceQty.has_key(orderLine):
-						issuedQuan = invoiceQty[orderLine]
-					else:
-						issuedQuan = 0
-
-					prod_split = orderLine.rsplit('-', 1)
-					if quantityPending > 0:
-						ws.write(count, 0, date, normal_center)
-						ws.write(count, 1, sale.name, normal_order)
-						ws.write(count, 2, sale.client_order_ref, normal_order)
-						ws.write(count, 3, orderLineQty[orderLine][4], normal_center)
-						ws.write(count, 4, prod_split[0], normal_name)
-						if len(prod_split) == 2:
-							ws.write(count, 5, prod_split[1], normal_center)
+			if data['form']['is_user']:
+				for orderLine in orderLineQty:
+					if stockQty.has_key(orderLine):
+						quantityPending = stockQty[orderLine]
+						if invoiceQty.has_key(orderLine):
+							issuedQuan = invoiceQty[orderLine]
 						else:
-							ws.write(count, 5, '1 NOS', normal_center)
-						ws.write(count, 6, orderLineQty[orderLine][0], normal_center)
-						ws.write(count, 7, issuedQuan, normal_center)
-						ws.write(count, 8, quantityPending, normal_center)
-						count += 1
+							issuedQuan = 0
+
+						prod_split = orderLine.rsplit('-', 1)
+						if quantityPending > 0:
+							ws.write(count, 0, date, normal_center)
+							ws.write(count, 1, sale.name, normal_order)
+							ws.write(count, 2, sale.client_order_ref, normal_order)
+							ws.write(count, 3, orderLineQty[orderLine][4], normal_center)
+							ws.write(count, 4, prod_split[0], normal_name)
+							if len(prod_split) == 2:
+								ws.write(count, 5, prod_split[1], normal_center)
+							else:
+								ws.write(count, 5, '1 NOS', normal_center)
+							ws.write(count, 6, orderLineQty[orderLine][0], normal_center)
+							ws.write(count, 7, issuedQuan, normal_center)
+							ws.write(count, 8, quantityPending, normal_center)
+							count += 1
+			else:
+				for orderLine in orderLineQty:
+					if stockQty.has_key(orderLine):
+						quantityPending = stockQty[orderLine]
+						if invoiceQty.has_key(orderLine):
+							issuedQuan = invoiceQty[orderLine]
+						else:
+							issuedQuan = 0
+
+						prod_split = orderLine.rsplit('-', 1)
+						if quantityPending > 0:
+							ws.write(count, 0, date, normal_center)
+							ws.write(count, 1, sale.name, normal_order)
+							ws.write(count, 2, orderLineQty[orderLine][4], normal_center)
+							ws.write(count, 3, prod_split[0], normal_name)
+							if len(prod_split) == 2:
+								ws.write(count, 4, prod_split[1], normal_center)
+							else:
+								ws.write(count, 4, '1 NOS', normal_center)
+							ws.write(count, 5, orderLineQty[orderLine][0], normal_center)
+							ws.write(count, 6, issuedQuan, normal_center)
+							ws.write(count, 7, quantityPending, normal_center)
+							ws.write(count, 8, orderLineQty[orderLine][1], normal_center)
+							ws.write(count, 9, orderLineQty[orderLine][2], normal_center)
+							ws.write(count, 10, orderLineQty[orderLine][3], normal_center)
+							count += 1
 			invoiceQty = {}
 			orderLineQty = {}
 			stockQty = {}

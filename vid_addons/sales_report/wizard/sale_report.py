@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 import time
 import logging
@@ -22,8 +22,14 @@ class sale_status_report(osv.osv_memory):
         return user_id.partner_id.id
 
     def _get_default_date(self, cr, uid, context=None):
-        user_id = self.pool.get('res.users').browse(cr, uid, uid,context=context)
         return time.strftime("%Y-%m-%d")
+
+    def _get_user_details(self, cr, uid, context=None):
+        # user_id = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+        group_id = self.pool.get('res.groups').search(cr, SUPERUSER_ID, [('name', '=', 'Portal'), ('users', 'in', uid)])
+        if group_id:
+            return False
+        return True
 
     _columns = {
         'date_from': fields.date('From'),
@@ -31,14 +37,16 @@ class sale_status_report(osv.osv_memory):
         'prod_or_cust':fields.selection([('prod', 'Product'), ('cust', 'Customer'), ('all', 'All Product'), ('all_order', 'All Order')], string='Product / Customer', default='cust'),
         'customer':fields.many2one("res.partner", string="Customer"),
         'product':fields.many2one("product.product", string="Product"),
-        'company_id':fields.many2one("res.company", string="Company")
+        'company_id':fields.many2one("res.company", string="Company"),
+        'is_user':fields.boolean(string="Is User")
         }
 
     _defaults = {
-        'date_from': time.strftime("%Y-04-01"),
+        'date_from': _get_default_date,
         'date_to': _get_default_date,
         'company_id':_get_default_company,
-        'customer':_get_default_customer
+        'customer':_get_default_customer,
+        'is_user':_get_user_details
         }
 
     def print_sales_report(self, cr, uid, ids, context=None):
