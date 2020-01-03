@@ -84,7 +84,7 @@ class sale_status_report(report_xls):
 
 		ws.write(0, 0, name, title2)
 
-		if data['form']['is_user']:
+		if not data['form']['is_user']:
 			headers = {
 				0: 'Sale Order Date', 1: 'Sale Order No', 2:'Order Ref', 3:'PCode', 4: 'Product', 5:'Pack', 6: 'Order Qty', 7: 'Issued Qty', 8: 'Pending Qty',
 				}
@@ -124,7 +124,7 @@ class sale_status_report(report_xls):
 					else:
 						stockQty.update({str(line.product_id.name):line.product_uom_qty})
 
-			if data['form']['is_user']:
+			if  not data['form']['is_user']:
 				for orderLine in orderLineQty:
 					if stockQty.has_key(orderLine):
 						quantityPending = stockQty[orderLine]
