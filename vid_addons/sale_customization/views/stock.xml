@@ -36,6 +36,29 @@
 			</field>
 		</record>
 
+		<record id="quant_search_view_cust" model="ir.ui.view">
+            <field name="name">stock.quant.search</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.quant_search_view"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//search/group" position="inside">
+            		<filter name='finished_stock' string="Finished Goods" domain="[('location_id.type','=', 'finished'), ('location_id.usage','=', 'internal')]"/>
+            	</xpath>
+            </field>
+		</record>
+
+
+		<record id="stock_picking_cust" model="ir.ui.view">
+			<field name="name">stock.picking.cust</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//button[@string='Reverse Transfer']" position="replace">
+					<button name="%(stock.act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_erp_manager"/>
+				</xpath>
+			</field>
+		</record>
+
 		<record id="stock.action_picking_tree_waiting" model="ir.actions.act_window">
 			<field name="name">Waiting Availability Transfers</field>
 			<field name="res_model">stock.picking</field>
