@@ -172,10 +172,12 @@ class B2bSummary(report_xls):
 
             for line in invoice.invoice_line:
                 if line.invoice_line_tax_id:
-                    if line.invoice_line_tax_id[0].gst_type in ["sgst", "cgst"]:
-                        tax_perc = (line.invoice_line_tax_id[0].amount*2)*100
-                    elif line.invoice_line_tax_id[0].gst_type == "igst":
-                        tax_perc = (line.invoice_line_tax_id[0].amount)*100
+                    for tax_line in line.invoice_line_tax_id:
+                        if tax_line.gst_type != 'cess':
+                            if tax_line.gst_type in ["sgst", "cgst"]:
+                                tax_perc = (tax_line.amount*2)*100
+                            elif tax_line.gst_type == "igst":
+                                tax_perc = (tax_line.amount)*100
                 else:
                     tax_perc = 0
                 if add_disc:
