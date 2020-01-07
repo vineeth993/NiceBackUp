@@ -23,34 +23,34 @@
 			<field name='arch' type='xml'>
 				<xpath expr="//label[@for='name']" position="before">
 					<label for="title" class="oe_edit_only"/>
-                    <field name="title" />
+					<field name="title" />
 				</xpath>
 				<xpath expr="//field[@name='country_id']" position="before">
 					<field name="employee_id" />
 				</xpath>
 				<xpath expr="//field[@name='bank_account_id']" position="before">
-	                <field name="pf_status" />
-	                <field name="esic_status"/>
-	                <field name="tds"/>
-	            </xpath>
-	            <xpath expr="//field[@name='passport_id']" position='before'>
-	            	<field name="blood_group"/>
-	            	<field name="is_a_donor"/>
-	            	<field name="qualification"/>
-	            	<field name="religion"/>
-	            	<field name="category"/>
-	            </xpath>
-	            
-	            <field name="marital" position="after">
-	            	<field name="anniversary"/>
-	            </field>
+					<field name="pf_status" />
+					<field name="esic_status"/>
+					<field name="tds"/>
+				</xpath>
+				<xpath expr="//field[@name='passport_id']" position='before'>
+					<field name="blood_group"/>
+					<field name="is_a_donor"/>
+					<field name="qualification"/>
+					<field name="religion"/>
+					<field name="category"/>
+				</xpath>
+				
+				<field name="marital" position="after">
+					<field name="anniversary"/>
+				</field>
 
-	            <page string="Personal Information" position="attributes">
-	            	<attribute name="groups">base.group_user</attribute>
-	            </page>
+				<page string="Personal Information" position="attributes">
+					<attribute name="groups">base.group_user</attribute>
+				</page>
 
-	            <xpath expr='//group[@string="Status"]' position='before'>
-	            	<group string="Provident Fund" attrs='{"invisible":[("pf_status", "=", "no")]}'>
+				<xpath expr='//group[@string="Status"]' position='before'>
+					<group string="Provident Fund" attrs='{"invisible":[("pf_status", "=", "no")]}'>
 						<field name="provident_fund_no"  attrs='{"required":[("pf_status", "=", "yes")]}'/>
 						<field name="pf_ac_no" />
 					</group>
@@ -71,7 +71,7 @@
 						<field name="contact_relationship_2"/>
 						<field name="contact_mobile_2"/>
 					</group>
-	            </xpath>
+				</xpath>
 				<xpath expr='//group[@string="Birth"]' position='after'>
 					<group string='Retirement Details'>
 						<field name='age'/>
@@ -140,24 +140,28 @@
 
 				<header position="replace">
 					<header>
-	                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
-	                    <button string="Sanction" name="validate" type="workflow" class="oe_highlight" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
-	                    <button string="Approve" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-	                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
-	                    <button string="Reset to Draft" name="reset" type="workflow"
-	                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse', 'cancel'])]}"/>
-	                    <button string="Cancel" type="object" name="action_cancel" states="confirm,validate1,validate" groups="base.group_hr_user"/>
-	                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
-	                </header>			
-                </header>
+						<button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+						<button string="Sanction" name="validate" type="workflow" class="oe_highlight" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
+						<button string="Approve" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+						<button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" attrs="{'invisible':['|', ('is_manager', '=', False), ('state', '!=', 'confirm')]}"/>
+						<button string="Reset to Draft" name="reset" type="workflow"
+								attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse', 'cancel'])]}"/>
+						<button string="Cancel" type="object" name="action_cancel" states="confirm,validate1,validate" groups="base.group_hr_user"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+					</header>			
+				</header>
 				
-                <field name="name" position="replace"/>
-                <field name="holiday_status_id" position="replace"/>
+				<field name="name" position="replace"/>
+				<field name="holiday_status_id" position="replace"/>
 
-                <xpath expr="//label[@string='Duration']" position="before">
-                	<field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                	<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required': [('type', '=', 'add')]}"/>
-                </xpath>
+				<xpath expr="//label[@string='Duration']" position="before">
+					<field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+					<field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required': [('type', '=', 'add')]}"/>
+				</xpath>
+				
+				<field name="employee_id" position="replace">
+					<field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" readonly="1"/>
+				</field>
 
 				<field name="holiday_type" position="before">
 					<field name="doc_created" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))]}"/>
@@ -181,14 +185,14 @@
 		</record>
 
 		<record model="ir.ui.view" id="view_holiday_allocation_tree_cust">
-            <field name="name">hr.holidays.allocation.tree</field>
-            <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr_holidays.view_holiday_allocation_tree"/>
-            <field name="arch" type="xml">
-            	<field name="holiday_status_id" position="before">
-            		<field name="doc_created"/>
-            	</field>
-            </field>
+			<field name="name">hr.holidays.allocation.tree</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.view_holiday_allocation_tree"/>
+			<field name="arch" type="xml">
+				<field name="holiday_status_id" position="before">
+					<field name="doc_created"/>
+				</field>
+			</field>
 		</record>
 
 		<record id="edit_holiday_status_form_cust" model="ir.ui.view">
