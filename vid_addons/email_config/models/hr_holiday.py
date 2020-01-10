@@ -35,6 +35,7 @@ class HrHoliday(models.Model):
 		end_date = datetime.now().replace(month=12, day=31).date().strftime('%Y-%m-%d')
 		
 		if holiday_status_id.leave_limit:
+			_logger.info("The value are = "+str(values))
 			get_leaves = self.pool['hr.holidays'].search(cr, uid, [('employee_id', '=', values['employee_id']), ('holiday_status_id', '=', values["holiday_status_id"]), ('date_from', '>=', start_date),('date_from', '<=', end_date), ('type', '=', 'remove'), ('is_encashment', '=', False), ('state', 'not in', ('cancel', 'refuse'))], context=context)
 			if len(get_leaves) > holiday_status_id.leave_limit:
 				raise ValidationError("Your %s Leave limit has reached ,You cannot apply for %s for this financial year" %(holiday_status_id.name, holiday_status_id.name))

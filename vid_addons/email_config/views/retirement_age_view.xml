@@ -160,7 +160,7 @@
 				</xpath>
 				
 				<field name="employee_id" position="replace">
-					<field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')], 'readonly':[('type', '=', 'remove')]}" on_change="onchange_employee(employee_id)"/>
+					<field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':['|',('holiday_type','=','category'), ('type', '=', 'remove')]}" on_change="onchange_employee(employee_id)"/>
 				</field>
 
 				<field name="holiday_type" position="before">
