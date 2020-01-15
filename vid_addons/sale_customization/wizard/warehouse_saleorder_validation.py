@@ -26,15 +26,22 @@ class WarehouseValidation(models.TransientModel):
 			items = []
 			item = {}
 			count = 0
+			locations = self.env['stock.location'].search([('company_id', '=', order_id.company_id.id), ('type', '=', 'finished')])
 			for line in order_id.order_line:
 				count += 1
-				prod_stock = line.product_id.with_context({'location':line.product_location.id}).qty_available				
+				stocks = ''
+				prod_stock = line.product_id.with_context({'location':line.product_location.id}).qty_available
+				for location in locations:
+					location_stock = line.product_id.with_context({'location':location.id}).qty_available
+					if location_stock > 0:
+						stocks += location.location_id.name + '-' + str(location_stock) + ' : '
 				item = {
 					'sl_no':count,
 					'product_id':line.product_id.id,
 					'product_qty':line.product_uom_qty,
 					'location_id':line.product_location.id or line.product_id.product_tmpl_id.product_location.id,
-					'product_stock':prod_stock if prod_stock > 0 else 0
+					'product_stock':prod_stock if prod_stock > 0 else 0,
+					'all_stock':stocks
 					}
 				items.append(item)
 			res['line_id'] = items
@@ -58,6 +65,7 @@ class WarehouseValidationLine(models.TransientModel):
 	sl_no = fields.Integer("Sl No.")
 	validation_id = fields.Many2one("warehouse.validation", string="Validation Ref")
 	product_stock = fields.Float("Stock")
+	all_stock = fields.Char("All Stock")
 
 	@api.onchange("location_id")
 	def onchange_location_id(self):
