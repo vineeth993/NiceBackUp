@@ -90,7 +90,7 @@ class sale_status_report(report_xls):
 				}
 		else:
 			headers = {
-				0: 'Sale Order Date', 1: 'Sale Order No', 2:'PCode', 3: 'Product', 4:'Pack', 5: 'Order Qty', 6: 'Issued Qty', 7: 'Pending Qty', 8:'Discount', 9:'Extra Discount', 10:'Additonal Discount'
+				0: 'Sale Order Date', 1: 'Sale Order No', 2:'PCode', 3: 'Product', 4:'Pack', 5: 'Order Qty', 6:'Issued Warehouse', 7: 'Issued Qty', 8: 'Pending Qty', 9:'Discount', 10:'Extra Discount', 11:'Additonal Discount'
 				}
 	  	
 		for header in headers:
@@ -120,14 +120,14 @@ class sale_status_report(report_xls):
 			for stock in stocks:
 				for line in stock.move_lines:
 					if stockQty.has_key(str(line.product_id.name)):
-						stockQty[str(line.product_id.name)] += line.product_uom_qty
+						stockQty[str(line.product_id.name)][0] += line.product_uom_qty
 					else:
-						stockQty.update({str(line.product_id.name):line.product_uom_qty})
+						stockQty.update({str(line.product_id.name):[line.product_uom_qty, line.location_id.location_id.name]})
 
-			if  not data['form']['is_user']:
+			if not data['form']['is_user']:
 				for orderLine in orderLineQty:
 					if stockQty.has_key(orderLine):
-						quantityPending = stockQty[orderLine]
+						quantityPending = stockQty[orderLine][0]
 						if invoiceQty.has_key(orderLine):
 							issuedQuan = invoiceQty[orderLine]
 						else:
@@ -151,7 +151,7 @@ class sale_status_report(report_xls):
 			else:
 				for orderLine in orderLineQty:
 					if stockQty.has_key(orderLine):
-						quantityPending = stockQty[orderLine]
+						quantityPending = stockQty[orderLine][0]
 						if invoiceQty.has_key(orderLine):
 							issuedQuan = invoiceQty[orderLine]
 						else:
@@ -168,11 +168,12 @@ class sale_status_report(report_xls):
 							else:
 								ws.write(count, 4, '1 NOS', normal_center)
 							ws.write(count, 5, orderLineQty[orderLine][0], normal_center)
-							ws.write(count, 6, issuedQuan, normal_center)
-							ws.write(count, 7, quantityPending, normal_center)
-							ws.write(count, 8, orderLineQty[orderLine][1], normal_center)
-							ws.write(count, 9, orderLineQty[orderLine][2], normal_center)
-							ws.write(count, 10, orderLineQty[orderLine][3], normal_center)
+							ws.write(count, 6, stockQty[orderLine][1], normal_center)
+							ws.write(count, 7, issuedQuan, normal_center)
+							ws.write(count, 8, quantityPending, normal_center)
+							ws.write(count, 9, orderLineQty[orderLine][1], normal_center)
+							ws.write(count, 10, orderLineQty[orderLine][2], normal_center)
+							ws.write(count, 11, orderLineQty[orderLine][3], normal_center)
 							count += 1
 			invoiceQty = {}
 			orderLineQty = {}

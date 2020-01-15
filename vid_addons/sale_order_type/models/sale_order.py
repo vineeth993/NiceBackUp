@@ -29,11 +29,22 @@ class SaleOrder(models.Model):
                     if not order.partner_invoice_id.tax_id:
                         raise ValidationError("Tax are not defined in party master under seetings tab")
 
+    def _get_location(self):
+        warehouse_ids = self.env['stock.warehouse'].search([('type', '=', 'finished')])
+        if not warehouse_ids:
+            return False
+        location_id = warehouse_ids[0].location_ids[0]
+        return location_id
+    
+
     type_id = fields.Many2one(
         comodel_name='sale.order.type', string='Type', readonly=True, compute="_get_value", store=True)
     sub_type_id = fields.Many2one("sale.order.sub.type", string="Sub Type", readonly=True, compute="_get_value", store=True)
     user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user)
     multiple_warehouse = fields.Boolean("Multiple Warehouse", default=lambda self: self.env.user.company_id.is_multi_warehouse)
+    stock_location = fields.Many2one("stock.location", string="Stock Location", default=_get_location)
+
+
 
     # @api.onchange('partner_invoice_id')
     # def onchange_partner_invoice_id(self):

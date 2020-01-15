@@ -153,8 +153,12 @@ class SaleOrderLine(models.Model):
 			product_obj = self.pool.get('product.product').browse(cr, uid, product)
 			res['value']['product_name'] = product_obj.name
 			if context.get('multi_warehouse', '/') != "/":
-				if context.get('multi_warehouse'):
+				sub_type = self.pool.get('sale.order.sub.type').browse(cr, uid, context.get('sub_type_id'))
+				gst_type = sub_type.tax_categ
+				if context.get('multi_warehouse') and gst_type != 'gst' :
 					res["value"]["product_location"] = product_obj.product_tmpl_id.product_location
+				elif context.get('multi_warehouse'):
+					res["value"]["product_location"] = context.get('location_id')
 
 			if product_obj.price_list and res['value']['partner_type'] != 'special':
 				raise exceptions.Warning('These Products cannot be quoted in Normal and Extra bill type')
