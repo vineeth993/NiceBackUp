@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="before">
-                    <field name="sale_type_id" domain="[('object_type', '=', 'sale'), ('company_id', '=', company_id)]" required="1"/>
-                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type_id), ('object_type', '=', 'sale'), ('company_id', '=', company_id)]]"/>
+                    <field name="sale_type_id" domain="[('object_type', '=', 'sale'), ('company_id', '=', company_id)]" required="1" readonly="1"/>
+                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type_id), ('object_type', '=', 'sale'), ('company_id', '=', company_id)]]" readonly="1"/>
                 </field>
                 <field name="partner_id" position="attributes">
                     <attribute name="context"></attribute>
@@ -16,6 +16,8 @@
                 <xpath expr="//field[@name='invoice_line']/tree/field[@name='product_id']" position="attributes">
                     <attribute name="on_change">product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)</attribute>
                     <attribute name="context">{'sub_type_id': parent.sale_sub_type_id}</attribute>
+                    <attribute name="readonly">1</attribute>
+                    <attribute name="options">{'no_open':True}</attribute>
                 </xpath>
             </field>
         </record>
@@ -29,8 +31,8 @@
                     <attribute name="context"></attribute>
                 </field>
                 <field name="partner_id" position="before">
-                    <field name="sale_type_id" domain="[('object_type', '=', 'purchase'), ('company_id', '=', company_id)]]" required="1"/>
-                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type_id), ('object_type', '=', 'purchase'), ('company_id', '=', company_id)]]"/>
+                    <field name="sale_type_id" domain="[('object_type', '=', 'purchase'), ('company_id', '=', company_id)]]" readonly="1" required="1"/>
+                    <field name="sale_sub_type_id" domain="[('type_id', '=', sale_type_id), ('object_type', '=', 'purchase'), ('company_id', '=', company_id)]]" readonly="1"/>
                 </field>
             </field>
         </record>
