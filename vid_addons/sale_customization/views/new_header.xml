@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<template id="report_header_customized" inherit_id="report.external_layout_header">
+			<xpath expr="//div[@class='header']" position="replace">
+				<div class="header">
+					<div class="row" style="padding-top:25px">
+						<div class="col-xs-3" style="display:inline-block;float:left;">
+							<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 50px;"/>
+						</div>
+						<div class="col-xs-9" name="company_name" style="display:inline-block;">
+							<!--  <span class="ace-font" t-field="company.partner_id"/><br/> -->
+							<img src="/sale_customization/static/img/company_logo.png" style="width:50%;float:right;"/>
+						</div>
+
+						<div class="text-right" name="company_address"  style="padding-right: 12px;">
+							<span t-field="company.street"/>,<br/> <span t-field="company.street2"/>,<br/> <span t-field="company.city"/>, <span t-field="company.state_id.name"/>, <span t-field="company.country_id"/>, <span t-field="company.zip"/><br/>
+							<t t-if="company.phone">Phone: <span t-field="company.phone"/></t>
+							<ul t-if="not company.custom_footer" class="list-inline">
+								<li t-if="company.website">Website: <span t-field="company.website"/></li>
+								<li t-if="company.email and company.website">&amp;bull;</li>
+								<li t-if="company.email">Email: <span t-field="company.email"/></li>
+								<li t-if="company.fax and company.email or company.website and company.fax">&amp;bull;</li>
+								<li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+								<li t-if="company.gst_no and company.fax or company.gst_no and company.email or company.gst_no and company.website">&amp;bull;</li>
+								<li t-if="company.gst_no">GSTN: <span t-field="company.gst_no"/></li>
+							</ul>
+
+						</div>
+					</div>
+
+					<div style="border-bottom: 1px solid black;"></div>
+				</div>
+			</xpath>
+		</template>
+	</data>	
+</openerp>

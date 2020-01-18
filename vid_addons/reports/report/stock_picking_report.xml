@@ -13,10 +13,13 @@
 
 			<xpath expr="//div[@class='row'][1]" position="replace">
 			 	<div class="row">
-			 		<h2>
-				 		<span t-field="o.picking_type_id.warehouse_id"/>:<br/>
-	                	<span t-field="o.name"/>
-	                </h2>
+			 		<h1 class="text-center">Delivery Order</h1>
+			 		<div>
+				 		<h3>
+					 		<span t-field="o.picking_type_id.warehouse_id"/>:<br/>
+					 	</h3>
+		                <strong><span t-field="o.name"/></strong>
+	                </div>
 				 	<div class="col-xs-6">
 	                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
 	                        <span><strong>Supplier Address:</strong></span>
@@ -60,10 +63,17 @@
 									</td>
 								</tr>
 								<tr>
-									<td style="padding-top:10px"><b>Reference</b></td>
+									<td style="padding-top:10px"><b>Customer Reference</b></td>
 									<td>:</td>
 									<td>
 										<span t-if="o.sale_id.client_order_ref"><span t-field="o.sale_id.client_order_ref"/></span>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding-top:10px;color:red"><b>Remarks</b></td>
+									<td>:</td>
+									<td>
+										<span t-if="o.sale_id.customer_remarks"><span style="color:red" t-field="o.sale_id.customer_remarks"/></span>
 									</td>
 								</tr>
 							</table>
