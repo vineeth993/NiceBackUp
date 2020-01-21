@@ -25,6 +25,7 @@ from openerp import models, fields, api, _, tools
 
 from openerp import models, fields, api
 
+import openerp.addons.decimal_precision as dp
 
 class HSCode(models.Model):
 	_name = "hs.code"
@@ -120,14 +121,25 @@ class ProductTemplate(models.Model):
 					line.product_tax = tax.amount * 100
 					return 
 
+	@api.depends()
+	def _product_available_text(self):
+		res = {}
+		location_ids = []
+		for w in self.env["stock.warehouse"].search([('type', '=', 'finished')]):
+			location_ids.append(w.view_location_id.id)
+		for product in self:
+			product.qty_available_text = str(product.with_context({'location':location_ids}).qty_available) +  _(" On Hand")
+
+
+	qty_available_text = fields.Char(compute="_product_available_text")
 	hazard_type = fields.Selection([(1, 'Hazard'), (2, 'Non Hazard')])
 	control_type = fields.Selection([(1, 'Controlled'), (2, 'Non Controlled')])
-	gcode = fields.Char('Product Gcode')
+	gcode = fields.Char('Product Gcode', track_visibility='onchange')
 	cas_no = fields.Char(string='CAS No')
 	profiling_seasons = fields.Many2many('sale.reason', 'product_template_sale_reason_rel',
 										 'product_template_id', 'sale_reason_id',
 										 string='Profiling Season')
-	default_code = fields.Char(related='product_variant_ids.default_code', string='Product Code')
+	default_code = fields.Char(related='product_variant_ids.default_code', string='Product Code', track_visibility='onchange')
 	uom_id_one = fields.Many2one('product.uom', 'Unit')
 	uom_id_two = fields.Many2one('product.uom', 'Unit')
 	uom_id_three = fields.Many2one('product.uom', 'Unit')
@@ -137,10 +149,13 @@ class ProductTemplate(models.Model):
 	schedule = fields.Many2one('product.schedule', 'Schedule')
 	grade = fields.Many2one('product.grade', string="Grade")
 	hs_code_id = fields.Many2one('hs.code', 'H.S.Code', required=True)
-	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Special")
-	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot")
-	product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True)
-	product_location = fields.Many2one('stock.location', company_dependent=True)
+	price_list = fields.Boolean(related='product_variant_ids.price_list', string="Non Pricelist Item", track_visibility='onchange')
+	case_lot = fields.Float(related='product_variant_ids.case_lot', string="Case Lot", track_visibility='onchange')
+	list_price = fields.Float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price.", track_visibility="onchange")
+	taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', 'Customer Taxes', domain=[('parent_id','=',False),('type_tax_use','in',['sale','all'])], track_visibility="onchange")
+	supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', 'Supplier Taxes', domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])], track_visibility="onchange")
+	product_tax = fields.Float(string="Product Tax(%)", compute="_get_tax", store=True, group_operator=False)
+	product_location = fields.Many2one('stock.location', company_dependent=True, track_visibility='onchange')
 
 	_defaults = {
 		'type': 'product',
