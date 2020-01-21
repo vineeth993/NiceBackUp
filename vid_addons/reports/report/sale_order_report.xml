@@ -31,10 +31,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><b style="color:red;font-size:20px">Reference</b></td>
+                                <td><b style="color:red;">Reference</b></td>
                                 <td>:</td>
                                 <td>
-                                    <span t-if="o.client_order_ref"><span style="color:red;font-size:20px" t-field="o.client_order_ref"/><br/></span>
+                                    <span t-if="o.client_order_ref"><span style="color:red;" t-field="o.client_order_ref"/><br/></span>
                                 </td>
                             </tr>
                             <tr>
