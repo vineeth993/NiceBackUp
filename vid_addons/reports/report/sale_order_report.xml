@@ -37,6 +37,13 @@
                                     <span t-if="o.client_order_ref"><span style="color:red;font-size:20px" t-field="o.client_order_ref"/><br/></span>
                                 </td>
                             </tr>
+                            <tr>
+                                <td><b style="color:red;">Remarks</b></td>
+                                <td>:</td>
+                                <td>
+                                    <span t-if="o.customer_remarks"><span style="color:red;" t-field="o.customer_remarks"/><br/></span>
+                                </td>
+                            </tr>
                         </table>
                     </td>
                     <td width="30%">
