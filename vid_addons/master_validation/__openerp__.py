@@ -12,7 +12,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'purchase', 'sale', 'crm', 'report', 'mail'],
+    'depends': ['base', 'account', 'purchase', 'sale', 'crm', 'report', 'mail', 'product'],
 
     # always loaded
     'data': [
@@ -22,6 +22,7 @@
         'views/sale.xml',
         'views/invoice.xml',
         'views/partner_report.xml',
+        'views/product_cust.xml',
         'data/master_validation_template.xml'
     ],
     # only loaded in demonstration mode

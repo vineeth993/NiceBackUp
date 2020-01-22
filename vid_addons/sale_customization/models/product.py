@@ -168,3 +168,11 @@ class ProductTemplate(models.Model):
 			names1 = self.search([('name', '=', self.name)])
 			if len(names1) > 1:
 				raise Warning('A product with the same Name already exists')
+
+	def action_open_quants(self, cr, uid, ids, context=None):
+
+		products = self._get_products(cr, uid, ids, context=context)
+		result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
+		result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+		result['context'] = "{'search_default_locationgroup': 1, 'search_default_finished_stock': 1}"
+		return result

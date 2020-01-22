@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		
+		<record id="product_master_validation" model="ir.ui.view">
+			<field name="name">product.validation</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_only_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/*" position="before">
+					<header>
+						<button name="action_confirm" type="object"  string="Confirm" class="oe_highlight" attrs="{'invisible':[('states', '!=', 'draft')]}"/>
+						<button name="action_validate" type="object" string="Validate" class="oe_highlight" attrs="{'invisible':[('states', '!=', 'confirm')]}"/>
+						<button name="action_approve" type="object" string="Approve" class="oe_highlight" groups="account.group_account_user, account.group_account_manager" attrs="{'invisible':[('states', '!=', 'validate')]}"/>
+						<button name="reset_to_draft" type="object" string="Reset To Draft" attrs="{'invisible':[('states', '!=', 'confirm')]}" />
+						<button name="admin_reset" type="object" string="Reset To Draft" class="oe_highlight" groups="base.group_erp_manager" attrs="{'invisible':[('states', 'not in', ('approved', 'validate'))]}"/>
+						<field name="states" widget="statusbar" statusbar_visible="draft,confirm,validate,approved"/>
+					</header>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>
