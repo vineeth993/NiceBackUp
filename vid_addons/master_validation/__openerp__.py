@@ -17,6 +17,7 @@
     # always loaded
     'data': [
         'report/report.xml',
+        'security/security.xml',
         'views/partner_cust.xml',
         'views/purchase.xml',
         'views/sale.xml',

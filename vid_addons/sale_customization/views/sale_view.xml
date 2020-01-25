@@ -135,17 +135,16 @@
 					<field name="validated_user" invisible='1'/>
 					<field name="transaction_type" />
 					<field name="brand_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
-					<field name="partner_selling_type" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}"/>
-					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'not in', ('draft', 'confirm', 'sent'))], 'invisible':[('partner_selling_type', '==', 'special')]}"/>
+					<field name="partner_selling_type" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
+					<field name="normal_disc" attrs="{'readonly':['|', ('partner_selling_type', 'in', ('normal', 'extra')),('state', 'not in', ('draft', 'confirm', 'sent'))], 'invisible':[('partner_selling_type', '==', 'special')]}" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
 					<field name="extra_discount" 
-						attrs="{'readonly':['|',('partner_selling_type','==','normal'), ('state', 'not in', ('draft', 'confirm', 'sent'))], 'invisible':[('partner_selling_type', 'in', ('extra', 'special'))]}" />
+						attrs="{'readonly':['|',('partner_selling_type','==','normal'), ('state', 'not in', ('draft', 'confirm', 'sent'))], 'invisible':[('partner_selling_type', 'in', ('extra', 'special'))]}" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
 					<field name="nonread_normal_disocunt"
-						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" />
+						attrs="{'invisible':[('partner_selling_type', 'in',('normal', 'extra'))],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
 					<field name="nonread_extra_disocunt"
-						attrs="{'invisible':[('partner_selling_type', '==','normal')],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}" />
-					<!-- <field name="scheme_id"/> -->
+						attrs="{'invisible':[('partner_selling_type', '==','normal')],'readonly':[('state', 'not in', ('draft', 'confirm', 'sent'))]}"  groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
 					<field name="employee_id" readonly="1" invisible='1'/>
-					<field name="customer_remarks"/>
+					<field name="customer_remarks" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
 				</xpath>
 
 <!-- 				<field name="warehouse_id" position="attributes">
@@ -198,18 +197,36 @@
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='discount']"
 					position="attributes">
 					<attribute name="readonly">1</attribute>
+					<attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads</attribute>
 				</xpath>
+
+				<xpath expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_unit']"
+					position="attributes">
+						<attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads</attribute>
+					</xpath>
 
 				<xpath
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='tax_id']"
 					position="attributes">
 					<attribute name="readonly">1</attribute>
+					<attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads</attribute>
 				</xpath>
+
+				<xpath
+					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal']"
+					position="attributes">
+					<attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads</attribute>
+				</xpath>
+				
+				<xpath expr="//group[@name='sale_total']" position="attributes">
+					<attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads</attribute>
+				</xpath>
+				
 
 				<xpath
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='discount']"
 					position="after">
-					<field name="additional_discount" attrs="{'readonly':[('state', 'not in',  ('draft', 'confirm', 'sent', 'cancel'))]}"/>
+					<field name="additional_discount" attrs="{'readonly':[('state', 'not in',  ('draft', 'confirm', 'sent', 'cancel'))]}" groups="base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads"/>
 					<field name="partner_type" invisible="1"/>
 					<field name="sale_sub_type" invisible="1"/>
 					<field name="product_name" invisible="1"/>
@@ -226,13 +243,13 @@
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal']"
 					position="after">
 					<field name="extra_discount" invisible="1"/>
-					
 				</xpath>
 
 				<xpath expr="//button[@name='action_quotation_send']" position="after">
 					<button name="action_quotation_confirm" string="Confirm Quotation"
 						type="object" states="draft" groups="base.group_user"/>
-					<button name="%(warehouse_validation_action)d" string="Confirm Warehouse" type="action" states="warehouse" groups="base.group_user" class="oe_highlight"/>
+					<button name="%(warehouse_validation_action)d" string="Select Warehouse" type="action" states="warehouse" groups="sale_customization.group_stock_validator" class="oe_highlight"/>
+					<!-- <button name="action_warehouse_confirmed" string="Validate Document" type="object" states="warehouse" groups="sale_customization.group_stock_validator"/> -->
 				</xpath>
 
 				<field name="payment_term" position="after">
@@ -387,9 +404,27 @@
 			</field>
 		</record>
 
+		<record id="warehouse_sale_order_action" model="ir.actions.act_window">
+			<field name="name">Sale Order</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'warehouse')]</field>
+		</record>
+
+		<record id="warehouse_sale_picking_action" model="ir.actions.act_window">
+			<field name="name">Stock Picking</field>
+			<field name="res_model">stock.picking</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+		</record>
+
 		<menuitem name="Validity Terms" id="validity_terms" parent="base.menu_base_config" action="stock_validity_term_act" sequence="30"/>
 		<menuitem name="Delivery Terms" id="delivery_terms" parent="base.menu_base_config" action="stock_delivery_term_act" sequence="30"/>
 		<menuitem name="Reasons For Sale" id="sale_reasons" parent="base.menu_sales"
 			action="sale_reason_act" groups="base.group_sale_salesman,base.group_sale_manager" />
+		<menuitem name="Stock Picking" id="warehouse_user_picking_sale" parent="stock.menu_stock_warehouse_mgmt" action="warehouse_sale_picking_action" />
+		<menuitem name="Warehouse Validation" id="sale_order_warehouse_validation" parent="stock.menu_stock_warehouse_mgmt" action="warehouse_sale_order_action" groups="sale_customization.group_stock_validator"/>
 	</data>
 </openerp>

@@ -43,12 +43,20 @@
 						<field name="arch" type="xml">
 							<field name="user_id" position="replace"/>
 
-							<xpath expr="//button[@name='action_button_confirm']" position="replace">
-									<button name="action_button_confirm" string="Confirm Order" type="object" groups="base.group_user" attrs="{'invisible':['|', ('multiple_warehouse', '=', True), ('state', 'not in', ('confirm', 'sent'))]}" class="oe_highlight"/>
-									<button name="action_button_confirm" string="Confirm Order" type="object" groups="base.group_user" attrs="{'invisible':['|',('multiple_warehouse', '=', False), ('state', '!=', 'warehouse')]}"/>
-									<button name="action_warehouse_validation" string="Warehouse Validation" type="object" groups="base.group_user" attrs="{'invisible':['|',('multiple_warehouse', '=', False), ('state', '!=', 'confirm', 'sent')]}" class="oe_highlight"/>
+							<xpath expr="//button[@name='action_button_confirm'][2]" position="replace">
 							</xpath> 
-								
+							
+							<xpath expr="//button[@name='action_button_confirm']" position="replace">
+									<!-- <button name="action_button_confirm" string="Confirm Order" type="object" groups="base.group_user" attrs="{'invisible':['|', ('multiple_warehouse', '=', True), ('state', 'not in', ('confirm', 'sent'))]}" class="oe_highlight"/> -->
+									<button name="action_button_confirm" string="Send for Processing" type="object" groups="sale_customization.group_stock_validator"  states="warehouse" class="oe_highlight"/>
+									<button name="action_button_confirm" string="Sale Order" type="object"  state="confirm,sent" attrs="{'invisible':['|',('multiple_warehouse', '=', True), ('state', 'not in', ('sent','confirm'))]}"   class="oe_highlight"/>
+									<button name="action_warehouse_validation" string="Confirm Order" type="object" groups="base.group_user" attrs="{'invisible':['|',('multiple_warehouse', '=', False), ('state', 'not in', ('confirm', 'sent'))]}" class="oe_highlight"/>
+							</xpath> 
+
+							<xpath expr="//button[@name='action_cancel']" position="replace">
+								<button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" groups="base.group_user"/>
+							</xpath>
+
 							<field name="partner_id" position="attributes">
 									<attribute name="domain">[('customer','=',True),('company_id', '=', company_id)]</attribute>
 									<attribute name="context">{'default_sale_type': type_id, 'default_sale_sub_type_id': [sub_type_id]}</attribute>

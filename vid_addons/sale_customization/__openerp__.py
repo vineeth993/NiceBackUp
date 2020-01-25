@@ -11,6 +11,7 @@ CRM/Sales Customization
     'depends': ['base', 'crm', 'report', 'sale', 'sale_stock', 'purchase', 'product', 'stock_account', 'mrp', 'fleet', 'sale_journal', 'stock', 'procurement', 'crm_lead_lost_reason', 'sales_team', 'customer_portal_management'],
     'data': [
         'report.xml',
+        'security/group.xml',
         'views/lead_view.xml',
         'views/partner_selling_type_view.xml',
         'views/partner_view.xml',

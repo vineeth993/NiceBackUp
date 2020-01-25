@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+
+<openerp>
+	<data>
+		<record id="group_master_creator" model="res.groups">
+			<field name="name">See all Leads Master Creation</field>
+			<field name= "category_id" ref="base.module_category_sales_management"/>
+			<field name="implied_ids" eval="[(4, ref('base.group_sale_salesman')), (4, ref('base.group_sale_salesteam'))]"/>
+		</record>
+	</data>
+</openerp>

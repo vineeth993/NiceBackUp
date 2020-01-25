@@ -65,7 +65,7 @@ class WarehouseValidationLine(models.TransientModel):
 	sl_no = fields.Integer("Sl No.")
 	validation_id = fields.Many2one("warehouse.validation", string="Validation Ref")
 	product_stock = fields.Float("Stock")
-	all_stock = fields.Char("All Stock")
+	all_stock = fields.Char("Stock in other Warehouses")
 
 	@api.onchange("location_id")
 	def onchange_location_id(self):

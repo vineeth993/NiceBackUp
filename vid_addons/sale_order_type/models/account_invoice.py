@@ -193,7 +193,9 @@ class AccountVoucher(models.Model):
 		res = super(AccountVoucher, self).onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=context)
 		partner_pool = self.pool.get('res.partner')
 		partner = partner_pool.browse(cr, uid, partner_id, context=context)
-		res['value']['partner_receivable'] = partner.credit
+		# _logger.info("The partner = "+str(context))
+		if context.get('active_model', '/') == '/':
+			res['value']['partner_receivable'] = partner.credit
 		return res
 
 class onshipping(models.TransientModel):

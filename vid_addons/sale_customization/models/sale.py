@@ -274,11 +274,11 @@ class SaleOrder(models.Model):
 	state = fields.Selection([
 			('draft', 'Draft Quotation'),
 			('confirm', 'Quotation Confirmed'),
-			('warehouse', 'Warehouse Validation'),
 			('sent', 'Quotation Sent'),
+			('warehouse', 'Sale Order'),
 			('cancel', 'Cancelled'),
 			('waiting_date', 'Waiting Schedule'),
-			('progress', 'Sales Order'),
+			('progress', 'Sales in Progress'),
 			('manual', 'Sale to Invoice'),
 			('shipping_except', 'Shipping Exception'),
 			('invoice_except', 'Invoice Exception'),
@@ -314,6 +314,10 @@ class SaleOrder(models.Model):
 	@api.multi
 	def action_ship_recreate(self):
 		self.signal_workflow('ship_recreate')
+
+	@api.multi
+	def action_warehouse_confirmed(self):
+		self.write({'state':'warehouse_validate'})
 
 	def action_cancel(self, cr, uid, ids, context=None):
 		res = super(SaleOrder, self).action_cancel(cr, uid, ids, context=context)
