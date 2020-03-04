@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		
+		<template id="sale_stockreport_document">
+			<t t-call="report.external_layout">
+		        <div class="page">
+		            <div class="oe_structure"/>
+		            <div class="row">
+		            	<h2 class="text-center">Pre-Delivery Order</h2>
+		                <span style="color:red;font-size:12px">This not a validated order. <br/> This Printout is only for checking purpose and not for executing consignment</span>
+		                <table width="100%">
+		                    <td width="70%">
+		                        <table width="100%">
+		                            <tr>
+		                                <td><b>Party</b></td>
+		                                <td width="2%">:</td>
+		                                <td width="80%"><span t-field="o.partner_id.display_name"/></td>
+		                            </tr>
+		                            <tr>
+		                                <td ><b>Address</b></td>
+		                                <td>:</td>
+		                                    <td style="padding-left: 3px;">
+		                                        <span t-if="o.partner_id.street"><span t-field="o.partner_id.street"/><br/></span>
+		                                        <span t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></span>
+		                                        <span t-if="o.partner_id.city"><br/><span t-field="o.partner_id.city"/>,</span>
+		                                        <span t-if="o.partner_id.zip"><span t-field="o.partner_id.zip"/></span>
+		                                        <span t-if="o.partner_id.state_id"><br/><span t-field="o.partner_id.state_id.name"/>,</span><span t-if="o.partner_id.country_id"><span t-field="o.partner_id.country_id.name"/></span>
+		                                    </td>
+		                            </tr>
+		        		            <tr>
+		                                <td><b>GSTN</b></td>
+		                                <td>:</td>
+		                                <td style="padding-left: 3px;">
+		                                    <span t-if="o.partner_id.street"><span t-field="o.partner_id.gst_no"/><br/></span>   
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td><b style="color:red;">Reference</b></td>
+		                                <td>:</td>
+		                                <td>
+		                                    <span t-if="o.client_order_ref"><span style="color:red;" t-field="o.client_order_ref"/><br/></span>
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td><b style="color:red;">Remarks</b></td>
+		                                <td>:</td>
+		                                <td>
+		                                    <span t-if="o.customer_remarks"><span style="color:red;" t-field="o.customer_remarks"/><br/></span>
+		                                </td>
+		                            </tr>
+		                        </table>
+		                    </td>
+		                    <td width="30%">
+		                        <table width="100%">
+		                            <tr>
+		                                <td>Partner Selling Type</td>
+		                                <td>:</td>
+		                                <td><span t-if="o.partner_selling_type"/><span t-field="o.partner_selling_type"/></td>
+		                            </tr>
+		                            <tr>
+		                                <td>Normal Discount</td>
+		                                <td>:</td>
+		                                <t t-if="o.normal_disc">
+		                                    <td><span t-field="o.normal_disc"/></td>
+		                                </t>
+		                                <t t-if="o.nonread_normal_disocunt">
+		                                    <td><span t-field="o.nonread_normal_disocunt"/></td>    
+		                                </t>
+		                            </tr>
+		                            <tr>
+		                                <td>Additional Discount</td>
+		                                <td>:</td>
+		                                <t t-if="o.extra_discount">
+		                                    <td><span t-field="o.extra_discount"/></td>
+		                                </t>
+		                                <t t-if="o.nonread_extra_disocunt">
+		                                    <td><span t-field="o.nonread_extra_disocunt"/></td>    
+		                                </t>
+		                            </tr>
+		                        </table>
+		                    </td>
+		                </table>
+		            </div>
+
+		            <h2>
+		                <span t-if="o.state not in ['draft','sent']">Order N° </span>
+		                <span t-if="o.state in ['draft','sent']">Quotation N° </span>
+		                <span t-field="o.name"/>
+		            </h2>
+
+		            <div class="row mt32 mb32" id="informations">
+		                <div t-if="o.client_order_ref" class="col-xs-3">
+		                    <strong>Your Reference:</strong>
+		                    <p t-field="o.client_order_ref"/>
+		                </div>
+		                <div t-if="o.date_order" class="col-xs-3">
+		                    <strong t-if="o.state not in ['draft','sent']">Date Ordered:</strong>
+		                    <strong t-if="o.state in ['draft','sent']">Quotation Date:</strong>
+		                    <p t-field="o.date_order"/>
+		                </div>
+		                <div t-if="o.user_id.name" class="col-xs-3">
+		                    <strong>Salesperson:</strong>
+		                    <p t-field="o.user_id.name"/>
+		                </div>
+		                <div t-if="o.payment_term" class="col-xs-3">
+		                    <strong>Payment Term:</strong>
+		                    <p t-field="o.payment_term"/>
+		                </div>
+		            </div>
+
+		            <table class="table table-condensed">
+		                <thead>
+		                    <tr>
+		                        <th>Description</th>
+		                        <th class="text-right">Quantity</th>
+		                        <th><strong>Available Stock<br/><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /></strong> </th>
+		                    </tr>
+		               </thead>
+		               <tbody class="sale_tbody">
+		                    <tr t-foreach="o.order_line" t-as="l">
+		                        <td>
+		                           <span t-field="l.name"/>
+		                        </td>
+		                        <td class="text-right">
+		                            <span t-field="l.product_uom_qty"/>
+		                            <span groups="product.group_uom" t-field="l.product_uom"/>
+		                        </td>
+		                        <td t-esc="l.get_all_qty(l.product_id, o.company_id)"/> 
+		                    </tr>
+		                </tbody>
+		            </table>
+		        </div>
+		    </t>
+		</template>
+
+		<template id="sale_stockreport" >	
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'reports.sale_stockreport_document')"/>
+				</t>
+			</t>
+		</template>
+
+	</data>
+</openerp>

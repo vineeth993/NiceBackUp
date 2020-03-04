@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<report
+			string="Stock Report"
+			id="sale_stock_report"
+			model="sale.order"
+			report_type="qweb-pdf"
+			name="reports.sale_stockreport"
+			/>
+
+	</data>
+</openerp>

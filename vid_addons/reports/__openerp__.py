@@ -9,8 +9,10 @@
     'category': 'report',
     'depends': ['base', 'sale', 'stock', 'delivery'],
     'data': [
+        'report.xml',
         'report/sale_order_report.xml',
         'report/stock_picking_report.xml',
+        'report/sale_stock_report.xml'
     ],
     'installable': True,
     'auto_install': False
