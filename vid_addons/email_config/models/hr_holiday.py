@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 class HrHoliday(models.Model):
 
 	_inherit = "hr.holidays"
-	_order = "doc_created asc"
+	_order = "doc_created desc"
 
 	doc_created = fields.Date("Applied Date", default=lambda x:date.today())
 	approved_date = fields.Date("Approved Date")

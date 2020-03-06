@@ -164,7 +164,7 @@
 				</field>
 
 				<field name="holiday_type" position="before">
-					<field name="doc_created" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))]}"/>
+					<field name="doc_created" readonly="1"/>
 					<field name="approved_date" attrs="{'readonly':[('state', 'not in', ('draft', 'confirm'))], 'invisible':[('state', 'in', ('draft', 'confirm', 'cancel'))]}"/> 
 					<field name="is_manager" invisible="1"/>
 					<field name="is_encashment" attrs="{'readonly':[('type', '!=', 'remove')]}"/>
