@@ -114,7 +114,7 @@
 		                <thead>
 		                    <tr>
 		                        <th>Description</th>
-		                        <th class="text-right">Quantity</th>
+		                        <th class="text-right">Quantity(Unit)</th>
 		                        <th><strong>Available Stock<br/><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /></strong> </th>
 		                    </tr>
 		               </thead>
@@ -125,7 +125,6 @@
 		                        </td>
 		                        <td class="text-right">
 		                            <span t-field="l.product_uom_qty"/>
-		                            <span groups="product.group_uom" t-field="l.product_uom"/>
 		                        </td>
 		                        <td t-esc="l.get_all_qty(l.product_id, o.company_id)"/> 
 		                    </tr>

@@ -4,7 +4,7 @@
 	<data>
 
 		<report
-			string="Stock Report"
+			string="Pre-Delivery Order"
 			id="sale_stock_report"
 			model="sale.order"
 			report_type="qweb-pdf"
