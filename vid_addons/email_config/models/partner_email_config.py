@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 class PartnerEmail(models.Model):
 
 	_inherit = 'hr.employee'
+	_order = 'employee_id asc'
 
 	email_config_id = fields.Many2one('ir.mail_server', 'Config Id', track_visibility='onchange')
 	password = fields.Char("Password")

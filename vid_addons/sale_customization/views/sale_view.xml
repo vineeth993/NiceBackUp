@@ -238,6 +238,10 @@
 					position="after">
 					<field name="reason" widget="many2many_tags" />
 				</xpath>
+				
+				<xpath expr="//notebook//page[@string='Other Information']" position="attributes">
+					<attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads</attribute>
+				</xpath>
 
 				<xpath
 					expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='price_subtotal']"
