@@ -21,12 +21,12 @@ class ProductValidator(models.Model):
 								('approved','Approved')], string="State", default="draft")
 	confirmed_user = fields.Many2one("res.users", string="Confirmed User")
 
-	@api.multi
-	def write(self, vals):
-		for rec in self:
-			if self.states == "approved" and vals.get('qty_available', '/') == '/' and vals.get('incoming_qty', '/') == '/' and vals.get('purchase_incoming_qty', '/') == '/' and vals.get('virtual_available', '/') == '/':
-				raise ValidationError("Document is approved cannot be edited please contact administrator")
-		return super(ProductValidator, self).write(vals)
+	#@api.multi
+	#def write(self, vals):
+	#	for rec in self:
+	#		if self.states == "approved" and vals.get('qty_available', '/') == '/' and vals.get('incoming_qty', '/') == '/' and vals.get('purchase_incoming_qty', '/') == '/' and vals.get('virtual_available', '/') == '/':
+	#			raise ValidationError("Document is approved cannot be edited please contact administrator")
+	#	return super(ProductValidator, self).write(vals)
 
 	@api.multi
 	def reset_to_draft(self):

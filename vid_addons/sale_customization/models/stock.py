@@ -15,8 +15,9 @@ class stock_picking(osv.osv):
 		if context is None:
 			context = {}
 		partner, currency_id, company_id, user_id = key
-		strtoDate = datetime.datetime.strptime(move.picking_id.sale_id.date_order, '%Y-%m-%d %I:%M:%S')
-		sale_order = move.picking_id.sale_id.name+'-'+datetime.datetime.strftime(strtoDate, '%d/%m/%y')
+		#strtoDate = datetime.datetime.strptime(move.picking_id.sale_id.date_order, '%Y-%m-%d %I:%M:%S')
+		#sale_order = move.picking_id.sale_id.name+'-'+datetime.datetime.strftime(strtoDate, '%d/%m/%y')
+		sale_order = move.picking_id.sale_id.name
 		if inv_type in ('out_invoice', 'out_refund'):
 			account_id = partner.property_account_receivable.id
 			payment_term = partner.property_payment_term.id or False
