@@ -72,8 +72,11 @@ class GetEwp(models.TransientModel):
 	invoices_id = fields.Many2many("account.invoice", "ewb_invoices_rel", "partner_id", "invoice_id", string="Invoices", readonly=True)
 	to_zip_code = fields.Char("To Zipcode", required=True)
 	check_register = fields.Selection(REGISTERED, "GST")
-	trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
-	
+	# trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
+	json_version = fields.Char("Version ", default="1.0.0618")
+	hsn_line = fields.Integer("HSN Line", default=4)
+
+
 	@api.model
 	def default_get(self, fields):
 
@@ -147,7 +150,7 @@ class GetEwp(models.TransientModel):
 						hsn_igst_total = round((line.price_subtotal * tax.amount), 2)
 					elif tax.gst_type == "cess":
 						hsn_cess_total = round((line.price_subtotal * tax.amount), 2)
-				product_hsn = line.product_id.hs_code_id.code[0:4]
+				product_hsn = line.product_id.hs_code_id.code[0:self.hsn_line]
 				if not item_list.has_key(product_hsn):
 					item_list.update({product_hsn:{round(tax_percnt, 2):[round(hsn_total_taxablevalue, 2), round(hsn_igst_total, 2), round(hsn_sgst_total, 2), round(hsn_cgst_total, 2), round(hsn_cess_total, 2), line.quantity, val, line.product_id.hs_code_id.description]}})
 				else:
@@ -190,7 +193,7 @@ class GetEwp(models.TransientModel):
 						items['igstRate'] = 0
 
 					items['cessRate'] = 0
-					items['cessNonAvol'] = 0
+					# items['cessNonAvol'] = 0
 					totalIgst += item_list[hsn][item][1]
 					totalSgst += item_list[hsn][item][2]
 					totalCgst += item_list[hsn][item][3]
@@ -222,14 +225,14 @@ class GetEwp(models.TransientModel):
 
 			addr = self.getAddress(invoice)
 
-			billList = {
+			billLists = {
 					'userGstin':addr['gst_no'],
 					'supplyType':self.supply_type,
 					'subSupplyType':self.sub_type,
 					'docType':'INV',
 					'docNo':invoice.number.replace('SAJ-', ''),
 					'docDate':invoice_date,
-					'transType':self.trans_type,
+					# 'transType':self.trans_type,
 					'fromGstin':addr['gst_no'],
 					'fromTrdName':self.from_addr.name,
 					'fromAddr1':addr['street'],
@@ -251,8 +254,8 @@ class GetEwp(models.TransientModel):
 					'sgstValue':round(totalSgst,2),
 					'igstValue':round(totalIgst,2),
 					'cessValue':round(totalCess,2),
-					'TotNonAdvolVal':0,
-					'OthValue':0,
+					# 'TotNonAdvolVal':0,
+					# 'OthValue':0,
 					'transMode':self.transport_mode,
 					'transDistance':self.transport_distance,
 					'transporterName':self.transporter_name,
@@ -266,7 +269,7 @@ class GetEwp(models.TransientModel):
 					'itemList':itemList
 				}
 			billLists.append(billList)
-		data = {'version':"1.0.1118",'billLists':billLists}
+		data = {'version':self.json_version,'billLists':billLists}
 		
 		temp_json_file = tempfile.gettempdir()+'/file.json'
 		# temp_json_file = "/tmp/Test.json"
