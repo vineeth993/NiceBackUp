@@ -72,8 +72,8 @@ class GetEwp(models.TransientModel):
 	invoices_id = fields.Many2many("account.invoice", "ewb_invoices_rel", "partner_id", "invoice_id", string="Invoices", readonly=True)
 	to_zip_code = fields.Char("To Zipcode", required=True)
 	check_register = fields.Selection(REGISTERED, "GST")
-	# trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
-	json_version = fields.Char("Version ", default="1.0.0618")
+	trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
+	json_version = fields.Char("Version ", default="1.0.0621")
 	hsn_line = fields.Integer("HSN Line", default=4)
 
 
@@ -232,7 +232,7 @@ class GetEwp(models.TransientModel):
 					'docType':'INV',
 					'docNo':invoice.number.replace('SAJ-', ''),
 					'docDate':invoice_date,
-					# 'transType':self.trans_type,
+					'transType':self.trans_type,
 					'fromGstin':addr['gst_no'],
 					'fromTrdName':self.from_addr.name,
 					'fromAddr1':addr['street'],

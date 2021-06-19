@@ -24,10 +24,11 @@
 						</group>
 						<group>
 							<field name="transport_mode"/>
+							<field name="trans_type"/>
 						</group>
 						<group string="Tranport Details">
 							<field name="transporter_name"/>
-							<field name="vehicle_number" attrs="{'required':[('transport_mode', '=', 1), ('transporter_id', '=', False)]}"/>
+							<field name="vehicle_number" placeholder="The format should be XX99XX9999" attrs="{'required':[('transport_mode', '=', 1), ('transporter_id', '=', False)]}"/>
 							<field name="transporter_id" attrs="{'required':[('vehicle_number', '=', False), ('transport_mode', '=', 1)]}"/>
 							<field name="transport_distance" required='1'/>
 							<field name="vehicle_type" attrs="{'required':[('transport_mode', '=', 1)]}"/>
