@@ -13,7 +13,8 @@ class HsnReport(models.TransientModel):
     report_type = fields.Selection([('monthly', 'Monthly'), 
                                     ('annually', 'Annually')], string="Report Type", default="monthly")
     company = fields.Many2one("res.company", string="Company", default=lambda self: self.env['res.users']._get_company())
-    
+    hsn_line = fields.Integer("HSN Line", default=8)
+
     @api.multi
     def print_hsn_report(self):
     	data = {}
