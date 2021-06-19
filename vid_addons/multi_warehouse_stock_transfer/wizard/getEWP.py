@@ -66,7 +66,9 @@ class GetEwpdc(models.TransientModel):
 	vehicle_number = fields.Char('Vehicle Number')
 	to_zip_code = fields.Char("To Zipcode", required=True)
 	trans_type = fields.Selection(TRANS_TYPE, "Transaction Type", default=1)
-
+	json_version = fields.Char("Version ", default="1.0.0621")
+	hsn_line = fields.Integer("HSN Line", default=4)
+	
 	@api.model
 	def default_get(self, fields):
 
@@ -152,7 +154,7 @@ class GetEwpdc(models.TransientModel):
 					items['cgstRate'] = item / 2
 					items['igstRate'] = 0										
 				items['cessRate'] = 0
-				items['cessNonAvol'] = 0
+				# items['cessNonAvol'] = 0
 				totalIgst += item_list[hsn][item][1]
 				totalSgst += item_list[hsn][item][2]
 				totalCgst += item_list[hsn][item][3]
@@ -205,8 +207,8 @@ class GetEwpdc(models.TransientModel):
 					'sgstValue':round(totalSgst,2),
 					'igstValue':round(totalIgst,2),
 					'cessValue':round(totalCess,2),
-					'TotNonAdvolVal':0,
-					'OthValue':0,
+					# 'TotNonAdvolVal':0,
+					# 'OthValue':0,
 					'transMode':self.transport_mode,
 					'transDistance':self.transport_distance,
 					'transporterName':self.transporter_name,
@@ -220,7 +222,7 @@ class GetEwpdc(models.TransientModel):
 					'itemList':itemList
 			}
                 billLists.append(billList)		
-                data = {'version':"1.0.1118",'billLists':billLists}
+                data = {'version':self.json_version,'billLists':billLists}
 		
 		temp_json_file = tempfile.gettempdir()+'/file.json'
 		# temp_json_file = "/tmp/Test.json"

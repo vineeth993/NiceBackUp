@@ -26,12 +26,16 @@
 						</group>
 						<group string="Tranport Details">
 							<field name="transporter_name"/>
-							<field name="vehicle_number" attrs="{'required':[('transport_mode', '=', 1), ('transporter_id', '=', False)]}"/>
+							<field name="vehicle_number" placeholder="The format should be XX99XX9999" attrs="{'required':[('transport_mode', '=', 1), ('transporter_id', '=', False)]}"/>
 							<field name="transporter_id" attrs="{'required':[('vehicle_number', '=', False), ('transport_mode', '=', 1)]}"/>
 							<field name="transport_distance" required='1'/>
 							<field name="vehicle_type" attrs="{'required':[('transport_mode', '=', 1)]}"/>
 							<field name="trans_doc_no" attrs="{'required':[('transport_mode', '!=', 1)]}"/>
 							<field name="trans_doc_date" attrs="{'required':[('transport_mode', '!=', 1)]}"/>
+						</group>
+						<group string="JSON Configuration">
+							<field name="json_version"/>
+							<field name="hsn_line"/>
 						</group>
 					</group>
 					<footer>
