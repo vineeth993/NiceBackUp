@@ -225,7 +225,7 @@ class GetEwp(models.TransientModel):
 
 			addr = self.getAddress(invoice)
 
-			billLists = {
+			billList = {
 					'userGstin':addr['gst_no'],
 					'supplyType':self.supply_type,
 					'subSupplyType':self.sub_type,
