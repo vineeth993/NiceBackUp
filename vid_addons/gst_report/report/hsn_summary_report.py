@@ -235,16 +235,16 @@ class HsnReport(report_xls):
 		for hsn in hsn_dict:
 			for tax in hsn_dict[hsn]:
 				ws.write(count, 0, hsn, self.number2d)
-				ws.write(count, 1, hsn_dict[hsn][7], self.normal)
+				ws.write(count, 1, hsn_dict[hsn][tax][7], self.normal)
 				ws.write(count, 2, 'NOS-NUMBERS', self.normal)
-				ws.write(count, 3, hsn_dict[hsn][0], self.number2d)
-				ws.write(count, 4, hsn_dict[hsn][6], self.number2d)
-				ws.write(count, 5, hsn_dict[hsn][1], self.number2d)
+				ws.write(count, 3, hsn_dict[hsn][tax][0], self.number2d)
+				ws.write(count, 4, hsn_dict[hsn][tax][6], self.number2d)
+				ws.write(count, 5, hsn_dict[hsn][tax][1], self.number2d)
 				ws.write(count, 6, tax, self.number2d)
-				ws.write(count, 7, hsn_dict[hsn][4], self.number2d)
-				ws.write(count, 8, hsn_dict[hsn][2], self.number2d)
-				ws.write(count, 9, hsn_dict[hsn][3], self.number2d)
-				ws.write(count, 10, hsn_dict[hsn][5], self.number2d)
+				ws.write(count, 7, hsn_dict[hsn][tax][4], self.number2d)
+				ws.write(count, 8, hsn_dict[hsn][tax][2], self.number2d)
+				ws.write(count, 9, hsn_dict[hsn][tax][3], self.number2d)
+				ws.write(count, 10, hsn_dict[hsn][tax][5], self.number2d)
 				count += 1
 
 		ws.write(0, 0, 'Summary For HSN(12)', self.title2)
